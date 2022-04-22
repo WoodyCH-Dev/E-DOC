@@ -153,6 +153,9 @@
         <router-link
           to="/user/dashboard"
           class="bg-dark list-group-item list-group-item-action"
+          v-if="
+            permission.access_user == true || permission.access_admin == true
+          "
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="far fa-tachometer mr-3"></i>
@@ -160,8 +163,11 @@
           </div>
         </router-link>
         <router-link
-          to="#"
+          to="/user/inbox"
           class="bg-dark list-group-item list-group-item-action"
+          v-if="
+            permission.access_user == true || permission.access_admin == true
+          "
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-inbox-in mr-3"></i>
@@ -169,21 +175,27 @@
           </div>
         </router-link>
         <router-link
-          to="#"
+          to="/sender/send"
           class="bg-dark list-group-item list-group-item-action"
-        >
-          <div class="d-flex w-100 justify-content-start align-items-center">
-            <i class="fas fa-clipboard-list-check mr-3"></i>
-            <span class="menu-collapsed">รายการที่ส่ง</span>
-          </div>
-        </router-link>
-        <router-link
-          to="#"
-          class="bg-dark list-group-item list-group-item-action"
+          v-if="
+            permission.access_sender == true || permission.access_admin == true
+          "
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-paper-plane mr-3"></i>
             <span class="menu-collapsed">ส่งเอกสาร</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/sender/send/list"
+          class="bg-dark list-group-item list-group-item-action"
+          v-if="
+            permission.access_sender == true || permission.access_admin == true
+          "
+        >
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <i class="fas fa-clipboard-list-check mr-3"></i>
+            <span class="menu-collapsed">รายการที่ส่ง</span>
           </div>
         </router-link>
         <!-- Separator with title -->
@@ -201,8 +213,9 @@
         </li>
         <!-- /END Separator -->
         <router-link
-          to="#"
+          to="/admin/manage/user"
           class="bg-dark list-group-item list-group-item-action"
+          v-if="permission.access_admin == true"
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-user-cog mr-3"></i>
@@ -210,8 +223,9 @@
           </div>
         </router-link>
         <router-link
-          to="#"
+          to="/admin/manage/document"
           class="bg-dark list-group-item list-group-item-action"
+          v-if="permission.access_admin == true"
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-file-alt mr-3"></i>
@@ -219,8 +233,9 @@
           </div>
         </router-link>
         <router-link
-          to="#"
+          to="/admin/manage/category/document"
           class="bg-dark list-group-item list-group-item-action"
+          v-if="permission.access_admin == true"
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-books mr-3"></i>
@@ -228,8 +243,9 @@
           </div>
         </router-link>
         <router-link
-          to="#"
+          to="/admin/manage/system"
           class="bg-dark list-group-item list-group-item-action"
+          v-if="permission.access_admin == true"
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-cog mr-3"></i>

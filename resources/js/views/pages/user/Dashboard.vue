@@ -21,7 +21,7 @@
                   ปีการศึกษา
                 </va-card-title>
                 <va-card-content class="card-subtitle-dashboard">
-                  2565
+                  {{ data.acd_year }}
                 </va-card-content>
               </va-card>
             </div>
@@ -73,6 +73,8 @@ export default {
     var access_sender = false;
     var access_admin = false;
 
+    var acd_year = "0";
+
     if (window.localStorage.getItem("user_id")) {
       username = window.localStorage.getItem("name");
       lastname = window.localStorage.getItem("lastname");
@@ -84,10 +86,13 @@ export default {
       this.$router.push("/");
     }
 
+    this.onLoad();
+
     return {
       data: {
         username: username,
         lastname: lastname,
+        acd_year: acd_year,
       },
       permission: {
         access_user: access_user,
@@ -97,6 +102,13 @@ export default {
     };
   },
   methods: {
+    onLoad() {
+      this.axios.get("api/user/acd_year").then((res) => {
+        if (res.data.status == true) {
+          this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+    },
     // onSubmit() {
     //   this.axios.post("api/login", this.form).then((res) => {
     //     if (res.data.status == true) {

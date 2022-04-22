@@ -70,11 +70,6 @@
 
 <template>
   <Header></Header>
-  <!-- <div class="content" style="padding-top: 20px">
-    <div class="layout gutter--sm center">
-      <router-view></router-view>
-    </div>
-  </div> -->
   <!-- <Footer></Footer> -->
 </template>
 
