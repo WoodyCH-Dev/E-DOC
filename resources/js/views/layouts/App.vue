@@ -3,21 +3,20 @@
   font-family: "Kanit", sans-serif;
 }
 
-a:link {
-  color: white;
-  text-decoration: none;
+.router-link:link {
+  text-decoration: none !important;
 }
-a:active {
-  color: white;
-  text-decoration: none;
+
+.router-link:hover {
+  text-decoration: none !important;
 }
-a:hover {
-  color: rgb(255, 211, 65);
-  text-decoration: none;
+
+.router-link:active {
+  text-decoration: none !important;
 }
-a:visited {
-  color: white;
-  text-decoration: none;
+
+.router-link:visited {
+  text-decoration: none !important;
 }
 
 .header-logo {
@@ -71,6 +70,11 @@ a:visited {
 
 <template>
   <Header></Header>
+  <!-- <div class="content" style="padding-top: 20px">
+    <div class="layout gutter--sm center">
+      <router-view></router-view>
+    </div>
+  </div> -->
   <!-- <Footer></Footer> -->
 </template>
 

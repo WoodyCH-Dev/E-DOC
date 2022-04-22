@@ -2,16 +2,15 @@
   <div class="row">
     <div class="flex xl12 center">
       <va-card tag="b" outlined>
-        <va-card-title>Dashboard</va-card-title>
         <va-card-content>
           <div class="row">
             <div class="flex xl12 xs12">
               <va-card stripe stripe-color="danger">
                 <va-card-title class="card-title-dashboard">
-                  ยินดีต้อนรับ
+                  <i class="far fa-tachometer"></i>&nbsp; Dashboard
                 </va-card-title>
                 <va-card-content class="card-subtitle-dashboard">
-                  {{ data.username + " " + data.lastname }}
+                  ยินดีต้อนรับ {{ data.username + " " + data.lastname }}
                 </va-card-content>
               </va-card>
             </div>
