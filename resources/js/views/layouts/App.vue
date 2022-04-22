@@ -44,19 +44,33 @@ a:visited {
   text-align: center;
 } */
 
-header {
-  position: sticky;
-  top: 0;
+.nav-item {
+  cursor: pointer;
+}
+
+.text-white {
+  color: white;
+}
+
+.card-title-dashboard {
+  font-size: 12pt !important;
+}
+
+.card-subtitle-dashboard {
+  font-size: 22pt !important;
+}
+
+.data-content {
+  z-index: 10000;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  height: 100vh;
 }
 </style>
 
 <template>
   <Header></Header>
-  <div class="main row">
-    <div class="flex xs11 md10 center">
-      <router-view></router-view>
-    </div>
-  </div>
   <!-- <Footer></Footer> -->
 </template>
 
