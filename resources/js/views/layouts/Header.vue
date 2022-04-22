@@ -31,68 +31,9 @@
       </template>
     </va-navbar>
 
-    <div style="height: 100%; position: relative">
-      <va-sidebar
-        textColor="dark"
-        style="position: absolute"
-        v-if="data.isLogin == true"
-      >
-        <router-link to="/user/dashboard">
-          <va-sidebar-item active>
-            <va-sidebar-item-content>
-              <va-icon name="dashboard" />
-              <va-sidebar-item-title> Dashboard </va-sidebar-item-title>
-            </va-sidebar-item-content>
-          </va-sidebar-item>
-        </router-link>
-        <va-sidebar-item>
-          <va-sidebar-item-content>
-            <va-icon name="move_to_inbox" />
-            <va-sidebar-item-title> กล่องเอกสารเข้า </va-sidebar-item-title>
-          </va-sidebar-item-content>
-        </va-sidebar-item>
-        <va-sidebar-item>
-          <va-sidebar-item-content>
-            <va-icon name="list_alt" />
-            <va-sidebar-item-title> รายการที่ส่ง </va-sidebar-item-title>
-          </va-sidebar-item-content>
-        </va-sidebar-item>
-        <va-sidebar-item>
-          <va-sidebar-item-content>
-            <va-icon name="send" />
-            <va-sidebar-item-title> ส่งเอกสาร </va-sidebar-item-title>
-          </va-sidebar-item-content>
-        </va-sidebar-item>
-
-        <va-divider orientation="left" style="padding-top: 30px">
-          <span class="px-2">เมนูของแอดมิน</span>
-        </va-divider>
-        <va-sidebar-item>
-          <va-sidebar-item-content>
-            <va-icon name="manage_accounts" />
-            <va-sidebar-item-title> จัดการผู้ใช้ </va-sidebar-item-title>
-          </va-sidebar-item-content>
-        </va-sidebar-item>
-        <va-sidebar-item>
-          <va-sidebar-item-content>
-            <va-icon name="settings" />
-            <va-sidebar-item-title> จัดการเอกสาร </va-sidebar-item-title>
-          </va-sidebar-item-content>
-        </va-sidebar-item>
-        <va-sidebar-item>
-          <va-sidebar-item-content>
-            <va-icon name="room_preferences" />
-            <va-sidebar-item-title>
-              จัดการหมวดหมู่เอกสาร
-            </va-sidebar-item-title>
-          </va-sidebar-item-content>
-        </va-sidebar-item>
-      </va-sidebar>
-
-      <div class="content" style="padding-top: 20px; margin-left: 16rem">
-        <div class="layout gutter--sm center">
-          <router-view></router-view>
-        </div>
+    <div class="content" style="padding-top: 20px">
+      <div class="layout gutter--sm center">
+        <router-view></router-view>
       </div>
     </div>
   </div>
