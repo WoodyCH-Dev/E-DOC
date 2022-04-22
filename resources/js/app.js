@@ -23,6 +23,8 @@ import { VuesticPlugin } from "vuestic-ui";
 import "vuestic-ui/dist/vuestic-ui.css";
 import axios from "axios";
 import VueAxios from "vue-axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 
 // Init router into app
 app.use(router);
