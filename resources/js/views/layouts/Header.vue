@@ -171,7 +171,9 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-inbox-in mr-3"></i>
-            <span class="menu-collapsed">กล่องเอกสารเข้า</span>
+            <span class="menu-collapsed">
+              กล่องเอกสารเข้า &nbsp;<span class="badge badge-warning">0</span>
+            </span>
           </div>
         </router-link>
         <router-link
@@ -219,7 +221,9 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-user-cog mr-3"></i>
-            <span class="menu-collapsed">จัดการผู้ใช้</span>
+            <span class="menu-collapsed">
+              จัดการผู้ใช้ &nbsp;<span class="badge badge-light">0</span>
+            </span>
           </div>
         </router-link>
         <router-link
@@ -229,7 +233,9 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-file-alt mr-3"></i>
-            <span class="menu-collapsed">จัดการเอกสาร</span>
+            <span class="menu-collapsed">
+              จัดการเอกสาร &nbsp;<span class="badge badge-light">0</span>
+            </span>
           </div>
         </router-link>
         <router-link
@@ -239,7 +245,11 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-books mr-3"></i>
-            <span class="menu-collapsed">จัดการหมวดหมู่เอกสาร</span>
+            <span class="menu-collapsed">
+              จัดการหมวดหมู่เอกสาร &nbsp;<span class="badge badge-light">
+                0
+              </span>
+            </span>
           </div>
         </router-link>
         <router-link
