@@ -23260,6 +23260,9 @@ __webpack_require__.r(__webpack_exports__);
     }
 
     this.onLoad();
+    var category_select_options = ["วิชาการ", "ทั่วไป", "การเงิน", "กิจการนักเรียน"];
+    var user_select_options = ["user1", "user2"];
+    var piority_select_options = ["ทั่วไป", "ด่วน", "ด่วนที่สุด"];
     return {
       data: {
         username: username,
@@ -23270,6 +23273,14 @@ __webpack_require__.r(__webpack_exports__);
         access_user: access_user,
         access_sender: access_sender,
         access_admin: access_admin
+      },
+      form: {
+        category_select_value: "",
+        user_select_value: "",
+        piority_select_value: piority_select_options[0],
+        category_select_options: category_select_options,
+        user_select_options: user_select_options,
+        piority_select_options: piority_select_options
       }
     };
   },
@@ -24460,8 +24471,226 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "render": () => (/* binding */ render)
 /* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  "class": "row"
+};
+var _hoisted_2 = {
+  "class": "flex xl12 xs12 center"
+};
+
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ส่งเอกสาร");
+
+var _hoisted_4 = {
+  "class": "row"
+};
+var _hoisted_5 = {
+  "class": "flex xl8 xs12"
+};
+var _hoisted_6 = {
+  "class": "form-group"
+};
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "หัวข้อเรื่อง (*)", -1
+/* HOISTED */
+);
+
+var _hoisted_8 = {
+  "class": "flex xl4 xs12"
+};
+var _hoisted_9 = {
+  "class": "form-group"
+};
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลขที่เอกสาร (*)", -1
+/* HOISTED */
+);
+
+var _hoisted_11 = {
+  "class": "flex xl4 xs12"
+};
+var _hoisted_12 = {
+  "class": "form-group"
+};
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "หมวดหมู่ (*)", -1
+/* HOISTED */
+);
+
+var _hoisted_14 = {
+  "class": "flex xl8 xs12"
+};
+var _hoisted_15 = {
+  "class": "form-group"
+};
+
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลขที่เอกสาร (ถ้ามี)", -1
+/* HOISTED */
+);
+
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "flex xl12 xs12"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "form-group"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ไฟล์ที่ Upload"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "va-table-responsive"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", {
+  "class": "va-table",
+  style: {
+    "width": "100%"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ลำดับที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ไฟล์ที่แนบ")])]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "1"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf")])])])])])], -1
+/* HOISTED */
+);
+
+var _hoisted_18 = {
+  "class": "flex xl12 xs12"
+};
+var _hoisted_19 = {
+  "class": "form-group"
+};
+
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fas fa-upload mr-2"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เลือกไฟล์ ");
+
+var _hoisted_22 = {
+  "class": "flex xl8 xs12"
+};
+var _hoisted_23 = {
+  "class": "form-group"
+};
+
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลือกผู้รับ (*)", -1
+/* HOISTED */
+);
+
+var _hoisted_25 = {
+  "class": "flex xl4 xs12"
+};
+var _hoisted_26 = {
+  "class": "form-group"
+};
+
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ระดับความสำคัญ (*)", -1
+/* HOISTED */
+);
+
+var _hoisted_28 = {
+  "class": "flex xl12 xs12",
+  align: "center"
+};
+var _hoisted_29 = {
+  "class": "form-group"
+};
+
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fas fa-paper-plane mr-2"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ส่งเอกสาร ");
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return null;
+  var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
+
+  var _component_va_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-input");
+
+  var _component_va_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-select");
+
+  var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
+
+  var _component_va_card_content = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-content");
+
+  var _component_va_card = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+    tag: "b",
+    outlined: ""
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, null, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_3];
+        }),
+        _: 1
+        /* STABLE */
+
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_input, {
+            placeholder: "เรื่อง...",
+            required: ""
+          })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_input, {
+            placeholder: "0",
+            required: ""
+          })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [_hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+            required: "",
+            modelValue: $data.form.category_select_value,
+            "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+              return $data.form.category_select_value = $event;
+            }),
+            options: $data.form.category_select_options,
+            placeholder: "กรุณาเลือกหมวดหมู"
+          }, null, 8
+          /* PROPS */
+          , ["modelValue", "options"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_input, {
+            placeholder: "รายละเอียด (ถ้ามี)...",
+            required: ""
+          })])]), _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, null, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_20, _hoisted_21];
+            }),
+            _: 1
+            /* STABLE */
+
+          })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+            "class": "mb-4",
+            placeholder: "เลือกผู้รับ",
+            options: $data.form.user_select_options,
+            modelValue: $data.form.user_select_value,
+            "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+              return $data.form.user_select_value = $event;
+            }),
+            multiple: ""
+          }, null, 8
+          /* PROPS */
+          , ["options", "modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [_hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+            required: "",
+            modelValue: $data.form.piority_select_value,
+            "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+              return $data.form.piority_select_value = $event;
+            }),
+            options: $data.form.piority_select_options,
+            placeholder: "ระดับความสำคัญ"
+          }, null, 8
+          /* PROPS */
+          , ["modelValue", "options"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            color: "dark"
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_30, _hoisted_31];
+            }),
+            _: 1
+            /* STABLE */
+
+          })])])])];
+        }),
+        _: 1
+        /* STABLE */
+
+      })];
+    }),
+    _: 1
+    /* STABLE */
+
+  })])]);
 }
 
 /***/ }),
@@ -24500,7 +24729,7 @@ var _hoisted_1 = {
   "class": "row"
 };
 var _hoisted_2 = {
-  "class": "flex xl12 center"
+  "class": "flex xs12 xl12 center"
 };
 var _hoisted_3 = {
   "class": "row"
@@ -24847,28 +25076,28 @@ __webpack_require__.r(__webpack_exports__);
 }, //Sender
 {
   path: "/sender/send",
-  component: _views_pages_user_Inbox__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_pages_sender_Sender__WEBPACK_IMPORTED_MODULE_4__["default"],
   name: "Send"
 }, {
   path: "/sender/send/list",
-  component: _views_pages_user_Inbox__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_pages_sender_SenderList__WEBPACK_IMPORTED_MODULE_5__["default"],
   name: "SendList"
 }, //Admin
 {
   path: "/admin/manage/user",
-  component: _views_pages_user_Inbox__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_pages_admin_UserManager__WEBPACK_IMPORTED_MODULE_6__["default"],
   name: "ManagedUser"
 }, {
   path: "/admin/manage/document",
-  component: _views_pages_user_Inbox__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_pages_admin_DocumentManager__WEBPACK_IMPORTED_MODULE_7__["default"],
   name: "ManagedDocument"
 }, {
   path: "/admin/manage/category/document",
-  component: _views_pages_user_Inbox__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_pages_admin_DocumentCategoryManager__WEBPACK_IMPORTED_MODULE_8__["default"],
   name: "ManagedDocumentCategory"
 }, {
   path: "/admin/manage/system",
-  component: _views_pages_user_Inbox__WEBPACK_IMPORTED_MODULE_3__["default"],
+  component: _views_pages_admin_SystemManager__WEBPACK_IMPORTED_MODULE_9__["default"],
   name: "ManagedSystem"
 }, //Error
 {

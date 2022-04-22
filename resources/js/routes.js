@@ -26,21 +26,25 @@ export default [
     { path: "/user/dashboard", component: Dashboard, name: "Dashboard" },
     { path: "/user/inbox", component: Inbox, name: "Inbox" },
     //Sender
-    { path: "/sender/send", component: Inbox, name: "Send" },
-    { path: "/sender/send/list", component: Inbox, name: "SendList" },
+    { path: "/sender/send", component: Sender, name: "Send" },
+    { path: "/sender/send/list", component: SenderList, name: "SendList" },
     //Admin
-    { path: "/admin/manage/user", component: Inbox, name: "ManagedUser" },
+    { path: "/admin/manage/user", component: UserManager, name: "ManagedUser" },
     {
         path: "/admin/manage/document",
-        component: Inbox,
+        component: DocumentManager,
         name: "ManagedDocument",
     },
     {
         path: "/admin/manage/category/document",
-        component: Inbox,
+        component: DocumentCategoryManager,
         name: "ManagedDocumentCategory",
     },
-    { path: "/admin/manage/system", component: Inbox, name: "ManagedSystem" },
+    {
+        path: "/admin/manage/system",
+        component: SystemManager,
+        name: "ManagedSystem",
+    },
     //Error
     { path: "/:pathMatch(.*)*", component: Error404 },
 ];
