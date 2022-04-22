@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="flex xl12 center">
+    <div class="flex xs12 xl12 center">
       <va-card tag="b" outlined>
         <va-card-content>
           <div class="row">
