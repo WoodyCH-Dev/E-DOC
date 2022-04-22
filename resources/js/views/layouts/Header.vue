@@ -227,6 +227,15 @@
             <span class="menu-collapsed">จัดการหมวดหมู่เอกสาร</span>
           </div>
         </router-link>
+        <router-link
+          to="#"
+          class="bg-dark list-group-item list-group-item-action"
+        >
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <i class="fas fa-cog mr-3"></i>
+            <span class="menu-collapsed">จัดการระบบ</span>
+          </div>
+        </router-link>
       </ul>
     </div>
 
