@@ -44,4 +44,5 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
 หลังจากแก้ไขไฟล์ .env เสร็จแล้ว
 ```bash
   php artisan key:generate
+  php artisan jwt:secret
 ```
