@@ -1,4 +1,68 @@
-<template></template>
+<template>
+  <div class="row">
+    <div class="flex xl12 xs12 center">
+      <va-card tag="b" outlined>
+        <va-card-title>จัดการเอกสาร</va-card-title>
+        <va-card-content>
+          <div class="row">
+            <div class="flex xl12 xs12">
+              <div class="flex xl12 xs12" align="right">
+                <va-button icon="add" class="mr-2" color="primary">
+                  เพิ่มเอกสาร
+                </va-button>
+              </div>
+              <div class="flex xl12 xs12">
+                <div class="form-group">
+                  <div class="va-table-responsive" style="overflow-y: auto">
+                    <table class="va-table" style="width: 100%">
+                      <thead>
+                        <tr>
+                          <th>เลขที่เอกสาร</th>
+                          <th>หัวข้อเรื่อง</th>
+                          <th>หมวดหมู่</th>
+                          <th>ระดับความสำคัญ</th>
+                          <th>ผู้ส่ง</th>
+                          <th>ติดตามเอกสาร</th>
+                          <th>จัดการ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>X</td>
+                          <td>Y</td>
+                          <td>T</td>
+                          <td>T</td>
+                          <td>
+                            <va-button
+                              icon="approval"
+                              class="mr-2"
+                              style="background-color: rgb(47, 148, 91)"
+                            >
+                              ติดตามเอกสาร
+                            </va-button>
+                          </td>
+                          <td>
+                            <va-button icon="edit" class="mr-2" color="warning">
+                              แก้ไข
+                            </va-button>
+                            <va-button icon="clear" class="mr-2" color="danger">
+                              ลบ
+                            </va-button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </va-card-content>
+      </va-card>
+    </div>
+  </div>
+</template>
 
 <script>
 export default {

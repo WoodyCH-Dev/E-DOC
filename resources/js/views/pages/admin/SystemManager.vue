@@ -1,4 +1,17 @@
-<template></template>
+<template>
+  <div class="row">
+    <div class="flex xl12 xs12 center">
+      <va-card tag="b" outlined>
+        <va-card-title>จัดการระบบ</va-card-title>
+        <va-card-content>
+          <div class="row">
+            <div class="flex xl12 xs12">Test</div>
+          </div>
+        </va-card-content>
+      </va-card>
+    </div>
+  </div>
+</template>
 
 <script>
 export default {
