@@ -1,4 +1,77 @@
-<template></template>
+<template>
+  <div class="row">
+    <div class="flex xl12 xs12 center">
+      <va-card tag="b" outlined>
+        <va-card-title>จัดการหมวดหมู่เอกสาร</va-card-title>
+        <va-card-content>
+          <div class="row">
+            <div class="flex xl3 xs12">
+              <div class="form-group">
+                <va-sidebar textColor="dark" style="width: 100%">
+                  <va-sidebar-item class="sidebar-item">
+                    <va-sidebar-item-content>
+                      <i class="fad fa-users"></i>
+                      <va-sidebar-item-title>
+                        Document Group 1
+                      </va-sidebar-item-title>
+                    </va-sidebar-item-content>
+                  </va-sidebar-item>
+                  <va-sidebar-item class="sidebar-item">
+                    <va-sidebar-item-content>
+                      <i class="fad fa-users"></i>
+                      <va-sidebar-item-title>
+                        Document Group 2
+                      </va-sidebar-item-title>
+                    </va-sidebar-item-content>
+                  </va-sidebar-item>
+                </va-sidebar>
+              </div>
+            </div>
+            <div class="flex xl9 xs12">
+              <div class="flex xl12 xs12">
+                <div class="form-group">
+                  <div class="va-table-responsive" style="overflow-y: auto">
+                    <table class="va-table" style="width: 100%">
+                      <thead>
+                        <tr>
+                          <th>ลำดับ</th>
+                          <th style="width: 50%">ชื่อหมวดหมู่</th>
+                          <th>
+                            <va-button
+                              icon="add"
+                              class="mr-4"
+                              style="background-color: rgb(47, 148, 91)"
+                            >
+                              เพิ่มหมวดหมู่
+                            </va-button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>X</td>
+                          <td>
+                            <va-button icon="edit" class="mr-2" color="warning">
+                              แก้ไข
+                            </va-button>
+                            <va-button icon="clear" class="mr-2" color="danger">
+                              ลบ
+                            </va-button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </va-card-content>
+      </va-card>
+    </div>
+  </div>
+</template>
 
 <script>
 export default {
