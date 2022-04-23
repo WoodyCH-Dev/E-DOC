@@ -66,14 +66,6 @@
   width: 100%;
   height: 100vh;
 }
-
-.nav-item {
-  text-decoration: none !important;
-}
-
-.sidebar-item {
-  text-decoration: none !important;
-}
 </style>
 
 <template>
