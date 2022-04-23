@@ -250,6 +250,20 @@
           </li>
         </router-link>
         <router-link
+          to="/admin/manage/user/group"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="permission.access_admin == true"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fad fa-users-cog mr-1"></i> จัดการกลุ่มผู้ใช้ &nbsp;
+            </a>
+          </li>
+        </router-link>
+        <router-link
           to="/admin/manage/document"
           class="nav-item dropdown d-sm-block d-md-none"
           v-if="permission.access_admin == true"
@@ -422,6 +436,16 @@
           </div>
         </router-link>
         <router-link
+          to="/admin/manage/user/group"
+          class="bg-dark list-group-item list-group-item-action"
+          v-if="permission.access_admin == true"
+        >
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <i class="fad fa-users-cog mr-3"></i>
+            <span class="menu-collapsed"> จัดการกลุ่มผู้ใช้ </span>
+          </div>
+        </router-link>
+        <router-link
           to="/admin/manage/document"
           class="bg-dark list-group-item list-group-item-action"
           v-if="permission.access_admin == true"
@@ -463,7 +487,7 @@
     <!-- MAIN -->
     <div class="col py-3">
       <div class="content" style="padding-top: 56px">
-        <div class="layout gutter--sm center">
+        <div class="layout gutter--sm">
           <router-view></router-view>
         </div>
       </div>

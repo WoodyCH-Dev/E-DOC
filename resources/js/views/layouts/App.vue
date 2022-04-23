@@ -70,6 +70,10 @@
 .nav-item {
   text-decoration: none !important;
 }
+
+.sidebar-item {
+  text-decoration: none !important;
+}
 </style>
 
 <template>
