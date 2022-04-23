@@ -16,7 +16,7 @@
 
 /* Sidebar sizes when expanded and expanded */
 .sidebar-expanded {
-  width: 230px;
+  width: 270px;
 }
 .sidebar-collapsed {
   width: 60px;
@@ -86,11 +86,26 @@
       aria-controls="navbarNavDropdown"
       aria-expanded="false"
       aria-label="Toggle navigation"
+      style="height: 40px"
     >
-      <span class="navbar-toggler-icon"></span>
+      <i class="fas fa-caret-circle-down"></i>
     </button>
+
+    <a
+      class="nav-link text-white nav-item d-sm-block d-md-none"
+      v-if="data.isLogin == true"
+    >
+      <i class="fas fa-user"></i> {{ data.username }}
+    </a>
+    <a
+      class="nav-link text-white nav-item d-sm-block d-md-none"
+      v-on:click="Logout()"
+      v-if="data.isLogin == true"
+    >
+      <i class="fas fa-sign-out"></i> ออกจากระบบ
+    </a>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <router-link class="navbar-brand" to="/">
+      <router-link class="navbar-brand d-none d-md-block" to="/">
         <img
           src="images/favicon.png"
           height="30"
@@ -98,6 +113,16 @@
           alt=""
         />
         ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)
+      </router-link>
+
+      <router-link class="navbar-brand d-sm-block d-md-none" to="/">
+        <img
+          src="images/favicon.png"
+          height="30"
+          class="d-inline-block align-top"
+          alt=""
+        />
+        E-DOC
       </router-link>
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item" v-if="data.isLogin == false">
@@ -112,28 +137,150 @@
             </a>
           </router-link>
         </li>
-      </ul>
 
-      <ul class="navbar-nav my-2 my-lg-0">
-        <li class="nav-item" v-if="data.isLogin == true">
-          <a class="nav-link">
-            <i class="fas fa-user"></i> {{ data.username }}
-          </a>
-        </li>
-        <li class="nav-item" v-if="data.isLogin == true">
-          <a class="nav-link" v-on:click="Logout()">
-            <i class="fas fa-sign-out"></i> ออกจากระบบ
-          </a>
-        </li>
+        <!-- Mobile only -->
+        <router-link
+          to="/user/dashboard"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="
+            permission.access_user == true || permission.access_admin == true
+          "
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="far fa-tachometer mr-1"></i> Dashboard
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/user/inbox"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="
+            permission.access_user == true || permission.access_admin == true
+          "
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fas fa-inbox-in mr-1"></i> กล่องเอกสารเข้า
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/sender/send"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="
+            permission.access_sender == true || permission.access_admin == true
+          "
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fas fa-paper-plane mr-1"></i> ส่งเอกสาร
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/sender/send/list"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="
+            permission.access_sender == true || permission.access_admin == true
+          "
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fas fa-clipboard-list-check mr-1"></i> รายการที่ส่ง
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/admin/manage/user"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="permission.access_admin == true"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/admin/manage/document"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="permission.access_admin == true"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdow">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/admin/manage/category/document"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="permission.access_admin == true"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร
+            </a>
+          </li>
+        </router-link>
+        <router-link
+          to="/admin/manage/system"
+          class="nav-item dropdown d-sm-block d-md-none"
+          v-if="permission.access_admin == true"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="smallerscreenmenu">
+              <i class="fas fa-cog mr-1"></i> จัดการระบบ
+            </a>
+          </li>
+        </router-link>
       </ul>
     </div>
+    <a
+      class="nav-link text-white nav-item d-none d-md-block"
+      v-if="data.isLogin == true"
+    >
+      <i class="fas fa-user"></i> {{ data.username }}
+    </a>
+    <a
+      class="nav-link text-white nav-item d-none d-md-block"
+      v-on:click="Logout()"
+      v-if="data.isLogin == true"
+    >
+      <i class="fas fa-sign-out"></i> ออกจากระบบ
+    </a>
   </nav>
   <!-- NavBar END -->
   <div class="row" id="body-row">
     <div
       v-if="data.isLogin == true"
       id="sidebar-container"
-      class="sidebar-expanded d-none d-md-block col-2"
+      class="sidebar-expanded d-none d-md-block"
     >
       <ul class="list-group sticky-top sticky-offset" style="padding-top: 56px">
         <!-- Separator with title -->
