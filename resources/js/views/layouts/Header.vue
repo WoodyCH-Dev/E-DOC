@@ -167,7 +167,8 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fas fa-inbox-in mr-1"></i> กล่องเอกสารเข้า
+              <i class="fas fa-inbox-in mr-1"></i> กล่องเอกสารเข้า &nbsp;
+              <span class="badge badge-warning">0</span>
             </a>
           </li>
         </router-link>
@@ -213,7 +214,8 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้
+              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้ &nbsp;
+              <span class="badge badge-light">0</span>
             </a>
           </li>
         </router-link>
@@ -227,7 +229,8 @@
         >
           <li class="nav-item dropdow">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร
+              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร&nbsp;
+              <span class="badge badge-light">0</span>
             </a>
           </li>
         </router-link>
@@ -241,7 +244,8 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร
+              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร&nbsp;
+              <span class="badge badge-light">0</span>
             </a>
           </li>
         </router-link>
