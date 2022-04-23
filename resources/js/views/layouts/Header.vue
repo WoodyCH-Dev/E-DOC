@@ -176,6 +176,20 @@
             </span>
           </div>
         </router-link>
+        <!-- Separator with title -->
+        <li
+          class="
+            list-group-item
+            sidebar-separator-title
+            text-muted
+            d-flex
+            align-items-center
+            menu-collapsed
+          "
+        >
+          <small>เมนูผู้ส่ง</small>
+        </li>
+        <!-- /END Separator -->
         <router-link
           to="/sender/send"
           class="bg-dark list-group-item list-group-item-action"
