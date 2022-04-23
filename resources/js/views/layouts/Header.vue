@@ -104,6 +104,20 @@
     >
       <i class="fas fa-sign-out"></i> ออกจากระบบ
     </a>
+
+    <router-link
+      class="navbar-brand d-sm-block d-md-none"
+      to="/"
+      v-if="data.isLogin == false"
+    >
+      <img
+        src="images/favicon.png"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+      />
+      E-DOC
+    </router-link>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <router-link class="navbar-brand d-none d-md-block" to="/">
         <img
@@ -115,7 +129,11 @@
         ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)
       </router-link>
 
-      <router-link class="navbar-brand d-sm-block d-md-none" to="/">
+      <router-link
+        class="navbar-brand d-sm-block d-md-none"
+        to="/"
+        v-if="data.isLogin == true"
+      >
         <img
           src="images/favicon.png"
           height="30"
@@ -125,12 +143,24 @@
         E-DOC
       </router-link>
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item" v-if="data.isLogin == false">
+        <li
+          class="nav-item"
+          v-if="data.isLogin == false"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
           <router-link to="/" class="router-link">
             <a class="nav-link"><i class="fas fa-home"></i> หน้าแรก </a>
           </router-link>
         </li>
-        <li class="nav-item" v-if="data.isLogin == false">
+        <li
+          class="nav-item"
+          v-if="data.isLogin == false"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
           <router-link to="/about" class="router-link">
             <a class="nav-link">
               <i class="far fa-info-circle"></i> เกี่ยวกับ
