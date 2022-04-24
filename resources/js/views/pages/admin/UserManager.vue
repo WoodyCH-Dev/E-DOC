@@ -7,7 +7,13 @@
           <div class="row">
             <div class="flex xl12 xs12">
               <div class="flex xl12 xs12" align="right">
-                <va-button icon="add" class="mr-2" color="primary">
+                <va-button
+                  icon="add"
+                  class="mr-2"
+                  color="primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#AddUserModal"
+                >
                   เพิ่มผู้ใช้
                 </va-button>
                 <va-button
@@ -91,6 +97,45 @@
           </div>
         </va-card-content>
       </va-card>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="AddUserModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">เพิ่มผู้ใช้งาน</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+          <va-button icon="add" class="mr-1" color="primary">
+            เพิ่มข้อมูล
+          </va-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
