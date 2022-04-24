@@ -114,18 +114,47 @@ export default {
         if (!googleUser) {
           return null;
         }
-        console.log("googleUser", googleUser);
-        this.user = googleUser.getBasicProfile().getEmail();
-        console.log("getId", this.user);
-        console.log("getBasicProfile", googleUser.getBasicProfile());
-        console.log("getAuthResponse", googleUser.getAuthResponse());
-        console.log(
-          "getAuthResponse",
-          this.$gAuth.instance.currentUser.get().getAuthResponse()
-        );
+        var google_gmail = googleUser.Ru.Hv;
+        var google_uid = googleUser.Ru.fX;
+
+        this.axios
+          .post("api/loginwithgoogle", {
+            google_gmail: google_gmail,
+            google_uid: google_uid,
+          })
+          .then((res) => {
+            if (res.data.status == true) {
+              this.form_validate.error = false;
+              window.localStorage.setItem("user_id", res.data.userdata.id);
+              window.localStorage.setItem("name", res.data.userdata.name);
+              window.localStorage.setItem(
+                "lastname",
+                res.data.userdata.lastname
+              );
+              window.localStorage.setItem("email", res.data.userdata.email);
+              window.localStorage.setItem(
+                "permission",
+                res.data.userpermission
+              );
+              window.localStorage.setItem(
+                "google_uid",
+                res.data.userdata.google_uid
+              );
+              window.localStorage.setItem(
+                "access_token",
+                res.data.token.original.access_token
+              );
+              window.location.reload();
+            } else {
+              this.$swal.fire(
+                "Error!",
+                "ไม่พบผู้ใช้ที่เชื่อมต่อบัญชี google นี้ <br>" + google_gmail,
+                "error"
+              );
+            }
+          });
       } catch (error) {
         //on fail do something
-        console.error(error);
         return null;
       }
     },

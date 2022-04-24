@@ -23013,7 +23013,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var googleUser;
+        var googleUser, google_gmail, google_uid;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -23033,28 +23033,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.abrupt("return", null);
 
               case 6:
-                console.log("googleUser", googleUser);
-                _this2.user = googleUser.getBasicProfile().getEmail();
-                console.log("getId", _this2.user);
-                console.log("getBasicProfile", googleUser.getBasicProfile());
-                console.log("getAuthResponse", googleUser.getAuthResponse());
-                console.log("getAuthResponse", _this2.$gAuth.instance.currentUser.get().getAuthResponse());
-                _context.next = 18;
+                google_gmail = googleUser.Ru.Hv;
+                google_uid = googleUser.Ru.fX;
+
+                _this2.axios.post("api/loginwithgoogle", {
+                  google_gmail: google_gmail,
+                  google_uid: google_uid
+                }).then(function (res) {
+                  if (res.data.status == true) {
+                    _this2.form_validate.error = false;
+                    window.localStorage.setItem("user_id", res.data.userdata.id);
+                    window.localStorage.setItem("name", res.data.userdata.name);
+                    window.localStorage.setItem("lastname", res.data.userdata.lastname);
+                    window.localStorage.setItem("email", res.data.userdata.email);
+                    window.localStorage.setItem("permission", res.data.userpermission);
+                    window.localStorage.setItem("google_uid", res.data.userdata.google_uid);
+                    window.localStorage.setItem("access_token", res.data.token.original.access_token);
+                    window.location.reload();
+                  } else {
+                    _this2.$swal.fire("Error!", "ไม่พบผู้ใช้ที่เชื่อมต่อบัญชี google นี้ <br>" + google_gmail, "error");
+                  }
+                });
+
+                _context.next = 14;
                 break;
 
-              case 14:
-                _context.prev = 14;
+              case 11:
+                _context.prev = 11;
                 _context.t0 = _context["catch"](0);
-                //on fail do something
-                console.error(_context.t0);
                 return _context.abrupt("return", null);
 
-              case 18:
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 14]]);
+        }, _callee, null, [[0, 11]]);
       }))();
     }
   }

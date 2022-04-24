@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 
 //API
 Route::post('/login', [AuthController::class, 'Login']);
+Route::post('/loginwithgoogle', [AuthController::class, 'LoginWithGoogle']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);

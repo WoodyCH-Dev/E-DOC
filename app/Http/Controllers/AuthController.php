@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -58,6 +59,52 @@ class AuthController extends Controller
                 'userpermission'=> $permission,
                 'token' => $this->respondWithToken($token)
             ]);
+        }else{
+            return response()->json(['status' => false]);
+        }
+    }
+
+    public function LoginWithGoogle(Request $request){
+        if($request->post('google_uid')){
+            $status = false;
+            $permission = [];
+
+            $userdata = DB::table('users')
+            ->where('google_uid',$request->post('google_uid'))
+            ->first();
+
+            if(!empty($userdata)){
+                $userpermission = DB::table('user_permission')
+                ->where('user_id',$userdata->id)
+                ->get();
+
+                foreach($userpermission as $user_perms){
+                    if($user_perms->permission_id == 0){
+                        array_push($permission,'user');
+                    }
+                    if($user_perms->permission_id == 1){
+                        array_push($permission,'sender');
+                    }
+                    if($user_perms->permission_id == 2){
+                        array_push($permission,'admin');
+                    }
+                }
+
+                $status = true;
+
+                if (!$token = JWTAuth::fromUser($userdata)) {
+                    return response()->json(['error' => 'invalid_credentials'], 401);
+                }
+
+                return response()->json([
+                    'status' => $status,
+                    'userdata' => $userdata,
+                    'userpermission'=> $permission,
+                    // 'token' => $this->respondWithToken($token)
+                ]);
+            }else{
+                return response()->json(['status' => false]);
+            }
         }else{
             return response()->json(['status' => false]);
         }
