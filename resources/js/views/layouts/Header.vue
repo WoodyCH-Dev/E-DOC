@@ -147,8 +147,6 @@
           class="nav-item"
           v-if="data.isLogin == false"
           data-toggle="collapse"
-          data-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
         >
           <router-link to="/" class="router-link">
             <a class="nav-link"><i class="fas fa-home"></i> หน้าแรก </a>
@@ -158,8 +156,6 @@
           class="nav-item"
           v-if="data.isLogin == false"
           data-toggle="collapse"
-          data-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
         >
           <router-link to="/about" class="router-link">
             <a class="nav-link">

@@ -23799,9 +23799,7 @@ var _hoisted_15 = {
 var _hoisted_16 = {
   key: 0,
   "class": "nav-item",
-  "data-toggle": "collapse",
-  "data-target": "#navbarNavDropdown",
-  "aria-controls": "navbarNavDropdown"
+  "data-toggle": "collapse"
 };
 
 var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
@@ -23815,9 +23813,7 @@ var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 var _hoisted_18 = {
   key: 1,
   "class": "nav-item",
-  "data-toggle": "collapse",
-  "data-target": "#navbarNavDropdown",
-  "aria-controls": "navbarNavDropdown"
+  "data-toggle": "collapse"
 };
 
 var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
