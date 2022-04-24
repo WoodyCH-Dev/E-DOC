@@ -30,7 +30,7 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
 ```bash
   cd <ตำแหน่งที่อยู่ไฟล์>
   composer install
-  npm install --force
+  npm install
 ```
 จากหลัง npm install เสร็จให้เปลี่ยนชื่อไฟล์ .env.example เป็น .env จากนั้นเปิดไฟล์ แก้ไขตามนี้
 ```bash
