@@ -27,6 +27,7 @@
     "vue-axios": "^3.4.1",
     "vue-loader": "^16.0.0-beta.9",
     "vue-router": "^4.0.6",
+    "vue-sweetalert2": "^5.0.2",
     "vuestic-ui": "^1.3.4"
   },
   "devDependencies": {

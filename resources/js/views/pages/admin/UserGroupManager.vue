@@ -34,13 +34,13 @@
                           <th>ชื่อ</th>
                           <th>นามสกุล</th>
                           <th>E-mail</th>
-                          <th>
+                          <th style="text-align: right">
                             <va-button
                               icon="add"
                               class="mr-4"
                               style="background-color: rgb(47, 148, 91)"
                             >
-                              เพิ่มผู้ใช้
+                              เพิ่มผู้ใช้ในกลุ่ม
                             </va-button>
                           </th>
                         </tr>

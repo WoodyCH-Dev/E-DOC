@@ -32,7 +32,7 @@
                           <th>จัดการ</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody v-if="!data.AllUser_isLoad">
                         <tr
                           v-for="(user, index) in data.AllUser"
                           :key="user.user.id"
@@ -71,6 +71,19 @@
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div
+                    align="center"
+                    style="padding-top: 30px"
+                    v-if="data.AllUser_isLoad"
+                  >
+                    <va-progress-circle
+                      size="large"
+                      :thickness="0.4"
+                      color="primary"
+                      indeterminate
+                    />
+                    กำลังโหลดข้อมูล
                   </div>
                 </div>
               </div>
@@ -114,6 +127,7 @@ export default {
         lastname: lastname,
         acd_year: acd_year,
         AllUser: new Array(),
+        AllUser_isLoad: true,
       },
       permission: {
         access_user: access_user,
@@ -132,7 +146,14 @@ export default {
 
       this.axios.get("api/admin/get/AllUser").then((res) => {
         if (res.data.status == true) {
+          this.data.AllUser_isLoad = false;
           this.data.AllUser = res.data.users;
+        } else {
+          this.$swal.fire(
+            "Error!",
+            "Permission ของคุณไม่สามารถเข้าถึงได้",
+            "error"
+          );
         }
       });
     },
