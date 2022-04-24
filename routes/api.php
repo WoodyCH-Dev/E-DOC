@@ -19,13 +19,21 @@ use App\Http\Controllers\UserController;
 
 //API
 Route::post('/login', [AuthController::class, 'Login']);
+Route::post('/loginwithgoogle', [AuthController::class, 'LoginWithGoogle']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     //User
+    Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
+    Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
+
     //Sender
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
+    Route::get('/admin/get/user/{user_id}', [UserController::class, 'AdminGetUser']);
+    Route::post('/admin/create/User', [UserController::class, 'AdminAddUser']);
+    Route::post('/admin/edit/User', [UserController::class, 'AdminEditUser']);
+    Route::post('/admin/remove/User', [UserController::class, 'AdminRemoveUser']);
 });

@@ -22,6 +22,11 @@ class UserController extends Controller
         return response()->json(['status' => true,'acd_year' => $acd_year->year]);
     }
 
+    public function GetUserCount(Request $request){
+        $users =  DB::table('users')->count();
+        return response()->json(['status' => true,'count' => $users]);
+    }
+
     public function Get_Alluser(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
 
@@ -39,6 +44,68 @@ class UserController extends Controller
             ]);
         }
         return response()->json(['status' => true,'users' => $users_withgroup]);
+    }
+
+    public function SyncWithGoogle(Request $request){
+        DB::table('users')
+        ->where('id',$request->post('id'))
+        ->update([
+            'google_uid' => $request->post('google_uid'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminGetUser(Request $request){
+        $userdata = DB::table('users')
+        ->where('id',$request->route('user_id'))
+        ->first();
+        return response()->json(['status' => true,'userdata'=> $userdata]);
+    }
+
+    public function AdminAddUser(Request $request){
+        $insertuser = DB::table('users')
+        ->insertGetId([
+            'name'=>$request->post('name'),
+            'lastname'=>$request->post('lastname'),
+            'email'=>$request->post('email'),
+            'password'=>Hash::make($request->post('password')),
+        ]);
+        DB::table('user_permission')
+        ->insert([
+            'user_id'=> $insertuser,
+            'permission_id'=> 0
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminEditUser(Request $request){
+        $password = $request->post('password');
+        if(!empty($password)){
+            DB::table('users')
+            ->where('id',$request->post('id'))
+            ->update([
+                'name' => $request->post('name'),
+                'lastname' => $request->post('lastname'),
+                'email' => $request->post('email'),
+                'password' => Hash::make($password)
+            ]);
+        }else{
+            DB::table('users')
+            ->where('id',$request->post('id'))
+            ->update([
+                'name' => $request->post('name'),
+                'lastname' => $request->post('lastname'),
+                'email' => $request->post('email'),
+            ]);
+        }
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminRemoveUser(Request $request){
+        DB::table('users')
+        ->where('id',$request->post('id'))
+        ->delete();
+        return response()->json(['status' => true]);
     }
 
     public function ChkUser($req_permission){

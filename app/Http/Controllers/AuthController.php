@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -63,6 +65,50 @@ class AuthController extends Controller
         }
     }
 
+    public function LoginWithGoogle(Request $request){
+        if($request->post('google_uid')){
+            $status = false;
+            $permission = [];
+
+            $userdata = User::where('google_uid', '=' ,$request->post('google_uid'))->first();
+
+            if(!empty($userdata)){
+                if (!$token = JWTAuth::fromUser($userdata)) {
+                    return response()->json(['error' => 'invalid_credentials'], 401);
+                }
+
+                $userpermission = DB::table('user_permission')
+                ->where('user_id',$userdata->id)
+                ->get();
+
+                foreach($userpermission as $user_perms){
+                    if($user_perms->permission_id == 0){
+                        array_push($permission,'user');
+                    }
+                    if($user_perms->permission_id == 1){
+                        array_push($permission,'sender');
+                    }
+                    if($user_perms->permission_id == 2){
+                        array_push($permission,'admin');
+                    }
+                }
+
+                $status = true;
+
+                return response()->json([
+                    'status' => $status,
+                    'userdata' => $userdata,
+                    'userpermission'=> $permission,
+                    'token' => $this->respondWithToken($token)
+                ]);
+            }else{
+                return response()->json(['status' => false]);
+            }
+        }else{
+            return response()->json(['status' => false]);
+        }
+    }
+
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh());
@@ -73,7 +119,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60 * 24 * 30,
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
         ]);
     }
 

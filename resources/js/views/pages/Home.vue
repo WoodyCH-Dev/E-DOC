@@ -36,7 +36,12 @@
               >
                 <i class="far fa-sign-in"></i>&nbsp;เข้าสู่ระบบ
               </va-button>
-              <va-button color="danger" gradient class="full-width">
+              <va-button
+                color="danger"
+                gradient
+                class="full-width"
+                @click="onSubmitWithGoogle"
+              >
                 <i class="fab fa-google"></i>&nbsp;เข้าสู่ระบบด้วย Google
               </va-button>
             </div>
@@ -74,22 +79,20 @@ export default {
       this.axios.post("api/login", this.form).then((res) => {
         if (res.data.status == true) {
           this.form_validate.error = false;
+          if (res.data.userdata.google_uid) {
+            window.localStorage.setItem(
+              "google_uid",
+              res.data.userdata.google_uid
+            );
+          }
           window.localStorage.setItem("user_id", res.data.userdata.id);
           window.localStorage.setItem("name", res.data.userdata.name);
           window.localStorage.setItem("lastname", res.data.userdata.lastname);
           window.localStorage.setItem("email", res.data.userdata.email);
           window.localStorage.setItem("permission", res.data.userpermission);
           window.localStorage.setItem(
-            "google_uid",
-            res.data.userdata.google_uid
-          );
-          window.localStorage.setItem(
             "access_token",
             res.data.token.original.access_token
-          );
-          window.localStorage.setItem(
-            "expires_token",
-            res.data.token.original.expires_in
           );
           if (this.form.remember_me == true) {
             window.sessionStorage.setItem("email", this.form.email);
@@ -105,6 +108,59 @@ export default {
           this.form_validate.error = true;
         }
       });
+    },
+
+    async onSubmitWithGoogle() {
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        if (!googleUser) {
+          return null;
+        }
+        var google_gmail = googleUser.Ru.Hv;
+        var google_uid = googleUser.Ru.fX;
+
+        this.axios
+          .post("api/loginwithgoogle", {
+            google_gmail: google_gmail,
+            google_uid: google_uid,
+          })
+          .then((res) => {
+            if (res.data.status == true) {
+              this.form_validate.error = false;
+              if (res.data.userdata.google_uid) {
+                window.localStorage.setItem(
+                  "google_uid",
+                  res.data.userdata.google_uid
+                );
+              }
+              window.localStorage.setItem("user_id", res.data.userdata.id);
+              window.localStorage.setItem("name", res.data.userdata.name);
+              window.localStorage.setItem(
+                "lastname",
+                res.data.userdata.lastname
+              );
+              window.localStorage.setItem("email", res.data.userdata.email);
+              window.localStorage.setItem(
+                "permission",
+                res.data.userpermission
+              );
+              window.localStorage.setItem(
+                "access_token",
+                res.data.token.original.access_token
+              );
+              window.location.reload();
+            } else {
+              this.$swal.fire(
+                "Error!",
+                "ไม่พบผู้ใช้ที่เชื่อมต่อบัญชี google นี้ <br>" + google_gmail,
+                "error"
+              );
+            }
+          });
+      } catch (error) {
+        //on fail do something
+        return null;
+      }
     },
   },
 };

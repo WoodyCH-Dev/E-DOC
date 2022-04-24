@@ -147,8 +147,6 @@
           class="nav-item"
           v-if="data.isLogin == false"
           data-toggle="collapse"
-          data-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
         >
           <router-link to="/" class="router-link">
             <a class="nav-link"><i class="fas fa-home"></i> หน้าแรก </a>
@@ -158,8 +156,6 @@
           class="nav-item"
           v-if="data.isLogin == false"
           data-toggle="collapse"
-          data-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
         >
           <router-link to="/about" class="router-link">
             <a class="nav-link">
@@ -169,6 +165,22 @@
         </li>
 
         <!-- Mobile only -->
+        <li
+          class="nav-item dropdown"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <a
+            class="nav-link"
+            id="smallerscreenmenu"
+            @click="onSubmitWithGoogle"
+            v-if="data.google_uid == null"
+            style="color: rgb(255, 68, 59)"
+          >
+            <i class="fab fa-google"></i>&nbsp;เชื่อมต่อบัญชี Google
+          </a>
+        </li>
         <router-link
           to="/user/dashboard"
           class="nav-item dropdown d-sm-block d-md-none"
@@ -244,8 +256,7 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้ &nbsp;
-              <span class="badge badge-light">{{ data.AllUser_count }}</span>
+              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้
             </a>
           </li>
         </router-link>
@@ -259,7 +270,7 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-users-cog mr-1"></i> จัดการกลุ่มผู้ใช้ &nbsp;
+              <i class="fad fa-users-cog mr-1"></i> จัดการกลุ่มผู้ใช้
             </a>
           </li>
         </router-link>
@@ -273,8 +284,7 @@
         >
           <li class="nav-item dropdow">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร&nbsp;
-              <span class="badge badge-light">0</span>
+              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร
             </a>
           </li>
         </router-link>
@@ -288,8 +298,7 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร&nbsp;
-              <span class="badge badge-light">0</span>
+              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร
             </a>
           </li>
         </router-link>
@@ -309,6 +318,19 @@
         </router-link>
       </ul>
     </div>
+    <a
+      class="nav-link text-white nav-item d-none d-md-block"
+      v-if="data.google_uid == null"
+    >
+      <va-button
+        color="danger"
+        size="small"
+        gradient
+        @click="onSubmitWithGoogle"
+      >
+        <i class="fab fa-google"></i>&nbsp;เชื่อมต่อบัญชี Google
+      </va-button>
+    </a>
     <a
       class="nav-link text-white nav-item d-none d-md-block"
       v-if="data.isLogin == true"
@@ -381,6 +403,9 @@
             align-items-center
             menu-collapsed
           "
+          v-if="
+            permission.access_sender == true || permission.access_admin == true
+          "
         >
           <small>เมนูผู้ส่ง</small>
         </li>
@@ -419,6 +444,7 @@
             align-items-center
             menu-collapsed
           "
+          v-if="permission.access_admin == true"
         >
           <small>เมนูของแอดมิน</small>
         </li>
@@ -430,11 +456,7 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-user-cog mr-3"></i>
-            <span class="menu-collapsed">
-              จัดการผู้ใช้ &nbsp;<span class="badge badge-light">{{
-                data.AllUser_count
-              }}</span>
-            </span>
+            <span class="menu-collapsed"> จัดการผู้ใช้ </span>
           </div>
         </router-link>
         <router-link
@@ -454,9 +476,7 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-file-alt mr-3"></i>
-            <span class="menu-collapsed">
-              จัดการเอกสาร &nbsp;<span class="badge badge-light">0</span>
-            </span>
+            <span class="menu-collapsed"> จัดการเอกสาร </span>
           </div>
         </router-link>
         <router-link
@@ -466,11 +486,7 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-books mr-3"></i>
-            <span class="menu-collapsed">
-              จัดการหมวดหมู่เอกสาร &nbsp;<span class="badge badge-light">
-                0
-              </span>
-            </span>
+            <span class="menu-collapsed"> จัดการหมวดหมู่เอกสาร </span>
           </div>
         </router-link>
         <router-link
@@ -508,20 +524,27 @@ export default {
     var access_sender = false;
     var access_admin = false;
 
+    var google_uid = "";
+
     if (window.localStorage.getItem("user_id")) {
       username = window.localStorage.getItem("name");
       isLogin = true;
-
+      google_uid = window.localStorage.getItem("google_uid");
       permission = window.localStorage.getItem("permission");
-      if (permission.includes("admin")) access_user = true;
+      if (permission.includes("admin")) access_admin = true;
       if (permission.includes("sender")) access_sender = true;
-      if (permission.includes("user")) access_admin = true;
+      if (permission.includes("user")) access_user = true;
+
+      this.onLoad();
     }
 
-    this.onLoad();
-
     return {
-      data: { isLogin: isLogin, username: username, AllUser_count: 0 },
+      data: {
+        isLogin: isLogin,
+        google_uid: google_uid,
+        username: username,
+        AllUser_count: 0,
+      },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
@@ -535,12 +558,56 @@ export default {
       window.location.reload();
     },
 
-    onLoad() {
-      this.axios.get("api/admin/get/AllUser").then((res) => {
-        if (res.data.status == true) {
-          this.data.AllUser_count = res.data.users.length;
+    onLoad() {},
+
+    async onSubmitWithGoogle() {
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        if (!googleUser) {
+          return null;
         }
-      });
+        var google_gmail = googleUser.Ru.Hv;
+        var google_uid = googleUser.Ru.fX;
+
+        var user_id = window.localStorage.getItem("user_id");
+
+        this.$swal
+          .fire({
+            title: "ยืนยันข้อมูล!",
+            html: "บัญชี Google ที่เลือก <br> <b>" + google_gmail + "<b>",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#3085d6",
+            cancelButtonText: "ยกเลิก",
+            confirmButtonColor: "rgb(50, 168, 82)",
+            confirmButtonText: "ยืนยัน",
+            reverseButtons: true,
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.axios
+                .post("api/user/sync/google", {
+                  id: user_id,
+                  google_uid: google_uid,
+                })
+                .then((res) => {
+                  if (res.data.status == true) {
+                    window.localStorage.setItem("google_uid", google_uid);
+                    this.data.google_uid = google_uid;
+                    this.onLoad();
+                    this.$swal.fire(
+                      "Success!",
+                      "ทำการเชื่อมต่อบัญชี Google แล้ว",
+                      "success"
+                    );
+                  }
+                });
+            }
+          });
+      } catch (error) {
+        //on fail do something
+        return null;
+      }
     },
   },
 };

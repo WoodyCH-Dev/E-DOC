@@ -28,6 +28,7 @@ import "bootstrap";
 import VueSweetalert2 from "vue-sweetalert2";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import GAuth from "vue3-google-oauth2";
 
 if (window.localStorage.getItem("access_token")) {
     axios.interceptors.request.use(
@@ -67,6 +68,12 @@ if (window.localStorage.getItem("access_token")) {
 app.use(router);
 app.use(VueAxios, axios);
 app.use(VueSweetalert2);
+app.use(GAuth, {
+    clientId: process.env.MIX_GOOGLE_CLIENT_ID,
+    scope: "profile email",
+    prompt: "select_account",
+    fetch_basic_profile: false,
+});
 
 //Init Module
 app.use(VuesticPlugin);

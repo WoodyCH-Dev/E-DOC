@@ -74,9 +74,34 @@
                           >
                             แก้ไข
                           </va-button>
-                          <va-button icon="delete" class="mr-2" color="danger">
+                          <va-button
+                            icon="manage_accounts"
+                            class="mr-2"
+                            style="background-color: rgb(50, 168, 82)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#EditUserPermissionModal"
+                            v-if="user.user.id != data.user_id"
+                            v-on:click="EditUserPermission(user.user.id)"
+                          >
+                            สิทธิ์
+                          </va-button>
+                          <va-button
+                            icon="delete"
+                            class="mr-2"
+                            color="danger"
+                            v-if="user.user.id != data.user_id"
+                            @Click="
+                              RemoveUser(
+                                user.user.id,
+                                user.user.name + ' ' + user.user.lastname
+                              )
+                            "
+                          >
                             ลบ
                           </va-button>
+                          <b v-if="user.user.id == data.user_id">
+                            (ผู้ใช้งานปัจจุบัน)
+                          </b>
                         </td>
                       </tr>
                     </tbody>
@@ -111,10 +136,12 @@
     tabindex="-1"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">เพิ่มผู้ใช้งาน</h5>
+          <h5 class="modal-title">
+            เพิ่มผู้ใช้งาน (รองรับการเพิ่มหลายผู้ใช้งานในครั้งเดียว)
+          </h5>
           <button
             type="button"
             data-bs-dismiss="modal"
@@ -124,18 +151,124 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">
+          <va-form ref="form" @validation="addUserForm.validation = $event">
+            <div class="row">
+              <div class="flex xl6 xs12">
+                <div class="form-group">
+                  <b>ชื่อ</b>
+                  <va-input
+                    class="mb-2"
+                    v-model="addUserForm.name"
+                    :rules="[(value) => value != '' || 'กรุณาใส่ชื่อ']"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl6 xs12">
+                <div class="form-group">
+                  <b>นามสกุล</b>
+                  <va-input
+                    class="mb-2"
+                    v-model="addUserForm.lastname"
+                    :rules="[(value) => value != '' || 'กรุณาใส่นามสกุล']"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl8 xs12">
+                <div class="form-group">
+                  <b>E-mail</b>
+                  <va-input
+                    class="mb-2"
+                    type="email"
+                    v-model="addUserForm.email"
+                    :rules="[(value) => value != '' || 'กรุณาใส่ E-mail']"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl4 xs12">
+                <div class="form-group">
+                  <b>Password (หากเว้นไว้ Password คือ password)</b>
+                  <va-input
+                    class="mb-2"
+                    type="password"
+                    v-model="addUserForm.password"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl12 xs12" align="right">
+                <va-button
+                  icon="add"
+                  class="mr-1"
+                  color="primary"
+                  type="submit"
+                  @click="$refs.form.validate() && AddUserToArray()"
+                >
+                  เพิ่ม
+                </va-button>
+              </div>
+            </div>
+          </va-form>
+          <div class="row">
+            <div class="flex xl12 xs12">
+              <div class="va-table-responsive" style="overflow-y: auto">
+                <table class="va-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>ชื่อ</th>
+                      <th>นามสกุล</th>
+                      <th>E-mail</th>
+                      <th>Password</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(newUser, index) in data.newUser_Array"
+                      :key="newUser"
+                    >
+                      <td>{{ newUser.name }}</td>
+                      <td>{{ newUser.lastname }}</td>
+                      <td>{{ newUser.email }}</td>
+                      <td>{{ newUser.password }}</td>
+                      <td width="10%">
+                        <va-button
+                          icon="close"
+                          class="mr-1"
+                          color="danger"
+                          v-on:click="RemoveUserFromArray(index)"
+                        >
+                          ลบ
+                        </va-button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="modal-footer">
           <va-button
             icon="close"
             class="mr-1"
             color="danger"
             data-bs-dismiss="modal"
+            v-on:click="CloseAddDialog()"
+            id="CloseAddUserModal"
           >
             ปิด
           </va-button>
-          <va-button icon="add" class="mr-1" color="primary">
-            เพิ่มข้อมูล
+          <va-button
+            icon="save"
+            class="mr-1"
+            color="primary"
+            v-on:click="AddUserSubmit()"
+          >
+            บันทึก
           </va-button>
         </div>
       </div>
@@ -172,11 +305,11 @@
             ปิด
           </va-button>
           <va-button
-            icon="add"
+            icon="save"
             class="mr-1"
             style="background-color: rgb(47, 148, 91)"
           >
-            เพิ่มข้อมูล
+            บันทึกข้อมูล
           </va-button>
         </div>
       </div>
@@ -202,7 +335,121 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="flex xl6 xs12">
+              <div class="form-group">
+                <b>ชื่อ</b>
+                <va-input class="mb-2" v-model="editUserForm.name" required />
+              </div>
+            </div>
+            <div class="flex xl6 xs12">
+              <div class="form-group">
+                <b>นามสกุล</b>
+                <va-input
+                  class="mb-2"
+                  v-model="editUserForm.lastname"
+                  required
+                />
+              </div>
+            </div>
+            <div class="flex xl8 xs12">
+              <div class="form-group">
+                <b>E-mail</b>
+                <va-input
+                  class="mb-2"
+                  type="email"
+                  v-model="editUserForm.email"
+                  required
+                />
+              </div>
+            </div>
+            <div class="flex xl4 xs12">
+              <div class="form-group">
+                <b>Password (หากเว้นไว้จะไม่ทำการเปลี่ยน Password)</b>
+                <va-input
+                  class="mb-2"
+                  type="password"
+                  v-model="editUserForm.password"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+            id="CloseEditUserModal"
+          >
+            ปิด
+          </va-button>
+          <va-button
+            icon="save"
+            class="mr-1"
+            color="warning"
+            v-on:click="EditUserSubmit()"
+          >
+            บันทึก
+          </va-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="EditUserPermissionModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">สิทธิ์การเข้าถึง</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="flex xl4 xs12" align="center">
+              <va-switch
+                color="primary"
+                class="mr-4"
+                v-model="editUserPermissionForm.user"
+              >
+                ผู้ใช้งานทั่วไป
+              </va-switch>
+            </div>
+            <div class="flex xl4 xs12" align="center">
+              <va-switch
+                color="warning"
+                class="mr-4"
+                v-model="editUserPermissionForm.sender"
+              >
+                ผู้ส่ง
+              </va-switch>
+            </div>
+            <div class="flex xl4 xs12" align="center">
+              <va-switch
+                color="danger"
+                class="mr-4"
+                v-model="editUserPermissionForm.admin"
+              >
+                แอดมิน
+              </va-switch>
+            </div>
+          </div>
+        </div>
         <div class="modal-footer">
           <va-button
             icon="close"
@@ -211,9 +458,6 @@
             data-bs-dismiss="modal"
           >
             ปิด
-          </va-button>
-          <va-button icon="save" class="mr-1" color="warning">
-            บันทึก
           </va-button>
         </div>
       </div>
@@ -224,6 +468,7 @@
 <script>
 export default {
   data() {
+    var user_id = 0;
     var username = "";
     var lastname = "";
     var permission = [];
@@ -235,6 +480,7 @@ export default {
     var acd_year = "0";
 
     if (window.localStorage.getItem("user_id")) {
+      user_id = Number(window.localStorage.getItem("user_id"));
       username = window.localStorage.getItem("name");
       lastname = window.localStorage.getItem("lastname");
       permission = window.localStorage.getItem("permission");
@@ -248,12 +494,35 @@ export default {
 
     return {
       data: {
+        user_id: user_id,
         username: username,
         lastname: lastname,
         acd_year: acd_year,
         AllUser: new Array(),
         AllUser_isLoad: true,
         Edit_user_select: 0,
+        newUser_Array: new Array(),
+      },
+      addUserForm: {
+        name: "",
+        lastname: "",
+        email: "",
+        password: "",
+        validation: null,
+      },
+      editUserForm: {
+        id: 0,
+        name: "",
+        lastname: "",
+        email: "",
+        password: "",
+        validation: null,
+      },
+      editUserPermissionForm: {
+        id: 0,
+        user: false,
+        sender: false,
+        admin: false,
       },
       permission: {
         access_user: access_user,
@@ -284,8 +553,155 @@ export default {
       });
     },
 
+    AddUserToArray() {
+      if (
+        this.addUserForm.name != "" &&
+        this.addUserForm.lastname != "" &&
+        this.addUserForm.email != ""
+      ) {
+        var password = this.addUserForm.password;
+        if (
+          this.addUserForm.password == null ||
+          this.addUserForm.password == ""
+        )
+          password = "password";
+
+        this.data.newUser_Array.push({
+          name: this.addUserForm.name,
+          lastname: this.addUserForm.lastname,
+          email: this.addUserForm.email,
+          password: password,
+        });
+        this.addUserForm.name = "";
+        this.addUserForm.lastname = "";
+        this.addUserForm.email = "";
+        this.addUserForm.password = "";
+        this.addUserForm.validation = null;
+      }
+    },
+
+    RemoveUserFromArray(array_id) {
+      this.data.newUser_Array.splice(array_id, 1);
+    },
+
+    AddUserSubmit() {
+      if (this.data.newUser_Array.length > 0) {
+        var counter = 0;
+        this.$swal.fire({
+          title: "กำลังเพิ่มข้อมูล กรุณารอสักครู่",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+        });
+        for (let newUser of this.data.newUser_Array) {
+          this.axios
+            .post("api/admin/create/User", {
+              name: newUser.name,
+              lastname: newUser.lastname,
+              email: newUser.email,
+              password: newUser.password,
+            })
+            .then((res) => {
+              if (res.data.status == true) {
+                counter++;
+                if (counter == this.data.newUser_Array.length) {
+                  this.$swal.fire(
+                    "Success!",
+                    "เพิ่มข้อมูลสำเร็จแล้ว!",
+                    "success"
+                  );
+                  this.onLoad();
+                  document.getElementById("CloseAddUserModal").click();
+                }
+              }
+            });
+        }
+      }
+    },
+
+    CloseAddDialog() {
+      this.addUserForm.validation = null;
+      this.data.newUser_Array = new Array();
+      this.addUserForm.name = "";
+      this.addUserForm.lastname = "";
+      this.addUserForm.email = "";
+      this.addUserForm.password = "";
+    },
+
     EditUser(user_id) {
-      this.data.Edit_user_select = user_id;
+      this.editUserForm.id = 0;
+      this.editUserForm.name = "";
+      this.editUserForm.lastname = "";
+      this.editUserForm.email = "";
+      this.editUserForm.password = "";
+      this.axios.get("api/admin/get/user/" + user_id).then((res) => {
+        console.log(res.data);
+        if (res.data.status == true) {
+          this.editUserForm.id = res.data.userdata.id;
+          this.editUserForm.name = res.data.userdata.name;
+          this.editUserForm.lastname = res.data.userdata.lastname;
+          this.editUserForm.email = res.data.userdata.email;
+        }
+      });
+    },
+
+    EditUserSubmit() {
+      this.axios
+        .post("api/admin/edit/User", {
+          id: this.editUserForm.id,
+          name: this.editUserForm.name,
+          lastname: this.editUserForm.lastname,
+          email: this.editUserForm.email,
+          password: this.editUserForm.password,
+        })
+        .then((res) => {
+          if (res.data.status == true) {
+            this.$swal.fire("Success!", "แก้ไขข้อมูลสำเร็จแล้ว!", "success");
+            this.editUserForm.id = 0;
+            this.editUserForm.name = "";
+            this.editUserForm.lastname = "";
+            this.editUserForm.email = "";
+            this.editUserForm.password = "";
+            this.onLoad();
+            document.getElementById("CloseEditUserModal").click();
+          }
+        });
+    },
+
+    RemoveUser(user_id, username) {
+      this.$swal
+        .fire({
+          title: "แจ้งเตือน!",
+          text: "ยืนยันการลบผู้ใช้ " + username,
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "rgb(235, 64, 52)",
+          confirmButtonText: "ยืนยัน",
+          reverseButtons: true,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios
+              .post("api/admin/remove/User", {
+                id: user_id,
+              })
+              .then((res) => {
+                if (res.data.status == true) {
+                  this.$swal.fire(
+                    "Success!",
+                    "ลบผู้ใช้!" + username + "แล้ว",
+                    "success"
+                  );
+                  this.onLoad();
+                }
+              });
+          }
+        });
+    },
+
+    EditUserPermission(user_id) {
+      this.editUserPermissionForm.id = user_id;
     },
   },
 };

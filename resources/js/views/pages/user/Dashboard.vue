@@ -51,7 +51,7 @@
                   จำนวนผู้ใช้งานทั้งหมด
                 </va-card-title>
                 <va-card-content class="text-white card-subtitle-dashboard">
-                  0
+                  {{ data.user_count }}
                 </va-card-content>
               </va-card>
             </div>
@@ -93,6 +93,7 @@ export default {
         username: username,
         lastname: lastname,
         acd_year: acd_year,
+        user_count: 0,
       },
       permission: {
         access_user: access_user,
@@ -108,31 +109,12 @@ export default {
           this.data.acd_year = String(Number(res.data.acd_year) + 543);
         }
       });
+      this.axios.get("api/user/dashboard/getusercount").then((res) => {
+        if (res.data.status == true) {
+          this.data.user_count = res.data.count;
+        }
+      });
     },
-    // onSubmit() {
-    //   this.axios.post("api/login", this.form).then((res) => {
-    //     if (res.data.status == true) {
-    //       this.form_validate.error = false;
-    //       window.localStorage.setItem("user_id", res.data.id);
-    //       window.localStorage.setItem("name", res.data.name);
-    //       window.localStorage.setItem("lastname", res.data.lastname);
-    //       window.localStorage.setItem("email", res.data.email);
-    //       window.localStorage.setItem("google_uid", res.data.google_uid);
-    //       if (this.form.remember_me == true) {
-    //         window.sessionStorage.setItem("email", this.form.email);
-    //         window.sessionStorage.setItem("password", this.form.password);
-    //         window.sessionStorage.setItem("remember_me", true);
-    //       } else {
-    //         window.sessionStorage.removeItem("email");
-    //         window.sessionStorage.removeItem("password");
-    //         window.sessionStorage.removeItem("remember_me");
-    //       }
-    //       window.location.reload();
-    //     } else {
-    //       this.form_validate.error = true;
-    //     }
-    //   });
-    // },
   },
 };
 </script>
