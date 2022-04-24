@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -74,6 +75,11 @@ class AuthController extends Controller
             ->first();
 
             if(!empty($userdata)){
+                $user = User::where('email', '=', $userdata->email)->first();
+                if (!$token = JWTAuth::fromUser($user)) {
+                    return response()->json(['error' => 'invalid_credentials'], 401);
+                }
+
                 $userpermission = DB::table('user_permission')
                 ->where('user_id',$userdata->id)
                 ->get();
@@ -92,15 +98,11 @@ class AuthController extends Controller
 
                 $status = true;
 
-                if (!$token = JWTAuth::fromUser($userdata)) {
-                    return response()->json(['error' => 'invalid_credentials'], 401);
-                }
-
                 return response()->json([
                     'status' => $status,
                     'userdata' => $userdata,
                     'userpermission'=> $permission,
-                    // 'token' => $this->respondWithToken($token)
+                    'token' => $this->respondWithToken($token)
                 ]);
             }else{
                 return response()->json(['status' => false]);
