@@ -74,7 +74,27 @@
                           >
                             แก้ไข
                           </va-button>
-                          <va-button icon="delete" class="mr-2" color="danger">
+                          <va-button
+                            icon="manage_accounts"
+                            class="mr-2"
+                            style="background-color: rgb(50, 168, 82)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#EditUserPermissionModal"
+                          >
+                            สิทธิ์
+                          </va-button>
+                          <va-button
+                            icon="delete"
+                            class="mr-2"
+                            color="danger"
+                            v-if="user.user.id != data.user_id"
+                            @Click="
+                              RemoveUser(
+                                user.user.id,
+                                user.user.name + ' ' + user.user.lastname
+                              )
+                            "
+                          >
                             ลบ
                           </va-button>
                         </td>
@@ -280,11 +300,11 @@
             ปิด
           </va-button>
           <va-button
-            icon="add"
+            icon="save"
             class="mr-1"
             style="background-color: rgb(47, 148, 91)"
           >
-            เพิ่มข้อมูล
+            บันทึกข้อมูล
           </va-button>
         </div>
       </div>
@@ -366,7 +386,48 @@
             icon="save"
             class="mr-1"
             color="warning"
-            v-on:click="EdituserSubmit()"
+            v-on:click="EditUserSubmit()"
+          >
+            บันทึก
+          </va-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="EditUserPermissionModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">สิทธิ์การเข้าถึง</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+          <va-button
+            icon="save"
+            class="mr-1"
+            style="background-color: rgb(47, 148, 91)"
           >
             บันทึก
           </va-button>
@@ -379,6 +440,7 @@
 <script>
 export default {
   data() {
+    var user_id = 0;
     var username = "";
     var lastname = "";
     var permission = [];
@@ -390,6 +452,7 @@ export default {
     var acd_year = "0";
 
     if (window.localStorage.getItem("user_id")) {
+      user_id = Number(window.localStorage.getItem("user_id"));
       username = window.localStorage.getItem("name");
       lastname = window.localStorage.getItem("lastname");
       permission = window.localStorage.getItem("permission");
@@ -403,6 +466,7 @@ export default {
 
     return {
       data: {
+        user_id: user_id,
         username: username,
         lastname: lastname,
         acd_year: acd_year,
@@ -546,7 +610,7 @@ export default {
       });
     },
 
-    EdituserSubmit() {
+    EditUserSubmit() {
       this.axios
         .post("api/admin/edit/User", {
           id: this.editUserForm.id,
@@ -565,6 +629,39 @@ export default {
             this.editUserForm.password = "";
             this.onLoad();
             document.getElementById("CloseEditUserModal").click();
+          }
+        });
+    },
+
+    RemoveUser(user_id, username) {
+      this.$swal
+        .fire({
+          title: "แจ้งเตือน!",
+          text: "ยืนยันการลบผู้ใช้ " + username,
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "rgb(235, 64, 52)",
+          confirmButtonText: "ยืนยัน",
+          reverseButtons: true,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios
+              .post("api/admin/remove/User", {
+                id: user_id,
+              })
+              .then((res) => {
+                if (res.data.status == true) {
+                  this.$swal.fire(
+                    "Success!",
+                    "ลบผู้ใช้!" + username + "แล้ว",
+                    "success"
+                  );
+                  this.onLoad();
+                }
+              });
           }
         });
     },
