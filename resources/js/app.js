@@ -26,6 +26,7 @@ import VueAxios from "vue-axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import VueSweetalert2 from "vue-sweetalert2";
+import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 if (window.localStorage.getItem("access_token")) {
@@ -42,6 +43,22 @@ if (window.localStorage.getItem("access_token")) {
 
         (error) => {
             return Promise.reject(error);
+        }
+    );
+
+    axios.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (error.response.status === 401) {
+                Swal.fire(
+                    "แจ้งเตือน",
+                    "Token ของคุณหมดอายุแล้วกรุณาเข้าสู่ระบบใหม่",
+                    "error"
+                ).then(() => {
+                    window.localStorage.clear();
+                    window.location.reload();
+                });
+            }
         }
     );
 }
