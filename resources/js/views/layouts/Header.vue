@@ -245,7 +245,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
               <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้ &nbsp;
-              <span class="badge badge-light">0</span>
+              <span class="badge badge-light">{{ data.AllUser_count }}</span>
             </a>
           </li>
         </router-link>
@@ -431,7 +431,9 @@
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-user-cog mr-3"></i>
             <span class="menu-collapsed">
-              จัดการผู้ใช้ &nbsp;<span class="badge badge-light">0</span>
+              จัดการผู้ใช้ &nbsp;<span class="badge badge-light">{{
+                data.AllUser_count
+              }}</span>
             </span>
           </div>
         </router-link>
@@ -516,8 +518,10 @@ export default {
       if (permission.includes("user")) access_admin = true;
     }
 
+    this.onLoad();
+
     return {
-      data: { isLogin: isLogin, username: username },
+      data: { isLogin: isLogin, username: username, AllUser_count: 0 },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
@@ -529,6 +533,14 @@ export default {
     Logout() {
       window.localStorage.clear();
       window.location.reload();
+    },
+
+    onLoad() {
+      this.axios.get("api/admin/get/AllUser").then((res) => {
+        if (res.data.status == true) {
+          this.data.AllUser_count = res.data.users.length;
+        }
+      });
     },
   },
 };
