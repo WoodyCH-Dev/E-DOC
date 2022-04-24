@@ -25,9 +25,11 @@
     "sass-loader": "^8.0.0",
     "vue": "^3.0.2",
     "vue-axios": "^3.4.1",
+    "vue-google-login": "^2.0.5",
     "vue-loader": "^16.0.0-beta.9",
     "vue-router": "^4.0.6",
     "vue-sweetalert2": "^5.0.2",
+    "vue3-google-oauth2": "^1.0.6",
     "vuestic-ui": "^1.3.4"
   },
   "devDependencies": {

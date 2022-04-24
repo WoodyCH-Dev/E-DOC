@@ -516,9 +516,9 @@ export default {
       if (permission.includes("admin")) access_user = true;
       if (permission.includes("sender")) access_sender = true;
       if (permission.includes("user")) access_admin = true;
-    }
 
-    this.onLoad();
+      this.onLoad();
+    }
 
     return {
       data: { isLogin: isLogin, username: username, AllUser_count: 0 },

@@ -36,7 +36,12 @@
               >
                 <i class="far fa-sign-in"></i>&nbsp;เข้าสู่ระบบ
               </va-button>
-              <va-button color="danger" gradient class="full-width">
+              <va-button
+                color="danger"
+                gradient
+                class="full-width"
+                @click="onSubmitWithGoogle"
+              >
                 <i class="fab fa-google"></i>&nbsp;เข้าสู่ระบบด้วย Google
               </va-button>
             </div>
@@ -87,10 +92,6 @@ export default {
             "access_token",
             res.data.token.original.access_token
           );
-          window.localStorage.setItem(
-            "expires_token",
-            res.data.token.original.expires_in
-          );
           if (this.form.remember_me == true) {
             window.sessionStorage.setItem("email", this.form.email);
             window.sessionStorage.setItem("password", this.form.password);
@@ -105,6 +106,28 @@ export default {
           this.form_validate.error = true;
         }
       });
+    },
+
+    async onSubmitWithGoogle() {
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        if (!googleUser) {
+          return null;
+        }
+        console.log("googleUser", googleUser);
+        this.user = googleUser.getBasicProfile().getEmail();
+        console.log("getId", this.user);
+        console.log("getBasicProfile", googleUser.getBasicProfile());
+        console.log("getAuthResponse", googleUser.getAuthResponse());
+        console.log(
+          "getAuthResponse",
+          this.$gAuth.instance.currentUser.get().getAuthResponse()
+        );
+      } catch (error) {
+        //on fail do something
+        console.error(error);
+        return null;
+      }
     },
   },
 };
