@@ -46,6 +46,17 @@ class UserController extends Controller
         return response()->json(['status' => true,'users' => $users_withgroup]);
     }
 
+    public function AdminAddUser(Request $request){
+        DB::table('users')
+        ->insert([
+            'name'=>$request->post('name'),
+            'lastname'=>$request->post('lastname'),
+            'email'=>$request->post('email'),
+            'password'=>Hash::make($request->post('password')),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function ChkUser($req_permission){
         $_user = auth()->user();
         if(!$_user){

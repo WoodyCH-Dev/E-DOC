@@ -31,4 +31,5 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
+    Route::post('/admin/create/User', [UserController::class, 'AdminAddUser']);
 });

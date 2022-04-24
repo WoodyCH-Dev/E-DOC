@@ -240,8 +240,7 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้ &nbsp;
-              <span class="badge badge-light">{{ data.AllUser_count }}</span>
+              <i class="fas fa-user-cog mr-1"></i> จัดการผู้ใช้
             </a>
           </li>
         </router-link>
@@ -255,7 +254,7 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-users-cog mr-1"></i> จัดการกลุ่มผู้ใช้ &nbsp;
+              <i class="fad fa-users-cog mr-1"></i> จัดการกลุ่มผู้ใช้
             </a>
           </li>
         </router-link>
@@ -269,8 +268,7 @@
         >
           <li class="nav-item dropdow">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร&nbsp;
-              <span class="badge badge-light">0</span>
+              <i class="fad fa-file-alt mr-1"></i> จัดการเอกสาร
             </a>
           </li>
         </router-link>
@@ -284,8 +282,7 @@
         >
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
-              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร&nbsp;
-              <span class="badge badge-light">0</span>
+              <i class="fad fa-books mr-1"></i> จัดการหมวดหมู่เอกสาร
             </a>
           </li>
         </router-link>
@@ -426,11 +423,7 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-user-cog mr-3"></i>
-            <span class="menu-collapsed">
-              จัดการผู้ใช้ &nbsp;<span class="badge badge-light">{{
-                data.AllUser_count
-              }}</span>
-            </span>
+            <span class="menu-collapsed"> จัดการผู้ใช้ </span>
           </div>
         </router-link>
         <router-link
@@ -450,9 +443,7 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-file-alt mr-3"></i>
-            <span class="menu-collapsed">
-              จัดการเอกสาร &nbsp;<span class="badge badge-light">0</span>
-            </span>
+            <span class="menu-collapsed"> จัดการเอกสาร </span>
           </div>
         </router-link>
         <router-link
@@ -462,11 +453,7 @@
         >
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fad fa-books mr-3"></i>
-            <span class="menu-collapsed">
-              จัดการหมวดหมู่เอกสาร &nbsp;<span class="badge badge-light">
-                0
-              </span>
-            </span>
+            <span class="menu-collapsed"> จัดการหมวดหมู่เอกสาร </span>
           </div>
         </router-link>
         <router-link
@@ -531,13 +518,7 @@ export default {
       window.location.reload();
     },
 
-    onLoad() {
-      this.axios.get("api/admin/get/AllUser").then((res) => {
-        if (res.data.status == true) {
-          this.data.AllUser_count = res.data.users.length;
-        }
-      });
-    },
+    onLoad() {},
   },
 };
 </script>
