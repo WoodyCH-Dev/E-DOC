@@ -46,14 +46,56 @@ class UserController extends Controller
         return response()->json(['status' => true,'users' => $users_withgroup]);
     }
 
+    public function AdminGetUser(Request $request){
+        $userdata = DB::table('users')
+        ->where('id',$request->route('user_id'))
+        ->first();
+        return response()->json(['status' => true,'userdata'=> $userdata]);
+    }
+
     public function AdminAddUser(Request $request){
-        DB::table('users')
-        ->insert([
+        $insertuser = DB::table('users')
+        ->insertGetId([
             'name'=>$request->post('name'),
             'lastname'=>$request->post('lastname'),
             'email'=>$request->post('email'),
             'password'=>Hash::make($request->post('password')),
         ]);
+        DB::table('user_permission')
+        ->insert([
+            'user_id'=> $insertuser,
+            'permission_id'=> 0
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminEditUser(Request $request){
+        $password = $request->post('password');
+        if(!empty($password)){
+            DB::table('users')
+            ->where('id',$request->post('id'))
+            ->update([
+                'name' => $request->post('name'),
+                'lastname' => $request->post('lastname'),
+                'email' => $request->post('email'),
+                'password' => Hash::make($password)
+            ]);
+        }else{
+            DB::table('users')
+            ->where('id',$request->post('id'))
+            ->update([
+                'name' => $request->post('name'),
+                'lastname' => $request->post('lastname'),
+                'email' => $request->post('email'),
+            ]);
+        }
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminRemoveUser(Request $request){
+        DB::table('users')
+        ->where('id',$request->post('id'))
+        ->delete();
         return response()->json(['status' => true]);
     }
 

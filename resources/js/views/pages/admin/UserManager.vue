@@ -114,7 +114,9 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">เพิ่มผู้ใช้งาน</h5>
+          <h5 class="modal-title">
+            เพิ่มผู้ใช้งาน (รองรับการเพิ่มหลายผู้ใช้งานในครั้งเดียว)
+          </h5>
           <button
             type="button"
             data-bs-dismiss="modal"
@@ -125,68 +127,66 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <div class="flex xl6 xs12">
-              <div class="form-group">
-                <b>ชื่อ</b>
-                <va-input
-                  class="mb-2"
-                  v-model="addUserForm.name"
-                  required
-                  :error="addUserForm.name == '' && addUserForm.error == true"
-                />
+          <va-form ref="form" @validation="addUserForm.validation = $event">
+            <div class="row">
+              <div class="flex xl6 xs12">
+                <div class="form-group">
+                  <b>ชื่อ</b>
+                  <va-input
+                    class="mb-2"
+                    v-model="addUserForm.name"
+                    :rules="[(value) => value != '' || 'กรุณาใส่ชื่อ']"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl6 xs12">
+                <div class="form-group">
+                  <b>นามสกุล</b>
+                  <va-input
+                    class="mb-2"
+                    v-model="addUserForm.lastname"
+                    :rules="[(value) => value != '' || 'กรุณาใส่นามสกุล']"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl8 xs12">
+                <div class="form-group">
+                  <b>E-mail</b>
+                  <va-input
+                    class="mb-2"
+                    type="email"
+                    v-model="addUserForm.email"
+                    :rules="[(value) => value != '' || 'กรุณาใส่ E-mail']"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl4 xs12">
+                <div class="form-group">
+                  <b>Password (หากเว้นไว้ Password คือ password)</b>
+                  <va-input
+                    class="mb-2"
+                    type="password"
+                    v-model="addUserForm.password"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="flex xl12 xs12" align="right">
+                <va-button
+                  icon="add"
+                  class="mr-1"
+                  color="primary"
+                  type="submit"
+                  @click="$refs.form.validate() && AddUserToArray()"
+                >
+                  เพิ่ม
+                </va-button>
               </div>
             </div>
-            <div class="flex xl6 xs12">
-              <div class="form-group">
-                <b>นามสกุล</b>
-                <va-input
-                  class="mb-2"
-                  v-model="addUserForm.lastname"
-                  :error="
-                    addUserForm.lastname == '' && addUserForm.error == true
-                  "
-                  required
-                />
-              </div>
-            </div>
-            <div class="flex xl8 xs12">
-              <div class="form-group">
-                <b>E-mail</b>
-                <va-input
-                  class="mb-2"
-                  type="email"
-                  v-model="addUserForm.email"
-                  :error="addUserForm.email == '' && addUserForm.error == true"
-                  required
-                />
-              </div>
-            </div>
-            <div class="flex xl4 xs12">
-              <div class="form-group">
-                <b>Password (หากเว้นไว้ Password คือ password)</b>
-                <va-input
-                  class="mb-2"
-                  type="password"
-                  v-model="addUserForm.password"
-                  :error="
-                    addUserForm.password == '' && addUserForm.error == true
-                  "
-                  required
-                />
-              </div>
-            </div>
-            <div class="flex xl12 xs12" align="right">
-              <va-button
-                icon="add"
-                class="mr-1"
-                color="primary"
-                v-on:click="AddUserToArray()"
-              >
-                เพิ่ม
-              </va-button>
-            </div>
-          </div>
+          </va-form>
           <div class="row">
             <div class="flex xl12 xs12">
               <div class="va-table-responsive" style="overflow-y: auto">
@@ -310,17 +310,64 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="flex xl6 xs12">
+              <div class="form-group">
+                <b>ชื่อ</b>
+                <va-input class="mb-2" v-model="editUserForm.name" required />
+              </div>
+            </div>
+            <div class="flex xl6 xs12">
+              <div class="form-group">
+                <b>นามสกุล</b>
+                <va-input
+                  class="mb-2"
+                  v-model="editUserForm.lastname"
+                  required
+                />
+              </div>
+            </div>
+            <div class="flex xl8 xs12">
+              <div class="form-group">
+                <b>E-mail</b>
+                <va-input
+                  class="mb-2"
+                  type="email"
+                  v-model="editUserForm.email"
+                  required
+                />
+              </div>
+            </div>
+            <div class="flex xl4 xs12">
+              <div class="form-group">
+                <b>Password (หากเว้นไว้จะไม่ทำการเปลี่ยน Password)</b>
+                <va-input
+                  class="mb-2"
+                  type="password"
+                  v-model="editUserForm.password"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="modal-footer">
           <va-button
             icon="close"
             class="mr-1"
             color="danger"
             data-bs-dismiss="modal"
+            id="CloseEditUserModal"
           >
             ปิด
           </va-button>
-          <va-button icon="save" class="mr-1" color="warning">
+          <va-button
+            icon="save"
+            class="mr-1"
+            color="warning"
+            v-on:click="EdituserSubmit()"
+          >
             บันทึก
           </va-button>
         </div>
@@ -369,7 +416,15 @@ export default {
         lastname: "",
         email: "",
         password: "",
-        error: false,
+        validation: null,
+      },
+      editUserForm: {
+        id: 0,
+        name: "",
+        lastname: "",
+        email: "",
+        password: "",
+        validation: null,
       },
       permission: {
         access_user: access_user,
@@ -400,10 +455,6 @@ export default {
       });
     },
 
-    EditUser(user_id) {
-      this.data.Edit_user_select = user_id;
-    },
-
     AddUserToArray() {
       if (
         this.addUserForm.name != "" &&
@@ -427,9 +478,7 @@ export default {
         this.addUserForm.lastname = "";
         this.addUserForm.email = "";
         this.addUserForm.password = "";
-        this.addUserForm.error = false;
-      } else {
-        this.addUserForm.error = true;
+        this.addUserForm.validation = null;
       }
     },
 
@@ -459,7 +508,7 @@ export default {
                 if (counter == this.data.newUser_Array.length) {
                   this.$swal.fire(
                     "Success!",
-                    "เพิ่มข่อมูลสำเร็จแล้ว!",
+                    "เพิ่มข้อมูลสำเร็จแล้ว!",
                     "success"
                   );
                   this.onLoad();
@@ -472,12 +521,52 @@ export default {
     },
 
     CloseAddDialog() {
-      this.addUserForm.error = false;
+      this.addUserForm.validation = null;
       this.data.newUser_Array = new Array();
       this.addUserForm.name = "";
       this.addUserForm.lastname = "";
       this.addUserForm.email = "";
       this.addUserForm.password = "";
+    },
+
+    EditUser(user_id) {
+      this.editUserForm.id = 0;
+      this.editUserForm.name = "";
+      this.editUserForm.lastname = "";
+      this.editUserForm.email = "";
+      this.editUserForm.password = "";
+      this.axios.get("api/admin/get/user/" + user_id).then((res) => {
+        console.log(res.data);
+        if (res.data.status == true) {
+          this.editUserForm.id = res.data.userdata.id;
+          this.editUserForm.name = res.data.userdata.name;
+          this.editUserForm.lastname = res.data.userdata.lastname;
+          this.editUserForm.email = res.data.userdata.email;
+        }
+      });
+    },
+
+    EdituserSubmit() {
+      this.axios
+        .post("api/admin/edit/User", {
+          id: this.editUserForm.id,
+          name: this.editUserForm.name,
+          lastname: this.editUserForm.lastname,
+          email: this.editUserForm.email,
+          password: this.editUserForm.password,
+        })
+        .then((res) => {
+          if (res.data.status == true) {
+            this.$swal.fire("Success!", "แก้ไขข้อมูลสำเร็จแล้ว!", "success");
+            this.editUserForm.id = 0;
+            this.editUserForm.name = "";
+            this.editUserForm.lastname = "";
+            this.editUserForm.email = "";
+            this.editUserForm.password = "";
+            this.onLoad();
+            document.getElementById("CloseEditUserModal").click();
+          }
+        });
     },
   },
 };

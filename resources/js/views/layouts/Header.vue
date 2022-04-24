@@ -374,6 +374,9 @@
             align-items-center
             menu-collapsed
           "
+          v-if="
+            permission.access_sender == true || permission.access_admin == true
+          "
         >
           <small>เมนูผู้ส่ง</small>
         </li>
@@ -412,6 +415,7 @@
             align-items-center
             menu-collapsed
           "
+          v-if="permission.access_admin == true"
         >
           <small>เมนูของแอดมิน</small>
         </li>
@@ -496,9 +500,9 @@ export default {
       isLogin = true;
 
       permission = window.localStorage.getItem("permission");
-      if (permission.includes("admin")) access_user = true;
+      if (permission.includes("admin")) access_admin = true;
       if (permission.includes("sender")) access_sender = true;
-      if (permission.includes("user")) access_admin = true;
+      if (permission.includes("user")) access_user = true;
 
       this.onLoad();
     }
