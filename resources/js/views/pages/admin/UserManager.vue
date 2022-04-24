@@ -20,6 +20,8 @@
                   icon="description"
                   class="mr-2"
                   style="background-color: rgb(47, 148, 91)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#AddUserViaExcelModal"
                 >
                   Import ด้วย Excel
                 </va-button>
@@ -132,6 +134,49 @@
             ปิด
           </va-button>
           <va-button icon="add" class="mr-1" color="primary">
+            เพิ่มข้อมูล
+          </va-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="AddUserViaExcelModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            เพิ่มผู้ใช้งานด้วย Excel
+          </h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+          <va-button
+            icon="add"
+            class="mr-1"
+            style="background-color: rgb(47, 148, 91)"
+          >
             เพิ่มข้อมูล
           </va-button>
         </div>
