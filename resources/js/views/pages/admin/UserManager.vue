@@ -5,101 +5,95 @@
         <va-card-title>จัดการผู้ใช้งาน</va-card-title>
         <va-card-content>
           <div class="row">
+            <div class="flex xl12 xs12" align="right">
+              <va-button
+                icon="add"
+                class="mr-2"
+                color="primary"
+                data-bs-toggle="modal"
+                data-bs-target="#AddUserModal"
+              >
+                เพิ่มผู้ใช้
+              </va-button>
+              <va-button
+                icon="description"
+                class="mr-2"
+                style="background-color: rgb(47, 148, 91)"
+                data-bs-toggle="modal"
+                data-bs-target="#AddUserViaExcelModal"
+              >
+                Import ด้วย Excel
+              </va-button>
+            </div>
             <div class="flex xl12 xs12">
-              <div class="flex xl12 xs12" align="right">
-                <va-button
-                  icon="add"
-                  class="mr-2"
-                  color="primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#AddUserModal"
+              <div class="form-group">
+                <div class="va-table-responsive" style="overflow-y: auto">
+                  <table class="va-table" style="width: 100%">
+                    <thead>
+                      <tr>
+                        <th>ลำดับ</th>
+                        <th>ชื่อ</th>
+                        <th>นามสกุล</th>
+                        <th>E-mail</th>
+                        <th>Group</th>
+                        <th>จัดการ</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="!data.AllUser_isLoad">
+                      <tr
+                        v-for="(user, index) in data.AllUser"
+                        :key="user.user.id"
+                      >
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ user.user.name }}</td>
+                        <td>{{ user.user.lastname }}</td>
+                        <td>
+                          {{ user.user.email }}
+                          <i
+                            class="fas fa-check-circle"
+                            v-if="user.user.google_uid"
+                          ></i>
+                        </td>
+                        <td>
+                          <label
+                            v-for="(usergroup, index) in user.user_group"
+                            :key="usergroup.id"
+                          >
+                            <label v-if="index > 0">, </label>
+                            {{ usergroup.group_name }}
+                          </label>
+                        </td>
+                        <td>
+                          <va-button
+                            icon="edit"
+                            class="mr-2"
+                            color="warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#EditUserModal"
+                            v-on:click="EditUser(user.user.id)"
+                          >
+                            แก้ไข
+                          </va-button>
+                          <va-button icon="delete" class="mr-2" color="danger">
+                            ลบ
+                          </va-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  align="center"
+                  style="padding-top: 30px"
+                  v-if="data.AllUser_isLoad"
                 >
-                  เพิ่มผู้ใช้
-                </va-button>
-                <va-button
-                  icon="description"
-                  class="mr-2"
-                  style="background-color: rgb(47, 148, 91)"
-                  data-bs-toggle="modal"
-                  data-bs-target="#AddUserViaExcelModal"
-                >
-                  Import ด้วย Excel
-                </va-button>
-              </div>
-              <div class="flex xl12 xs12">
-                <div class="form-group">
-                  <div class="va-table-responsive" style="overflow-y: auto">
-                    <table class="va-table" style="width: 100%">
-                      <thead>
-                        <tr>
-                          <th>ลำดับ</th>
-                          <th>ชื่อ</th>
-                          <th>นามสกุล</th>
-                          <th>E-mail</th>
-                          <th>Group</th>
-                          <th>จัดการ</th>
-                        </tr>
-                      </thead>
-                      <tbody v-if="!data.AllUser_isLoad">
-                        <tr
-                          v-for="(user, index) in data.AllUser"
-                          :key="user.user.id"
-                        >
-                          <td>{{ index + 1 }}</td>
-                          <td>{{ user.user.name }}</td>
-                          <td>{{ user.user.lastname }}</td>
-                          <td>
-                            {{ user.user.email }}
-                            <i
-                              class="fas fa-check-circle"
-                              v-if="user.user.google_uid"
-                            ></i>
-                          </td>
-                          <td>
-                            <label
-                              v-for="(usergroup, index) in user.user_group"
-                              :key="usergroup.id"
-                            >
-                              <label v-if="index > 0">, </label>
-                              {{ usergroup.group_name }}
-                            </label>
-                          </td>
-                          <td>
-                            <va-button
-                              icon="edit"
-                              class="mr-2"
-                              color="warning"
-                              data-bs-toggle="modal"
-                              data-bs-target="#EditUserModal"
-                              v-on:click="EditUser(user.user.id)"
-                            >
-                              แก้ไข
-                            </va-button>
-                            <va-button
-                              icon="delete"
-                              class="mr-2"
-                              color="danger"
-                            >
-                              ลบ
-                            </va-button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div
-                    align="center"
-                    style="padding-top: 30px"
-                    v-if="data.AllUser_isLoad"
-                  >
-                    <va-progress-circle
-                      size="large"
-                      :thickness="0.4"
-                      color="primary"
-                      indeterminate
-                    />
-                    กำลังโหลดข้อมูล
-                  </div>
+                  <va-progress-circle
+                    size="large"
+                    :thickness="0.4"
+                    color="primary"
+                    indeterminate
+                  />
+                  กำลังโหลดข้อมูล
                 </div>
               </div>
             </div>
