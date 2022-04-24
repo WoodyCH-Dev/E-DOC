@@ -22,9 +22,10 @@ Route::post('/login', [AuthController::class, 'Login']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);
+    //User
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
-});
+    //Sender
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+    //Admin
+    Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
+});

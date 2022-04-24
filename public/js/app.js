@@ -23266,7 +23266,8 @@ __webpack_require__.r(__webpack_exports__);
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year
+        acd_year: acd_year,
+        AllUser: new Array()
       },
       permission: {
         access_user: access_user,
@@ -23282,6 +23283,12 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.get("api/user/acd_year").then(function (res) {
         if (res.data.status == true) {
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+      this.axios.get("api/admin/get/AllUser").then(function (res) {
+        if (res.data.status == true) {
+          _this.data.AllUser = res.data.AllUser;
+          console.log(_this.data.AllUser);
         }
       });
     }

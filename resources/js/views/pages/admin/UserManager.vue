@@ -86,6 +86,7 @@ export default {
         username: username,
         lastname: lastname,
         acd_year: acd_year,
+        AllUser: new Array(),
       },
       permission: {
         access_user: access_user,
@@ -99,6 +100,13 @@ export default {
       this.axios.get("api/user/acd_year").then((res) => {
         if (res.data.status == true) {
           this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+
+      this.axios.get("api/admin/get/AllUser").then((res) => {
+        if (res.data.status == true) {
+          this.data.AllUser = res.data.AllUser;
+          console.log(this.data.AllUser);
         }
       });
     },

@@ -21,4 +21,22 @@ class UserController extends Controller
         ->first();
         return response()->json(['status' => true,'acd_year' => $acd_year->year]);
     }
+
+    public function Get_Alluser(Request $request){
+        $users_withgroup = Array();
+
+        $users =  DB::table('users')->get();
+        foreach($users as $user){
+            $user_ingroup = DB::table('user_ingroup')
+            ->leftJoin('user_group','user_group.id','user_ingroup.group_id')
+            ->where('user_ingroup',$user->id)
+            ->get();
+
+            array_push([
+                'user'=> $user,
+                'user_group'=> $user_ingroup
+            ]);
+        }
+        return response()->json(['status' => true,'users' => $users_withgroup]);
+    }
 }
