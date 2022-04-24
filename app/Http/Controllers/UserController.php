@@ -22,6 +22,11 @@ class UserController extends Controller
         return response()->json(['status' => true,'acd_year' => $acd_year->year]);
     }
 
+    public function GetUserCount(Request $request){
+        $users =  DB::table('users')->count();
+        return response()->json(['status' => true,'count' => $users]);
+    }
+
     public function Get_Alluser(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
 

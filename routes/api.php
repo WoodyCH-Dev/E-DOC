@@ -23,7 +23,9 @@ Route::post('/login', [AuthController::class, 'Login']);
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     //User
+    Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
+
     //Sender
 
     //Admin

@@ -23487,7 +23487,8 @@ __webpack_require__.r(__webpack_exports__);
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year
+        acd_year: acd_year,
+        user_count: 0
       },
       permission: {
         access_user: access_user,
@@ -23505,31 +23506,12 @@ __webpack_require__.r(__webpack_exports__);
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
         }
       });
-    } // onSubmit() {
-    //   this.axios.post("api/login", this.form).then((res) => {
-    //     if (res.data.status == true) {
-    //       this.form_validate.error = false;
-    //       window.localStorage.setItem("user_id", res.data.id);
-    //       window.localStorage.setItem("name", res.data.name);
-    //       window.localStorage.setItem("lastname", res.data.lastname);
-    //       window.localStorage.setItem("email", res.data.email);
-    //       window.localStorage.setItem("google_uid", res.data.google_uid);
-    //       if (this.form.remember_me == true) {
-    //         window.sessionStorage.setItem("email", this.form.email);
-    //         window.sessionStorage.setItem("password", this.form.password);
-    //         window.sessionStorage.setItem("remember_me", true);
-    //       } else {
-    //         window.sessionStorage.removeItem("email");
-    //         window.sessionStorage.removeItem("password");
-    //         window.sessionStorage.removeItem("remember_me");
-    //       }
-    //       window.location.reload();
-    //     } else {
-    //       this.form_validate.error = true;
-    //     }
-    //   });
-    // },
-
+      this.axios.get("api/user/dashboard/getusercount").then(function (res) {
+        if (res.data.status == true) {
+          _this.data.user_count = res.data.count;
+        }
+      });
+    }
   }
 });
 
@@ -26212,8 +26194,6 @@ var _hoisted_15 = {
 
 var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" จำนวนผู้ใช้งานทั้งหมด ");
 
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 0 ");
-
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
 
@@ -26362,7 +26342,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "class": "text-white card-subtitle-dashboard"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_17];
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.user_count), 1
+                  /* TEXT */
+                  )];
                 }),
                 _: 1
                 /* STABLE */
