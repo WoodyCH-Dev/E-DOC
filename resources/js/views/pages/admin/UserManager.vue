@@ -81,6 +81,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#EditUserPermissionModal"
                             v-if="user.user.id != data.user_id"
+                            v-on:click="EditUserPermission(user.user.id)"
                           >
                             สิทธิ์
                           </va-button>
@@ -418,7 +419,37 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="flex xl4 xs12" align="center">
+              <va-switch
+                color="primary"
+                class="mr-4"
+                v-model="editUserPermissionForm.user"
+              >
+                ผู้ใช้งานทั่วไป
+              </va-switch>
+            </div>
+            <div class="flex xl4 xs12" align="center">
+              <va-switch
+                color="warning"
+                class="mr-4"
+                v-model="editUserPermissionForm.sender"
+              >
+                ผู้ส่ง
+              </va-switch>
+            </div>
+            <div class="flex xl4 xs12" align="center">
+              <va-switch
+                color="danger"
+                class="mr-4"
+                v-model="editUserPermissionForm.admin"
+              >
+                แอดมิน
+              </va-switch>
+            </div>
+          </div>
+        </div>
         <div class="modal-footer">
           <va-button
             icon="close"
@@ -427,13 +458,6 @@
             data-bs-dismiss="modal"
           >
             ปิด
-          </va-button>
-          <va-button
-            icon="save"
-            class="mr-1"
-            style="background-color: rgb(47, 148, 91)"
-          >
-            บันทึก
           </va-button>
         </div>
       </div>
@@ -493,6 +517,12 @@ export default {
         email: "",
         password: "",
         validation: null,
+      },
+      editUserPermissionForm: {
+        id: 0,
+        user: false,
+        sender: false,
+        admin: false,
       },
       permission: {
         access_user: access_user,
@@ -668,6 +698,10 @@ export default {
               });
           }
         });
+    },
+
+    EditUserPermission(user_id) {
+      this.editUserPermissionForm.id = user_id;
     },
   },
 };
