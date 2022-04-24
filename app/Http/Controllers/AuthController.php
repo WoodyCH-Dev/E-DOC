@@ -70,13 +70,10 @@ class AuthController extends Controller
             $status = false;
             $permission = [];
 
-            $userdata = DB::table('users')
-            ->where('google_uid',$request->post('google_uid'))
-            ->first();
+            $userdata = User::where('google_uid', '=' ,$request->post('google_uid'))->first();
 
             if(!empty($userdata)){
-                $user = User::where('email', '=', $userdata->email)->first();
-                if (!$token = JWTAuth::fromUser($user)) {
+                if (!$token = JWTAuth::fromUser($userdata)) {
                     return response()->json(['error' => 'invalid_credentials'], 401);
                 }
 
