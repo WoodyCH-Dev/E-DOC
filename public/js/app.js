@@ -23279,7 +23279,8 @@ __webpack_require__.r(__webpack_exports__);
         lastname: lastname,
         acd_year: acd_year,
         AllUser: new Array(),
-        AllUser_isLoad: true
+        AllUser_isLoad: true,
+        Edit_user_select: 0
       },
       permission: {
         access_user: access_user,
@@ -23305,6 +23306,9 @@ __webpack_require__.r(__webpack_exports__);
           _this.$swal.fire("Error!", "Permission ของคุณไม่สามารถเข้าถึงได้", "error");
         }
       });
+    },
+    EditUser: function EditUser(user_id) {
+      this.data.Edit_user_select = user_id;
     }
   }
 });
@@ -25465,7 +25469,7 @@ var _hoisted_23 = {
   "class": "modal-content"
 };
 
-var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\" id=\"exampleModalLabel\">เพิ่มผู้ใช้งาน</h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">...</div>", 2);
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\">เพิ่มผู้ใช้งาน</h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">...</div>", 2);
 
 var _hoisted_26 = {
   "class": "modal-footer"
@@ -25489,7 +25493,7 @@ var _hoisted_31 = {
   "class": "modal-content"
 };
 
-var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\" id=\"exampleModalLabel\"> เพิ่มผู้ใช้งานด้วย Excel </h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">...</div>", 2);
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\">เพิ่มผู้ใช้งานด้วย Excel</h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">...</div>", 2);
 
 var _hoisted_34 = {
   "class": "modal-footer"
@@ -25498,6 +25502,30 @@ var _hoisted_34 = {
 var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
 
 var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เพิ่มข้อมูล ");
+
+var _hoisted_37 = {
+  "class": "modal fade",
+  id: "EditUserModal",
+  "data-bs-backdrop": "static",
+  tabindex: "-1",
+  "aria-hidden": "true"
+};
+var _hoisted_38 = {
+  "class": "modal-dialog modal-dialog-centered modal-xl"
+};
+var _hoisted_39 = {
+  "class": "modal-content"
+};
+
+var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\">แก้ไขผู้ใช้</h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">...</div>", 2);
+
+var _hoisted_42 = {
+  "class": "modal-footer"
+};
+
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
+
+var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" บันทึก ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
@@ -25574,15 +25602,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
               icon: "edit",
               "class": "mr-2",
-              color: "warning"
+              color: "warning",
+              "data-bs-toggle": "modal",
+              "data-bs-target": "#EditUserModal",
+              onClick: function onClick($event) {
+                return $options.EditUser(user.user.id);
+              }
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                 return [_hoisted_17];
               }),
-              _: 1
-              /* STABLE */
+              _: 2
+              /* DYNAMIC */
 
-            }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            }, 1032
+            /* PROPS, DYNAMIC_SLOTS */
+            , ["onClick"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
               icon: "delete",
               "class": "mr-2",
               color: "danger"
@@ -25657,6 +25692,29 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_36];
+    }),
+    _: 1
+    /* STABLE */
+
+  })])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [_hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+    icon: "close",
+    "class": "mr-1",
+    color: "danger",
+    "data-bs-dismiss": "modal"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_43];
+    }),
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+    icon: "save",
+    "class": "mr-1",
+    color: "warning"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_44];
     }),
     _: 1
     /* STABLE */

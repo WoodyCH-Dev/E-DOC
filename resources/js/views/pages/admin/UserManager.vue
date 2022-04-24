@@ -65,7 +65,14 @@
                             </label>
                           </td>
                           <td>
-                            <va-button icon="edit" class="mr-2" color="warning">
+                            <va-button
+                              icon="edit"
+                              class="mr-2"
+                              color="warning"
+                              data-bs-toggle="modal"
+                              data-bs-target="#EditUserModal"
+                              v-on:click="EditUser(user.user.id)"
+                            >
                               แก้ไข
                             </va-button>
                             <va-button
@@ -113,7 +120,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">เพิ่มผู้ใช้งาน</h5>
+          <h5 class="modal-title">เพิ่มผู้ใช้งาน</h5>
           <button
             type="button"
             data-bs-dismiss="modal"
@@ -150,9 +157,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            เพิ่มผู้ใช้งานด้วย Excel
-          </h5>
+          <h5 class="modal-title">เพิ่มผู้ใช้งานด้วย Excel</h5>
           <button
             type="button"
             data-bs-dismiss="modal"
@@ -178,6 +183,43 @@
             style="background-color: rgb(47, 148, 91)"
           >
             เพิ่มข้อมูล
+          </va-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="EditUserModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">แก้ไขผู้ใช้</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+          <va-button icon="save" class="mr-1" color="warning">
+            บันทึก
           </va-button>
         </div>
       </div>
@@ -218,6 +260,7 @@ export default {
         acd_year: acd_year,
         AllUser: new Array(),
         AllUser_isLoad: true,
+        Edit_user_select: 0,
       },
       permission: {
         access_user: access_user,
@@ -246,6 +289,10 @@ export default {
           );
         }
       });
+    },
+
+    EditUser(user_id) {
+      this.data.Edit_user_select = user_id;
     },
   },
 };
