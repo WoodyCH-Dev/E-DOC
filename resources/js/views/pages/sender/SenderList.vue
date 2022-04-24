@@ -1,4 +1,63 @@
-<template></template>
+<template>
+  <div class="row">
+    <div class="flex xl12 xs12 center">
+      <va-card tag="b" outlined>
+        <va-card-title>รายการที่ส่ง</va-card-title>
+        <va-card-content>
+          <div class="row">
+            <div class="flex xl12 xs12">
+              <div class="flex xl4 xs12">
+                <div class="form-group">
+                  <b>ปีการศึกษา</b>
+                  <va-select
+                    v-model="data.acd_year"
+                    :options="data.acd_year_options"
+                  />
+                </div>
+              </div>
+              <div class="flex xl12 xs12">
+                <div class="form-group">
+                  <div class="va-table-responsive" style="overflow-y: auto">
+                    <table class="va-table" style="width: 100%">
+                      <thead>
+                        <tr>
+                          <th>เลขที่เอกสาร</th>
+                          <th>วันที่ส่ง</th>
+                          <th>เอกสารลงวันที่</th>
+                          <th>หัวข้อเรื่อง</th>
+                          <th>หมวดหมู่เอกสาร</th>
+                          <th>รายการผู้รับเอกสาร</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ตรวจสอบ</td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ไฟล์.pdf</td>
+                          <td>ตรวจสอบ</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </va-card-content>
+      </va-card>
+    </div>
+  </div>
+</template>
 
 <script>
 export default {
@@ -12,6 +71,7 @@ export default {
     var access_admin = false;
 
     var acd_year = "0";
+    var acd_year_options = ["2565"];
 
     if (window.localStorage.getItem("user_id")) {
       username = window.localStorage.getItem("name");
@@ -31,6 +91,7 @@ export default {
         username: username,
         lastname: lastname,
         acd_year: acd_year,
+        acd_year_options: acd_year_options,
       },
       permission: {
         access_user: access_user,

@@ -12,6 +12,7 @@ import SenderList from "./views/pages/sender/SenderList";
 
 //Admin
 import UserManager from "./views/pages/admin/UserManager";
+import UserGroupManager from "./views/pages/admin/UserGroupManager";
 import DocumentManager from "./views/pages/admin/DocumentManager";
 import DocumentCategoryManager from "./views/pages/admin/DocumentCategoryManager";
 import SystemManager from "./views/pages/admin/SystemManager";
@@ -30,6 +31,11 @@ export default [
     { path: "/sender/send/list", component: SenderList, name: "SendList" },
     //Admin
     { path: "/admin/manage/user", component: UserManager, name: "ManagedUser" },
+    {
+        path: "/admin/manage/user/group",
+        component: UserGroupManager,
+        name: "ManagedUserGroup",
+    },
     {
         path: "/admin/manage/document",
         component: DocumentManager,

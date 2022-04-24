@@ -87,7 +87,7 @@
             </div>
             <div class="flex xl12 xs12" align="center">
               <div class="form-group">
-                <va-button color="dark">
+                <va-button style="background-color: rgb(47, 148, 91)">
                   <i class="fas fa-paper-plane mr-2"></i> ส่งเอกสาร
                 </va-button>
               </div>
