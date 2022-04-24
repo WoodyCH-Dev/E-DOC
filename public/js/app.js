@@ -22961,6 +22961,8 @@ __webpack_require__.r(__webpack_exports__);
           window.localStorage.setItem("email", res.data.userdata.email);
           window.localStorage.setItem("permission", res.data.userpermission);
           window.localStorage.setItem("google_uid", res.data.userdata.google_uid);
+          window.localStorage.setItem("access_token", res.data.token.original.access_token);
+          window.localStorage.setItem("expires_token", res.data.token.original.expires_in);
 
           if (_this.form.remember_me == true) {
             window.sessionStorage.setItem("email", _this.form.email);
@@ -25007,7 +25009,22 @@ var app = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_views_layouts_App__WEB
 
 
 
- // Init router into app
+
+
+if (window.localStorage.getItem("access_token")) {
+  axios__WEBPACK_IMPORTED_MODULE_5___default().interceptors.request.use(function (config) {
+    var token = window.localStorage.getItem("access_token");
+
+    if (token) {
+      config.headers["Authorization"] = "Bearer ".concat(token);
+    }
+
+    return config;
+  }, function (error) {
+    return Promise.reject(error);
+  });
+} // Init router into app
+
 
 app.use(router);
 app.use(vue_axios__WEBPACK_IMPORTED_MODULE_6__["default"], (axios__WEBPACK_IMPORTED_MODULE_5___default())); //Init Module

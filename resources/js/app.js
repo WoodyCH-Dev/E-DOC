@@ -26,6 +26,24 @@ import VueAxios from "vue-axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
+if (window.localStorage.getItem("access_token")) {
+    axios.interceptors.request.use(
+        (config) => {
+            const token = window.localStorage.getItem("access_token");
+
+            if (token) {
+                config.headers["Authorization"] = `Bearer ${token}`;
+            }
+
+            return config;
+        },
+
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+}
+
 // Init router into app
 app.use(router);
 app.use(VueAxios, axios);
