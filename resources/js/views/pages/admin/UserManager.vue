@@ -80,6 +80,7 @@
                             style="background-color: rgb(50, 168, 82)"
                             data-bs-toggle="modal"
                             data-bs-target="#EditUserPermissionModal"
+                            v-if="user.user.id != data.user_id"
                           >
                             สิทธิ์
                           </va-button>
@@ -97,6 +98,9 @@
                           >
                             ลบ
                           </va-button>
+                          <b v-if="user.user.id == data.user_id">
+                            (ผู้ใช้งานปัจจุบัน)
+                          </b>
                         </td>
                       </tr>
                     </tbody>

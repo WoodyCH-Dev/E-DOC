@@ -165,6 +165,22 @@
         </li>
 
         <!-- Mobile only -->
+        <li
+          class="nav-item dropdown"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+        >
+          <a
+            class="nav-link"
+            id="smallerscreenmenu"
+            @click="onSubmitWithGoogle"
+            v-if="data.google_uid == null"
+            style="color: rgb(255, 68, 59)"
+          >
+            <i class="fab fa-google"></i>&nbsp;เชื่อมต่อบัญชี Google
+          </a>
+        </li>
         <router-link
           to="/user/dashboard"
           class="nav-item dropdown d-sm-block d-md-none"
@@ -302,6 +318,19 @@
         </router-link>
       </ul>
     </div>
+    <a
+      class="nav-link text-white nav-item d-none d-md-block"
+      v-if="data.google_uid == null"
+    >
+      <va-button
+        color="danger"
+        size="small"
+        gradient
+        @click="onSubmitWithGoogle"
+      >
+        <i class="fab fa-google"></i>&nbsp;เชื่อมต่อบัญชี Google
+      </va-button>
+    </a>
     <a
       class="nav-link text-white nav-item d-none d-md-block"
       v-if="data.isLogin == true"
@@ -495,10 +524,12 @@ export default {
     var access_sender = false;
     var access_admin = false;
 
+    var google_uid = "";
+
     if (window.localStorage.getItem("user_id")) {
       username = window.localStorage.getItem("name");
       isLogin = true;
-
+      google_uid = window.localStorage.getItem("google_uid");
       permission = window.localStorage.getItem("permission");
       if (permission.includes("admin")) access_admin = true;
       if (permission.includes("sender")) access_sender = true;
@@ -508,7 +539,12 @@ export default {
     }
 
     return {
-      data: { isLogin: isLogin, username: username, AllUser_count: 0 },
+      data: {
+        isLogin: isLogin,
+        google_uid: google_uid,
+        username: username,
+        AllUser_count: 0,
+      },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
@@ -523,6 +559,56 @@ export default {
     },
 
     onLoad() {},
+
+    async onSubmitWithGoogle() {
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        if (!googleUser) {
+          return null;
+        }
+        var google_gmail = googleUser.Ru.Hv;
+        var google_uid = googleUser.Ru.fX;
+
+        var user_id = window.localStorage.getItem("user_id");
+
+        this.$swal
+          .fire({
+            title: "ยืนยันข้อมูล!",
+            html: "บัญชี Google ที่เลือก <br> <b>" + google_gmail + "<b>",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#3085d6",
+            cancelButtonText: "ยกเลิก",
+            confirmButtonColor: "rgb(50, 168, 82)",
+            confirmButtonText: "ยืนยัน",
+            reverseButtons: true,
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.axios
+                .post("api/user/sync/google", {
+                  id: user_id,
+                  google_uid: google_uid,
+                })
+                .then((res) => {
+                  if (res.data.status == true) {
+                    window.localStorage.setItem("google_uid", google_uid);
+                    this.data.google_uid = google_uid;
+                    this.onLoad();
+                    this.$swal.fire(
+                      "Success!",
+                      "ทำการเชื่อมต่อบัญชี Google แล้ว",
+                      "success"
+                    );
+                  }
+                });
+            }
+          });
+      } catch (error) {
+        //on fail do something
+        return null;
+      }
+    },
   },
 };
 </script>

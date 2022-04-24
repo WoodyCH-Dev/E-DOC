@@ -26,6 +26,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //User
     Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
+    Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
     //Sender
 

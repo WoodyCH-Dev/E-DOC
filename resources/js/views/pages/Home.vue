@@ -79,15 +79,17 @@ export default {
       this.axios.post("api/login", this.form).then((res) => {
         if (res.data.status == true) {
           this.form_validate.error = false;
+          if (res.data.userdata.google_uid) {
+            window.localStorage.setItem(
+              "google_uid",
+              res.data.userdata.google_uid
+            );
+          }
           window.localStorage.setItem("user_id", res.data.userdata.id);
           window.localStorage.setItem("name", res.data.userdata.name);
           window.localStorage.setItem("lastname", res.data.userdata.lastname);
           window.localStorage.setItem("email", res.data.userdata.email);
           window.localStorage.setItem("permission", res.data.userpermission);
-          window.localStorage.setItem(
-            "google_uid",
-            res.data.userdata.google_uid
-          );
           window.localStorage.setItem(
             "access_token",
             res.data.token.original.access_token
@@ -125,6 +127,12 @@ export default {
           .then((res) => {
             if (res.data.status == true) {
               this.form_validate.error = false;
+              if (res.data.userdata.google_uid) {
+                window.localStorage.setItem(
+                  "google_uid",
+                  res.data.userdata.google_uid
+                );
+              }
               window.localStorage.setItem("user_id", res.data.userdata.id);
               window.localStorage.setItem("name", res.data.userdata.name);
               window.localStorage.setItem(
@@ -135,10 +143,6 @@ export default {
               window.localStorage.setItem(
                 "permission",
                 res.data.userpermission
-              );
-              window.localStorage.setItem(
-                "google_uid",
-                res.data.userdata.google_uid
               );
               window.localStorage.setItem(
                 "access_token",

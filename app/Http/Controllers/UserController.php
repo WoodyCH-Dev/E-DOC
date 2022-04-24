@@ -46,6 +46,15 @@ class UserController extends Controller
         return response()->json(['status' => true,'users' => $users_withgroup]);
     }
 
+    public function SyncWithGoogle(Request $request){
+        DB::table('users')
+        ->where('id',$request->post('id'))
+        ->update([
+            'google_uid' => $request->post('google_uid'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminGetUser(Request $request){
         $userdata = DB::table('users')
         ->where('id',$request->route('user_id'))
