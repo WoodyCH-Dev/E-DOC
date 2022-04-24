@@ -83,6 +83,14 @@ export default {
             "google_uid",
             res.data.userdata.google_uid
           );
+          window.localStorage.setItem(
+            "access_token",
+            res.data.token.original.access_token
+          );
+          window.localStorage.setItem(
+            "expires_token",
+            res.data.token.original.expires_in
+          );
           if (this.form.remember_me == true) {
             window.sessionStorage.setItem("email", this.form.email);
             window.sessionStorage.setItem("password", this.form.password);

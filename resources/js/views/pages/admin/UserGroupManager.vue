@@ -79,13 +79,10 @@ export default {
     var username = "";
     var lastname = "";
     var permission = [];
-
     var access_user = false;
     var access_sender = false;
     var access_admin = false;
-
     var acd_year = "0";
-
     if (window.localStorage.getItem("user_id")) {
       username = window.localStorage.getItem("name");
       lastname = window.localStorage.getItem("lastname");
@@ -96,9 +93,7 @@ export default {
     } else {
       this.$router.push("/");
     }
-
     this.onLoad();
-
     return {
       data: {
         username: username,
