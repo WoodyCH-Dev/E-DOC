@@ -29,10 +29,10 @@ class UserController extends Controller
         foreach($users as $user){
             $user_ingroup = DB::table('user_ingroup')
             ->leftJoin('user_group','user_group.id','user_ingroup.group_id')
-            ->where('user_ingroup',$user->id)
+            ->where('user_id',$user->id)
             ->get();
 
-            array_push([
+            array_push($users_withgroup,[
                 'user'=> $user,
                 'user_group'=> $user_ingroup
             ]);

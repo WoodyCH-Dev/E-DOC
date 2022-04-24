@@ -29,18 +29,45 @@
                           <th>นามสกุล</th>
                           <th>E-mail</th>
                           <th>Group</th>
+                          <th>จัดการ</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>X</td>
-                          <td>Y</td>
+                        <tr
+                          v-for="(user, index) in data.AllUser"
+                          :key="user.user.id"
+                        >
+                          <td>{{ index + 1 }}</td>
+                          <td>{{ user.user.name }}</td>
+                          <td>{{ user.user.lastname }}</td>
                           <td>
-                            woodychgamer5588@gmail.com
-                            <i class="fas fa-check-circle"></i>
+                            {{ user.user.email }}
+                            <i
+                              class="fas fa-check-circle"
+                              v-if="user.user.google_uid"
+                            ></i>
                           </td>
-                          <td>วิชาการ, ครูทั่วไป</td>
+                          <td>
+                            <label
+                              v-for="(usergroup, index) in user.user_group"
+                              :key="usergroup.id"
+                            >
+                              <label v-if="index > 0">, </label>
+                              {{ usergroup.group_name }}
+                            </label>
+                          </td>
+                          <td>
+                            <va-button icon="edit" class="mr-2" color="warning">
+                              แก้ไข
+                            </va-button>
+                            <va-button
+                              icon="delete"
+                              class="mr-2"
+                              color="danger"
+                            >
+                              ลบ
+                            </va-button>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -105,8 +132,7 @@ export default {
 
       this.axios.get("api/admin/get/AllUser").then((res) => {
         if (res.data.status == true) {
-          this.data.AllUser = res.data.AllUser;
-          console.log(this.data.AllUser);
+          this.data.AllUser = res.data.users;
         }
       });
     },
