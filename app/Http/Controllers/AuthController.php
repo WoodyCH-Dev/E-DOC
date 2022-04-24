@@ -31,10 +31,10 @@ class AuthController extends Controller
                 if($user_perms->permission_id == 0){
                     array_push($permission,'user');
                 }
-                if($user_perms->permission_id == 0){
+                if($user_perms->permission_id == 1){
                     array_push($permission,'sender');
                 }
-                if($user_perms->permission_id == 0){
+                if($user_perms->permission_id == 2){
                     array_push($permission,'admin');
                 }
             }
@@ -73,7 +73,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => auth('api')->factory()->getTTL() * 60 * 24 * 30,
         ]);
     }
 
