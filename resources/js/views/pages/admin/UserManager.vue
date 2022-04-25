@@ -446,7 +446,13 @@
                 color="primary"
                 class="mr-4"
                 v-model="editUserPermissionForm.user"
-                v-on:click="EditUserPermissionSubmit(0)"
+                v-on:click="
+                  EditUserPermissionSubmit(0) ||
+                    $vaToast.init({
+                      message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+                      color: 'primary',
+                    })
+                "
               >
                 ผู้ใช้งานทั่วไป
               </va-switch>
@@ -456,7 +462,13 @@
                 color="warning"
                 class="mr-4"
                 v-model="editUserPermissionForm.sender"
-                v-on:click="EditUserPermissionSubmit(1)"
+                v-on:click="
+                  EditUserPermissionSubmit(1) ||
+                    $vaToast.init({
+                      message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+                      color: 'primary',
+                    })
+                "
               >
                 ผู้ส่ง
               </va-switch>
@@ -466,7 +478,13 @@
                 color="danger"
                 class="mr-4"
                 v-model="editUserPermissionForm.admin"
-                v-on:click="EditUserPermissionSubmit(2)"
+                v-on:click="
+                  EditUserPermissionSubmit(2) ||
+                    $vaToast.init({
+                      message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+                      color: 'primary',
+                    })
+                "
               >
                 แอดมิน
               </va-switch>

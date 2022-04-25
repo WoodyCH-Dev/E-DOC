@@ -32,11 +32,18 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
+    Route::get('/admin/get/AllGroup', [UserController::class, 'Get_Allgroup']);
     Route::get('/admin/get/user/{user_id}', [UserController::class, 'AdminGetUser']);
     Route::post('/admin/create/User', [UserController::class, 'AdminAddUser']);
+    Route::post('/admin/create/Group', [UserController::class, 'AdminAddGroup']);
     Route::post('/admin/edit/User', [UserController::class, 'AdminEditUser']);
+    Route::post('/admin/edit/Group', [UserController::class, 'AdminEditGroup']);
     Route::post('/admin/remove/User', [UserController::class, 'AdminRemoveUser']);
+    Route::post('/admin/remove/Group', [UserController::class, 'AdminRemoveGroup']);
     Route::post('/admin/edit/User/ResetSyncGoogle', [UserController::class, 'SyncWithGoogle']);
     Route::post('/admin/get/User/permission', [UserController::class, 'AdminGetUserPermission']);
     Route::post('/admin/edit/User/permission', [UserController::class, 'AdminEditUserPermission']);
+
+    Route::get('/admin/get/group/AllUser/{group_id}', [UserController::class, 'Get_Alluser_InGroup']);
+
 });

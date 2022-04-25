@@ -23353,6 +23353,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var username = "";
@@ -23379,13 +23397,20 @@ __webpack_require__.r(__webpack_exports__);
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year
+        acd_year: acd_year,
+        Allgroup_isLoad: true
       },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
         access_admin: access_admin
-      }
+      },
+      user_group_lists: new Array(),
+      select_group: 0,
+      select_group_name: "",
+      user_ingroup_lists: new Array(),
+      userid_ingroup_lists: [],
+      add_user_ingroup_lists: new Array()
     };
   },
   methods: {
@@ -23397,6 +23422,225 @@ __webpack_require__.r(__webpack_exports__);
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
         }
       });
+      this.axios.get("api/admin/get/AllGroup").then(function (res) {
+        if (res.data.status == true) {
+          _this.data.Allgroup_isLoad = false;
+          _this.user_group_lists = res.data.group;
+        } else {
+          _this.$swal.fire("Error!", "Permission ของคุณไม่สามารถเข้าถึงได้", "error");
+        }
+      });
+
+      if (this.select_group && this.select_group_name) {
+        GetUserInGroup(this.select_group, this.select_group_name);
+      }
+    },
+    CreateGroup: function CreateGroup() {
+      var _this2 = this;
+
+      this.$swal.fire({
+        title: "ชื่อ Group ที่ต้องการสร้าง",
+        input: "text",
+        showCancelButton: true,
+        confirmButtonText: "สร้าง",
+        showLoaderOnConfirm: true,
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "rgb(47, 148, 91)"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          if (result.value != "" && result.value != null) {
+            _this2.axios.post("api/admin/create/Group", {
+              group_name: result.value
+            }).then(function (res) {
+              _this2.$swal.fire("Success!", "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว", "success");
+
+              _this2.onLoad();
+            });
+          } else {
+            _this2.$swal.fire("Error!", "ไม่สารมารถเว้นการใส่ชื่อกลุ่มได้", "error");
+          }
+        }
+      });
+    },
+    EditGroup: function EditGroup(group_id, group_name) {
+      var _this3 = this;
+
+      this.$swal.fire({
+        title: "ชื่อ Group ที่ต้องเปลี่ยนชื่อ",
+        html: "Group ที่เลือก: " + group_name,
+        input: "text",
+        showCancelButton: true,
+        confirmButtonText: "แก้ไข",
+        showLoaderOnConfirm: true,
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "rgb(255, 184, 61)"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          if (result.value != "" && result.value != null) {
+            _this3.axios.post("api/admin/edit/Group", {
+              id: group_id,
+              group_name: result.value
+            }).then(function (res) {
+              _this3.$swal.fire("Success!", "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว", "success");
+
+              _this3.onLoad();
+            });
+          } else {
+            _this3.$swal.fire("Error!", "ไม่สารมารถเว้นการใส่ชื่อกลุ่มได้", "error");
+          }
+        }
+      });
+    },
+    RemoveGroup: function RemoveGroup(group_id) {
+      var _this4 = this;
+
+      this.$swal.fire({
+        title: "แจ้งเตือน!",
+        html: "คุณแน่ใจหรือไม่ที่จะลบ Group นี้",
+        showCancelButton: true,
+        confirmButtonText: "ลบ",
+        showLoaderOnConfirm: true,
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "rgb(235, 64, 52)"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          if (result.value != "" && result.value != null) {
+            _this4.axios.post("api/admin/remove/Group", {
+              id: group_id
+            }).then(function (res) {
+              _this4.$swal.fire("Success!", "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว", "success");
+
+              _this4.onLoad();
+            });
+          } else {
+            _this4.$swal.fire("Error!", "ไม่สารมารถเว้นการใส่ชื่อกลุ่มได้", "error");
+          }
+        }
+      });
+    },
+    GetUserInGroup: function GetUserInGroup(group_id, group_name) {
+      var _this5 = this;
+
+      this.select_group = group_id;
+      this.select_group_name = group_name;
+      this.axios.get("api/admin/get/group/AllUser/" + this.select_group).then( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+          var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, user;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  if (!(res.data.status == true)) {
+                    _context.next = 32;
+                    break;
+                  }
+
+                  _this5.user_ingroup_lists = res.data.users;
+                  _iteratorAbruptCompletion = false;
+                  _didIteratorError = false;
+                  _context.prev = 4;
+                  _iterator = _asyncIterator(res.data.users);
+
+                case 6:
+                  _context.next = 8;
+                  return _iterator.next();
+
+                case 8:
+                  if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
+                    _context.next = 14;
+                    break;
+                  }
+
+                  user = _step.value;
+
+                  _this5.userid_ingroup_lists.push(user.user_id);
+
+                case 11:
+                  _iteratorAbruptCompletion = false;
+                  _context.next = 6;
+                  break;
+
+                case 14:
+                  _context.next = 20;
+                  break;
+
+                case 16:
+                  _context.prev = 16;
+                  _context.t0 = _context["catch"](4);
+                  _didIteratorError = true;
+                  _iteratorError = _context.t0;
+
+                case 20:
+                  _context.prev = 20;
+                  _context.prev = 21;
+
+                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+                    _context.next = 25;
+                    break;
+                  }
+
+                  _context.next = 25;
+                  return _iterator["return"]();
+
+                case 25:
+                  _context.prev = 25;
+
+                  if (!_didIteratorError) {
+                    _context.next = 28;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 28:
+                  return _context.finish(25);
+
+                case 29:
+                  return _context.finish(20);
+
+                case 30:
+                  _this5.add_user_ingroup_lists = new Array();
+
+                  _this5.axios.get("api/admin/get/AllUser").then(function (res) {
+                    if (res.data.status == true) {
+                      var _iterator2 = _createForOfIteratorHelper(res.data.users),
+                          _step2;
+
+                      try {
+                        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                          var _user = _step2.value;
+
+                          _this5.add_user_ingroup_lists.push({
+                            id: _user.user.id,
+                            name: _user.user.name,
+                            lastname: _user.user.lastname,
+                            email: _user.user.email,
+                            select: _this5.userid_ingroup_lists.includes(_user.user.id)
+                          });
+                        }
+                      } catch (err) {
+                        _iterator2.e(err);
+                      } finally {
+                        _iterator2.f();
+                      }
+                    } else {
+                      _this5.$swal.fire("Error!", "Permission ของคุณไม่สามารถเข้าถึงได้", "error");
+                    }
+                  });
+
+                case 32:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[4, 16, 20, 30], [21,, 25, 29]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
     }
   }
 });
@@ -25493,96 +25737,150 @@ var _hoisted_4 = {
   "class": "row"
 };
 var _hoisted_5 = {
-  "class": "flex xl3 xs12"
+  "class": "flex xl4 xs12"
 };
 var _hoisted_6 = {
-  "class": "form-group"
+  "class": "flex xl12 xs12",
+  align: "right"
 };
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fad fa-users"
-}, null, -1
-/* HOISTED */
-);
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("เพิ่มกลุ่มผู้ใช้งาน");
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Group 1 ");
-
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fad fa-users"
-}, null, -1
-/* HOISTED */
-);
-
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Group 2 ");
-
-var _hoisted_11 = {
-  "class": "flex xl9 xs12"
-};
-var _hoisted_12 = {
+var _hoisted_8 = {
   "class": "flex xl12 xs12"
 };
-var _hoisted_13 = {
+var _hoisted_9 = {
   "class": "form-group"
 };
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fad fa-users"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_11 = {
+  "class": "flex xl8 xs12"
+};
+var _hoisted_12 = {
+  "class": "flex xl12 xs12",
+  align: "right"
+};
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เพิ่มผู้ใช้ในกลุ่ม ");
+
 var _hoisted_14 = {
+  "class": "flex xl12 xs12",
+  align: "center"
+};
+var _hoisted_15 = {
+  key: 0
+};
+var _hoisted_16 = {
+  "class": "form-group"
+};
+var _hoisted_17 = {
   "class": "va-table-responsive",
   style: {
     "overflow-y": "auto"
   }
 };
-var _hoisted_15 = {
+var _hoisted_18 = {
+  key: 0,
   "class": "va-table",
   style: {
     "width": "100%"
   }
 };
 
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ลำดับ", -1
-/* HOISTED */
-);
-
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อ", -1
-/* HOISTED */
-);
-
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "นามสกุล", -1
-/* HOISTED */
-);
-
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "E-mail", -1
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ลำดับ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "นามสกุล"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "E-mail"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  style: {
+    "text-align": "right"
+  }
+})])], -1
 /* HOISTED */
 );
 
 var _hoisted_20 = {
-  style: {
-    "text-align": "right"
-  }
+  key: 0,
+  "class": "fas fa-check-circle"
 };
 
-var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เพิ่มผู้ใช้ในกลุ่ม ");
+var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบ ");
 
-var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "1", -1
-/* HOISTED */
-);
+var _hoisted_22 = {
+  "class": "modal fade",
+  id: "AddUserInGroupModal",
+  "data-bs-backdrop": "static",
+  tabindex: "-1",
+  "aria-hidden": "true"
+};
+var _hoisted_23 = {
+  "class": "modal-dialog modal-dialog-centered modal-xl"
+};
+var _hoisted_24 = {
+  "class": "modal-content"
+};
+var _hoisted_25 = {
+  "class": "modal-header"
+};
+var _hoisted_26 = {
+  "class": "modal-title"
+};
 
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "X", -1
-/* HOISTED */
-);
-
-var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "Y", -1
-/* HOISTED */
-);
-
-var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" woodychgamer5588@gmail.com "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fas fa-check-circle"
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  type: "button",
+  "data-bs-dismiss": "modal",
+  "aria-label": "Close",
+  "class": "btn"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "far fa-times"
 })], -1
 /* HOISTED */
 );
 
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบ ");
+var _hoisted_28 = {
+  "class": "modal-body"
+};
+
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "รายชื่อผู้ใช้ทั้งหมด", -1
+/* HOISTED */
+);
+
+var _hoisted_30 = {
+  "class": "va-table-responsive",
+  style: {
+    "overflow-y": "auto"
+  }
+};
+var _hoisted_31 = {
+  key: 0,
+  "class": "va-table va-table--hoverable",
+  style: {
+    "width": "100%"
+  }
+};
+
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ลำดับ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "นามสกุล"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "E-mail"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  style: {
+    "text-align": "right"
+  }
+})])], -1
+/* HOISTED */
+);
+
+var _hoisted_33 = {
+  "class": "modal-footer"
+};
+
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
+
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" บันทึกข้อมูล ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
+
+  var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
 
   var _component_va_sidebar_item_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-sidebar-item-title");
 
@@ -25592,13 +25890,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   var _component_va_sidebar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-sidebar");
 
-  var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
-
   var _component_va_card_content = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-content");
 
   var _component_va_card = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card");
 
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+  var _component_va_checkbox = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-checkbox");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
     tag: "b",
     outlined: ""
   }, {
@@ -25612,89 +25910,134 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar, {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            icon: "add",
+            "class": "mr-2",
+            style: {
+              "background-color": "rgb(47, 148, 91)"
+            },
+            onClick: _cache[0] || (_cache[0] = function ($event) {
+              return $options.CreateGroup();
+            })
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_7];
+            }),
+            _: 1
+            /* STABLE */
+
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar, {
             textColor: "dark",
             style: {
               "width": "100%"
             }
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item, {
-                "class": "sidebar-item"
-              }, {
-                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item_content, null, {
-                    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                      return [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item_title, null, {
-                        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                          return [_hoisted_8];
-                        }),
-                        _: 1
-                        /* STABLE */
+              return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.user_group_lists, function (user_group) {
+                return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_sidebar_item, {
+                  "class": "sidebar-item",
+                  key: user_group.id
+                }, {
+                  "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                    return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item_content, {
+                      onClick: function onClick($event) {
+                        return $options.GetUserInGroup(user_group.id, user_group.group_name);
+                      }
+                    }, {
+                      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                        return [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item_title, null, {
+                          "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                            return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user_group.group_name), 1
+                            /* TEXT */
+                            )];
+                          }),
+                          _: 2
+                          /* DYNAMIC */
 
-                      })];
-                    }),
-                    _: 1
-                    /* STABLE */
+                        }, 1024
+                        /* DYNAMIC_SLOTS */
+                        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+                          icon: "edit",
+                          size: "medium",
+                          color: "warning",
+                          onClick: function onClick($event) {
+                            return $options.EditGroup(user_group.id, user_group.group_name);
+                          }
+                        }, null, 8
+                        /* PROPS */
+                        , ["onClick"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+                          icon: "delete",
+                          size: "medium",
+                          color: "danger",
+                          onClick: function onClick($event) {
+                            return $options.RemoveGroup(user_group.id);
+                          }
+                        }, null, 8
+                        /* PROPS */
+                        , ["onClick"])];
+                      }),
+                      _: 2
+                      /* DYNAMIC */
 
-                  })];
-                }),
-                _: 1
-                /* STABLE */
+                    }, 1032
+                    /* PROPS, DYNAMIC_SLOTS */
+                    , ["onClick"])];
+                  }),
+                  _: 2
+                  /* DYNAMIC */
 
-              }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item, {
-                "class": "sidebar-item"
-              }, {
-                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item_content, null, {
-                    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                      return [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_sidebar_item_title, null, {
-                        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                          return [_hoisted_10];
-                        }),
-                        _: 1
-                        /* STABLE */
-
-                      })];
-                    }),
-                    _: 1
-                    /* STABLE */
-
-                  })];
-                }),
-                _: 1
-                /* STABLE */
-
-              })];
+                }, 1024
+                /* DYNAMIC_SLOTS */
+                );
+              }), 128
+              /* KEYED_FRAGMENT */
+              ))];
             }),
             _: 1
             /* STABLE */
 
-          })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_16, _hoisted_17, _hoisted_18, _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+          })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [$data.select_group ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_button, {
+            key: 0,
             icon: "add",
             "class": "mr-4",
             style: {
               "background-color": "rgb(47, 148, 91)"
-            }
+            },
+            "data-bs-toggle": "modal",
+            "data-bs-target": "#AddUserInGroupModal"
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_21];
+              return [_hoisted_13];
             }),
             _: 1
             /* STABLE */
 
-          })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_22, _hoisted_23, _hoisted_24, _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
-            icon: "clear",
-            "class": "mr-4",
-            color: "danger"
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_26];
-            }),
-            _: 1
-            /* STABLE */
+          })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [!$data.select_group ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("b", _hoisted_15, " -- ยังไม่ได้เลือกกลุ่มผู้ใช้ -- ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [$data.select_group ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_18, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.user_ingroup_lists, function (user, index) {
+            return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+              key: user.id
+            }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.lastname), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.email) + " ", 1
+            /* TEXT */
+            ), user.google_uid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("i", _hoisted_20)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+              icon: "clear",
+              "class": "mr-4",
+              color: "danger"
+            }, {
+              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                return [_hoisted_21];
+              }),
+              _: 1
+              /* STABLE */
 
-          })])])])])])])])])])];
+            })])]);
+          }), 128
+          /* KEYED_FRAGMENT */
+          ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])];
         }),
         _: 1
         /* STABLE */
@@ -25704,7 +26047,57 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])]);
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_26, " เพิ่มผู้ใช้งานลงในกลุ่ม " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.select_group_name), 1
+  /* TEXT */
+  ), _hoisted_27]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [$data.select_group ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_31, [_hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.add_user_ingroup_lists, function (user, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+      key: user.id
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.lastname), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.email), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_checkbox, {
+      modelValue: user.select,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return user.select = $event;
+      }
+    }, null, 8
+    /* PROPS */
+    , ["modelValue", "onUpdate:modelValue"])])]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+    icon: "close",
+    "class": "mr-1",
+    color: "danger",
+    "data-bs-dismiss": "modal"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_34];
+    }),
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+    icon: "save",
+    "class": "mr-1",
+    style: {
+      "background-color": "rgb(47, 148, 91)"
+    }
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_35];
+    }),
+    _: 1
+    /* STABLE */
+
+  })])])])])], 64
+  /* STABLE_FRAGMENT */
+  );
 }
 
 /***/ }),
@@ -26543,7 +26936,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $data.editUserPermissionForm.user = $event;
     }),
     onClick: _cache[15] || (_cache[15] = function ($event) {
-      return $options.EditUserPermissionSubmit(0);
+      return $options.EditUserPermissionSubmit(0) || _ctx.$vaToast.init({
+        message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+        color: 'primary'
+      });
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -26562,7 +26958,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $data.editUserPermissionForm.sender = $event;
     }),
     onClick: _cache[17] || (_cache[17] = function ($event) {
-      return $options.EditUserPermissionSubmit(1);
+      return $options.EditUserPermissionSubmit(1) || _ctx.$vaToast.init({
+        message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+        color: 'primary'
+      });
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -26581,7 +26980,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $data.editUserPermissionForm.admin = $event;
     }),
     onClick: _cache[19] || (_cache[19] = function ($event) {
-      return $options.EditUserPermissionSubmit(2);
+      return $options.EditUserPermissionSubmit(2) || _ctx.$vaToast.init({
+        message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+        color: 'primary'
+      });
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
