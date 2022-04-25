@@ -72,7 +72,7 @@
                     <table
                       class="va-table"
                       style="width: 100%"
-                      v-if="select_group"
+                      v-if="select_group && !user_ingroup_lists_load"
                     >
                       <thead>
                         <tr>
@@ -100,6 +100,19 @@
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div
+                    align="center"
+                    style="padding-top: 30px"
+                    v-if="select_group && user_ingroup_lists_load"
+                  >
+                    <va-progress-circle
+                      size="large"
+                      :thickness="0.4"
+                      color="primary"
+                      indeterminate
+                    />
+                    กำลังโหลดข้อมูล
                   </div>
                 </div>
               </div>
@@ -231,6 +244,7 @@ export default {
       select_group: 0,
       select_group_name: "",
       user_ingroup_lists: new Array(),
+      user_ingroup_lists_load: true,
       userid_ingroup_lists: [],
       add_user_ingroup_lists: new Array(),
       add_user_ingroup_lists_table: new Array(),
@@ -383,8 +397,12 @@ export default {
     },
 
     GetUserInGroup(group_id, group_name) {
+      this.user_ingroup_lists_load = true;
       this.select_group = group_id;
       this.select_group_name = group_name;
+      this.user_ingroup_lists = new Array();
+      this.userid_ingroup_lists = new Array();
+      this.add_user_ingroup_lists_table = new Array();
       this.axios
         .get("api/admin/get/Group/AllUser/" + this.select_group)
         .then(async (res) => {
@@ -394,7 +412,6 @@ export default {
               this.userid_ingroup_lists.push(user.user_id);
             }
 
-            this.add_user_ingroup_lists_table = new Array();
             this.axios.get("api/admin/get/AllUser").then((res) => {
               if (res.data.status == true) {
                 for (let user of res.data.users) {
@@ -406,6 +423,7 @@ export default {
                     select: this.userid_ingroup_lists.includes(user.user.id),
                   });
                 }
+                this.user_ingroup_lists_load = false;
               } else {
                 this.$swal.fire(
                   "Error!",
