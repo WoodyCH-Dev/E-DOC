@@ -30,7 +30,7 @@
             </div>
             <div class="flex xl8 xs12">
               <div class="form-group">
-                <b>เลขที่เอกสาร (ถ้ามี)</b>
+                <b>รายละเอียด (ถ้ามี)</b>
                 <va-input placeholder="รายละเอียด (ถ้ามี)..." required />
               </div>
             </div>

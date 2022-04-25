@@ -27341,7 +27341,7 @@ var _hoisted_15 = {
   "class": "form-group"
 };
 
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลขที่เอกสาร (ถ้ามี)", -1
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "รายละเอียด (ถ้ามี)", -1
 /* HOISTED */
 );
 
