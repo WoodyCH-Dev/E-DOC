@@ -55,14 +55,14 @@
             <div class="flex xl8 xs12">
               <div class="flex xl12 xs12" align="right">
                 <va-button
-                  icon="add"
-                  class="mr-4"
-                  style="background-color: rgb(47, 148, 91)"
+                  icon="edit"
+                  class="mr-2"
+                  color="warning"
                   data-bs-toggle="modal"
                   data-bs-target="#AddUserInGroupModal"
                   v-if="select_group"
                 >
-                  เพิ่มผู้ใช้ในกลุ่ม
+                  แก้ไขผู้ใช้ในกลุ่ม
                 </va-button>
               </div>
               <div class="flex xl12 xs12" align="center">
@@ -80,7 +80,6 @@
                           <th>ชื่อ</th>
                           <th>นามสกุล</th>
                           <th>E-mail</th>
-                          <th style="text-align: right"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -97,11 +96,6 @@
                               class="fas fa-check-circle"
                               v-if="user.google_uid"
                             ></i>
-                          </td>
-                          <td>
-                            <va-button icon="clear" class="mr-4" color="danger">
-                              ลบ
-                            </va-button>
                           </td>
                         </tr>
                       </tbody>
@@ -141,6 +135,11 @@
         </div>
         <div class="modal-body">
           <b>รายชื่อผู้ใช้ทั้งหมด</b>
+          <va-input
+            class="xs12 md12"
+            placeholder="Filter... ชื่อ นามสกุล E-mail"
+            v-model="add_user_ingroup_lists_filter"
+          />
           <div class="va-table-responsive" style="overflow-y: auto">
             <table
               class="va-table va-table--hoverable"
@@ -158,7 +157,7 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="(user, index) in add_user_ingroup_lists"
+                  v-for="(user, index) in add_user_ingroup_lists_filteredRows"
                   :key="user.id"
                 >
                   <td>{{ index + 1 }}</td>
@@ -177,6 +176,7 @@
             class="mr-1"
             color="danger"
             data-bs-dismiss="modal"
+            id="AddUserInGrouClosepModal"
           >
             ปิด
           </va-button>
@@ -184,6 +184,7 @@
             icon="save"
             class="mr-1"
             style="background-color: rgb(47, 148, 91)"
+            v-on:click="SubmitAddUserInGroup()"
           >
             บันทึกข้อมูล
           </va-button>
@@ -232,6 +233,8 @@ export default {
       user_ingroup_lists: new Array(),
       userid_ingroup_lists: [],
       add_user_ingroup_lists: new Array(),
+      add_user_ingroup_lists_table: new Array(),
+      add_user_ingroup_lists_filter: "",
     };
   },
   methods: {
@@ -256,7 +259,7 @@ export default {
       });
 
       if (this.select_group && this.select_group_name) {
-        GetUserInGroup(this.select_group, this.select_group_name);
+        this.GetUserInGroup(this.select_group, this.select_group_name);
       }
     },
 
@@ -267,8 +270,10 @@ export default {
           input: "text",
           showCancelButton: true,
           confirmButtonText: "สร้าง",
+          reverseButtons: true,
           showLoaderOnConfirm: true,
           cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
           confirmButtonColor: "rgb(47, 148, 91)",
         })
         .then((result) => {
@@ -304,8 +309,10 @@ export default {
           html: "Group ที่เลือก: " + group_name,
           input: "text",
           showCancelButton: true,
+          reverseButtons: true,
           confirmButtonText: "แก้ไข",
           showLoaderOnConfirm: true,
+          cancelButtonText: "ยกเลิก",
           cancelButtonColor: "#3085d6",
           confirmButtonColor: "rgb(255, 184, 61)",
         })
@@ -341,9 +348,11 @@ export default {
         .fire({
           title: "แจ้งเตือน!",
           html: "คุณแน่ใจหรือไม่ที่จะลบ Group นี้",
+          reverseButtons: true,
           showCancelButton: true,
           confirmButtonText: "ลบ",
           showLoaderOnConfirm: true,
+          cancelButtonText: "ยกเลิก",
           cancelButtonColor: "#3085d6",
           confirmButtonColor: "rgb(235, 64, 52)",
         })
@@ -377,7 +386,7 @@ export default {
       this.select_group = group_id;
       this.select_group_name = group_name;
       this.axios
-        .get("api/admin/get/group/AllUser/" + this.select_group)
+        .get("api/admin/get/Group/AllUser/" + this.select_group)
         .then(async (res) => {
           if (res.data.status == true) {
             this.user_ingroup_lists = res.data.users;
@@ -385,11 +394,11 @@ export default {
               this.userid_ingroup_lists.push(user.user_id);
             }
 
-            this.add_user_ingroup_lists = new Array();
+            this.add_user_ingroup_lists_table = new Array();
             this.axios.get("api/admin/get/AllUser").then((res) => {
               if (res.data.status == true) {
                 for (let user of res.data.users) {
-                  this.add_user_ingroup_lists.push({
+                  this.add_user_ingroup_lists_table.push({
                     id: user.user.id,
                     name: user.user.name,
                     lastname: user.user.lastname,
@@ -407,6 +416,55 @@ export default {
             });
           }
         });
+    },
+
+    SubmitAddUserInGroup() {
+      if (this.add_user_ingroup_lists_table.length > 0) {
+        var counter = 0;
+        this.$swal.fire({
+          title: "กำลังบันทึกข้อมูล กรุณารอสักครู่",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+        });
+        for (let user of this.add_user_ingroup_lists_table) {
+          this.axios
+            .post("api/admin/edit/Group/User", {
+              user_id: user.id,
+              group_id: this.select_group,
+              type: user.select,
+            })
+            .then((res) => {
+              if (res.data.status == true) {
+                counter++;
+                if (counter == this.add_user_ingroup_lists_table.length) {
+                  this.$swal.fire(
+                    "Success!",
+                    "แก้ไขข้อมูลสำเร็จแล้ว!",
+                    "success"
+                  );
+                  this.onLoad();
+                  document.getElementById("AddUserInGrouClosepModal").click();
+                }
+              }
+            });
+        }
+      }
+    },
+  },
+  computed: {
+    add_user_ingroup_lists_filteredRows() {
+      return this.add_user_ingroup_lists_table.filter((element) => {
+        const name = element.name.toLowerCase();
+        const lastname = element.lastname.toLowerCase();
+        const email = element.email.toLowerCase();
+        const search = this.add_user_ingroup_lists_filter.toLowerCase();
+
+        return (
+          name.includes(search) ||
+          lastname.includes(search) ||
+          email.includes(search)
+        );
+      });
     },
   },
 };

@@ -44,6 +44,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/admin/get/User/permission', [UserController::class, 'AdminGetUserPermission']);
     Route::post('/admin/edit/User/permission', [UserController::class, 'AdminEditUserPermission']);
 
-    Route::get('/admin/get/group/AllUser/{group_id}', [UserController::class, 'Get_Alluser_InGroup']);
+    Route::get('/admin/get/Group/AllUser/{group_id}', [UserController::class, 'Get_Alluser_InGroup']);
+    Route::post('/admin/edit/Group/User', [UserController::class, 'AdminEditGroupUser']);
 
 });

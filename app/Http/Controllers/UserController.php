@@ -217,6 +217,32 @@ class UserController extends Controller
         return response()->json(['status' => true, 'users'=>$usersingroup]);
     }
 
+    public function AdminEditGroupUser(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $userchk = DB::table('user_ingroup')
+        ->where('user_id',$request->post('user_id'))
+        ->where('group_id',$request->post('group_id'))
+        ->first();
+
+        if($request->post('type') == true){ //Add
+            if(!$userchk){
+                DB::table('user_ingroup')
+                ->insert([
+                    'user_id'=> $request->post('user_id'),
+                    'group_id'=> $request->post('group_id')
+                ]);
+            }
+        }else if($request->post('type') == false){ //Remove
+            if($userchk){
+                DB::table('user_ingroup')
+                ->where('user_id',$request->post('user_id'))
+                ->where('group_id',$request->post('group_id'))
+                ->delete();
+            }
+        }
+        return response()->json(['status' => true]);
+    }
+
     //Chk User Function
     public function ChkUser($req_permission){
         $_user = auth()->user();
