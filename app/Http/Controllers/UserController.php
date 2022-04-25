@@ -55,6 +55,15 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function UnSyncWithGoogle(Request $request){
+        DB::table('users')
+        ->where('id',$request->post('id'))
+        ->update([
+            'google_uid' => null,
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminGetUser(Request $request){
         $userdata = DB::table('users')
         ->where('id',$request->route('user_id'))
@@ -108,6 +117,58 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function AdminGetUserPermission(Request $request){
+        $userpermission = DB::table('user_permission')
+        ->where('user_id',$request->post('user_id'))
+        ->get();
+        $user = false;
+        $sender = false;
+        $admin = false;
+        foreach($userpermission as $user_perms){
+            if($user_perms->permission_id == 0){
+                $user = true;
+            }
+            if($user_perms->permission_id == 1){
+                $sender = true;
+            }
+            if($user_perms->permission_id == 2){
+                $admin = true;
+            }
+        }
+        return response()->json([
+            'status' => true,
+            'permission_user' => $user,
+            'permission_sender' => $sender,
+            'permission_admin' => $admin
+        ]);
+    }
+
+    public function AdminEditUserPermission(Request $request){
+        $userpermissionchk = DB::table('user_permission')
+        ->where('user_id',$request->post('user_id'))
+        ->where('permission_id',$request->post('permission_id'))
+        ->first();
+
+        if($request->post('type') == true){ //Add
+            if(!$userpermissionchk){
+                DB::table('user_permission')
+                ->insert([
+                    'user_id'=> $request->post('user_id'),
+                    'permission_id'=> $request->post('permission_id')
+                ]);
+            }
+        }else if($request->post('type') == false){ //Remove
+            if($userpermissionchk){
+                DB::table('user_permission')
+                ->where('user_id',$request->post('user_id'))
+                ->where('permission_id',$request->post('permission_id'))
+                ->delete();
+            }
+        }
+        return response()->json(['status' => true]);
+    }
+
+    //Chk User Function
     public function ChkUser($req_permission){
         $_user = auth()->user();
         if(!$_user){

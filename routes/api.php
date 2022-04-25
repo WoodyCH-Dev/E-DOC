@@ -36,4 +36,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/admin/create/User', [UserController::class, 'AdminAddUser']);
     Route::post('/admin/edit/User', [UserController::class, 'AdminEditUser']);
     Route::post('/admin/remove/User', [UserController::class, 'AdminRemoveUser']);
+    Route::post('/admin/edit/User/ResetSyncGoogle', [UserController::class, 'SyncWithGoogle']);
+    Route::post('/admin/get/User/permission', [UserController::class, 'AdminGetUserPermission']);
+    Route::post('/admin/edit/User/permission', [UserController::class, 'AdminEditUserPermission']);
 });

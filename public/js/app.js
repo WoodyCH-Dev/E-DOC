@@ -23468,6 +23468,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         lastname: "",
         email: "",
         password: "",
+        google_uid: "",
         validation: null
       },
       editUserPermissionForm: {
@@ -23580,6 +23581,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.editUserForm.lastname = "";
       this.editUserForm.email = "";
       this.editUserForm.password = "";
+      this.editUserForm.google_uid = "";
       this.axios.get("api/admin/get/user/" + user_id).then(function (res) {
         console.log(res.data);
 
@@ -23588,6 +23590,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           _this3.editUserForm.name = res.data.userdata.name;
           _this3.editUserForm.lastname = res.data.userdata.lastname;
           _this3.editUserForm.email = res.data.userdata.email;
+          _this3.editUserForm.google_uid = res.data.userdata.google_uid;
         }
       });
     },
@@ -23609,6 +23612,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           _this4.editUserForm.lastname = "";
           _this4.editUserForm.email = "";
           _this4.editUserForm.password = "";
+          _this4.editUserForm.google_uid = "";
 
           _this4.onLoad();
 
@@ -23616,8 +23620,39 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
       });
     },
-    RemoveUser: function RemoveUser(user_id, username) {
+    EditUserGoogleResetSubmit: function EditUserGoogleResetSubmit() {
       var _this5 = this;
+
+      this.$swal.fire({
+        title: "แจ้งเตือน!",
+        text: "ยืนยันการยกเลิกการเชื่อมต่อบัญชี Google ",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#3085d6",
+        cancelButtonText: "ยกเลิก",
+        confirmButtonColor: "rgb(235, 64, 52)",
+        confirmButtonText: "ยืนยัน",
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this5.axios.post("api/admin/edit/User/ResetSyncGoogle", {
+            id: _this5.editUserForm.id
+          }).then(function (res) {
+            if (res.data.status == true) {
+              _this5.$swal.fire("Success!", "แก้ไขข้อมูลสำเร็จแล้ว!", "success");
+
+              _this5.editUserForm.google_uid = "";
+
+              _this5.onLoad();
+
+              _this5.EditUser(_this5.editUserForm.id);
+            }
+          });
+        }
+      });
+    },
+    RemoveUser: function RemoveUser(user_id, username) {
+      var _this6 = this;
 
       this.$swal.fire({
         title: "แจ้งเตือน!",
@@ -23631,20 +23666,61 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         reverseButtons: true
       }).then(function (result) {
         if (result.isConfirmed) {
-          _this5.axios.post("api/admin/remove/User", {
+          _this6.axios.post("api/admin/remove/User", {
             id: user_id
           }).then(function (res) {
             if (res.data.status == true) {
-              _this5.$swal.fire("Success!", "ลบผู้ใช้!" + username + "แล้ว", "success");
+              _this6.$swal.fire("Success!", "ลบผู้ใช้!" + username + "แล้ว", "success");
 
-              _this5.onLoad();
+              _this6.onLoad();
             }
           });
         }
       });
     },
     EditUserPermission: function EditUserPermission(user_id) {
+      var _this7 = this;
+
       this.editUserPermissionForm.id = user_id;
+      this.axios.post("api/admin/get/User/permission", {
+        user_id: this.editUserPermissionForm.id
+      }).then(function (res) {
+        if (res.data.status == true) {
+          _this7.editUserPermissionForm.user = res.data.permission_user;
+          _this7.editUserPermissionForm.sender = res.data.permission_sender;
+          _this7.editUserPermissionForm.admin = res.data.permission_admin;
+        }
+      });
+    },
+    EditUserPermissionSubmit: function EditUserPermissionSubmit(permission_id) {
+      var _this8 = this;
+
+      var type = false;
+
+      if (permission_id == 0) {
+        //User
+        type = !!this.editUserPermissionForm.user;
+      } else if (permission_id == 1) {
+        //Sender
+        type = !!this.editUserPermissionForm.sender;
+      } else if (permission_id == 2) {
+        //Admin
+        type = !!this.editUserPermissionForm.admin;
+      }
+
+      this.axios.post("api/admin/edit/User/permission", {
+        user_id: this.editUserPermissionForm.id,
+        permission_id: permission_id,
+        type: type
+      }).then(function (res) {
+        _this8.EditUserPermission(_this8.editUserPermissionForm.id);
+      });
+    },
+    EditUserPermissionClose: function EditUserPermissionClose() {
+      this.editUserPermissionForm.id = 0;
+      this.editUserPermissionForm.user = false;
+      this.editUserPermissionForm.sender = false;
+      this.editUserPermissionForm.admin = false;
     }
   }
 });
@@ -25947,28 +26023,55 @@ var _hoisted_77 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 );
 
 var _hoisted_78 = {
+  "class": "flex xl6 xs12"
+};
+
+var _hoisted_79 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", {
+  "class": "mr-1"
+}, "สถานะการเชื่อมต่อบัญชี Google", -1
+/* HOISTED */
+);
+
+var _hoisted_80 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("เชื่อมต่อแล้ว");
+
+var _hoisted_81 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ยังไม่เชื่อมต่อ");
+
+var _hoisted_82 = {
+  "class": "flex xl6 xs12",
+  align: "right"
+};
+
+var _hoisted_83 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fab fa-google mr-2"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_84 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ยกเลิกการ Sync Google ");
+
+var _hoisted_85 = {
   "class": "modal-footer"
 };
 
-var _hoisted_79 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
+var _hoisted_86 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
 
-var _hoisted_80 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" บันทึก ");
+var _hoisted_87 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" บันทึก ");
 
-var _hoisted_81 = {
+var _hoisted_88 = {
   "class": "modal fade",
   id: "EditUserPermissionModal",
   "data-bs-backdrop": "static",
   tabindex: "-1",
   "aria-hidden": "true"
 };
-var _hoisted_82 = {
+var _hoisted_89 = {
   "class": "modal-dialog modal-dialog-centered modal-xl"
 };
-var _hoisted_83 = {
+var _hoisted_90 = {
   "class": "modal-content"
 };
 
-var _hoisted_84 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_91 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "modal-header"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", {
   "class": "modal-title"
@@ -25983,38 +26086,38 @@ var _hoisted_84 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_85 = {
+var _hoisted_92 = {
   "class": "modal-body"
 };
-var _hoisted_86 = {
+var _hoisted_93 = {
   "class": "row"
 };
-var _hoisted_87 = {
+var _hoisted_94 = {
   "class": "flex xl4 xs12",
   align: "center"
 };
 
-var _hoisted_88 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ผู้ใช้งานทั่วไป ");
+var _hoisted_95 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ผู้ใช้งานทั่วไป ");
 
-var _hoisted_89 = {
+var _hoisted_96 = {
   "class": "flex xl4 xs12",
   align: "center"
 };
 
-var _hoisted_90 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ผู้ส่ง ");
+var _hoisted_97 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ผู้ส่ง ");
 
-var _hoisted_91 = {
+var _hoisted_98 = {
   "class": "flex xl4 xs12",
   align: "center"
 };
 
-var _hoisted_92 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แอดมิน ");
+var _hoisted_99 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แอดมิน ");
 
-var _hoisted_93 = {
+var _hoisted_100 = {
   "class": "modal-footer"
 };
 
-var _hoisted_94 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
+var _hoisted_101 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
@@ -26030,6 +26133,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-input");
 
   var _component_va_form = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-form");
+
+  var _component_va_chip = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-chip");
 
   var _component_va_switch = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-switch");
 
@@ -26369,7 +26474,41 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     required: ""
   }, null, 8
   /* PROPS */
-  , ["modelValue"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_78, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+  , ["modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_78, [_hoisted_79, $data.editUserForm.google_uid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_chip, {
+    key: 0,
+    color: "success"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_80];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.editUserForm.google_uid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_chip, {
+    key: 1,
+    color: "danger"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_81];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_82, [$data.editUserForm.google_uid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_button, {
+    key: 0,
+    "class": "mr-1",
+    color: "danger",
+    onClick: _cache[12] || (_cache[12] = function ($event) {
+      return $options.EditUserGoogleResetSubmit();
+    })
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_83, _hoisted_84];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_85, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
     icon: "close",
     "class": "mr-1",
     color: "danger",
@@ -26377,7 +26516,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     id: "CloseEditUserModal"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_79];
+      return [_hoisted_86];
     }),
     _: 1
     /* STABLE */
@@ -26386,72 +26525,84 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     icon: "save",
     "class": "mr-1",
     color: "warning",
-    onClick: _cache[12] || (_cache[12] = function ($event) {
+    onClick: _cache[13] || (_cache[13] = function ($event) {
       return $options.EditUserSubmit();
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_80];
+      return [_hoisted_87];
     }),
     _: 1
     /* STABLE */
 
-  })])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_81, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_82, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_83, [_hoisted_84, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_85, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_86, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_87, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_switch, {
+  })])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_88, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_89, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_90, [_hoisted_91, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_92, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_93, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_94, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_switch, {
     color: "primary",
     "class": "mr-4",
     modelValue: $data.editUserPermissionForm.user,
-    "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
+    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
       return $data.editUserPermissionForm.user = $event;
+    }),
+    onClick: _cache[15] || (_cache[15] = function ($event) {
+      return $options.EditUserPermissionSubmit(0);
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_88];
+      return [_hoisted_95];
     }),
     _: 1
     /* STABLE */
 
   }, 8
   /* PROPS */
-  , ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_89, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_switch, {
+  , ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_96, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_switch, {
     color: "warning",
     "class": "mr-4",
     modelValue: $data.editUserPermissionForm.sender,
-    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
+    "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
       return $data.editUserPermissionForm.sender = $event;
+    }),
+    onClick: _cache[17] || (_cache[17] = function ($event) {
+      return $options.EditUserPermissionSubmit(1);
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_90];
+      return [_hoisted_97];
     }),
     _: 1
     /* STABLE */
 
   }, 8
   /* PROPS */
-  , ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_91, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_switch, {
+  , ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_98, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_switch, {
     color: "danger",
     "class": "mr-4",
     modelValue: $data.editUserPermissionForm.admin,
-    "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
+    "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {
       return $data.editUserPermissionForm.admin = $event;
+    }),
+    onClick: _cache[19] || (_cache[19] = function ($event) {
+      return $options.EditUserPermissionSubmit(2);
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_92];
+      return [_hoisted_99];
     }),
     _: 1
     /* STABLE */
 
   }, 8
   /* PROPS */
-  , ["modelValue"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_93, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+  , ["modelValue"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_100, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
     icon: "close",
     "class": "mr-1",
     color: "danger",
-    "data-bs-dismiss": "modal"
+    "data-bs-dismiss": "modal",
+    onClick: _cache[20] || (_cache[20] = function ($event) {
+      return $options.EditUserPermissionClose();
+    })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_94];
+      return [_hoisted_101];
     }),
     _: 1
     /* STABLE */
