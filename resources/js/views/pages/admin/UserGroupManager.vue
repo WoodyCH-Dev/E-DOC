@@ -135,7 +135,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
-            เพิ่มผู้ใช้งานลงในกลุ่ม {{ select_group_name }}
+            แก้ไขผู้ใช้งานในกลุ่ม {{ select_group_name }}
           </h5>
           <button
             type="button"
@@ -341,7 +341,7 @@ export default {
                 .then((res) => {
                   this.$swal.fire(
                     "Success!",
-                    "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว",
+                    "ทำการแก้ไขกลุ่มผู้ใช้ " + result.value + " แล้ว",
                     "success"
                   );
                   this.onLoad();
@@ -372,26 +372,18 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
-            if (result.value != "" && result.value != null) {
-              this.axios
-                .post("api/admin/remove/Group", {
-                  id: group_id,
-                })
-                .then((res) => {
-                  this.$swal.fire(
-                    "Success!",
-                    "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว",
-                    "success"
-                  );
-                  this.onLoad();
-                });
-            } else {
-              this.$swal.fire(
-                "Error!",
-                "ไม่สารมารถเว้นการใส่ชื่อกลุ่มได้",
-                "error"
-              );
-            }
+            this.axios
+              .post("api/admin/remove/Group", {
+                id: group_id,
+              })
+              .then((res) => {
+                this.$swal.fire(
+                  "Success!",
+                  "ทำการลบกลุ่มผู้ใช้นี้แล้ว",
+                  "success"
+                );
+                this.onLoad();
+              });
           }
         });
     },

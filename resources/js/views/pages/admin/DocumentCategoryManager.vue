@@ -16,8 +16,9 @@
                         <th style="text-align: right">
                           <va-button
                             icon="add"
-                            class="mr-4"
+                            class="mr-0"
                             style="background-color: rgb(47, 148, 91)"
+                            v-on:click="CreateDocumentGroup()"
                           >
                             เพิ่มหมวดหมู่
                           </va-button>
@@ -25,14 +26,32 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>X</td>
-                        <td>
-                          <va-button icon="edit" class="mr-2" color="warning">
+                      <tr
+                        v-for="(doc_category, index) in document_group_lists"
+                        :key="doc_category.id"
+                      >
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ doc_category.group_name }}</td>
+                        <td style="text-align: right">
+                          <va-button
+                            icon="edit"
+                            class="mr-2"
+                            color="warning"
+                            v-on:click="
+                              EditDocumentGroup(
+                                doc_category.id,
+                                doc_category.group_name
+                              )
+                            "
+                          >
                             แก้ไข
                           </va-button>
-                          <va-button icon="clear" class="mr-2" color="danger">
+                          <va-button
+                            icon="clear"
+                            class="mr-2"
+                            color="danger"
+                            v-on:click="RemoveDocumentGroup(doc_category.id)"
+                          >
                             ลบ
                           </va-button>
                         </td>
@@ -80,12 +99,14 @@ export default {
         username: username,
         lastname: lastname,
         acd_year: acd_year,
+        AllDocumentgroup_isLoad: true,
       },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
         access_admin: access_admin,
       },
+      document_group_lists: new Array(),
     };
   },
   methods: {
@@ -95,6 +116,132 @@ export default {
           this.data.acd_year = String(Number(res.data.acd_year) + 543);
         }
       });
+
+      this.axios.get("api/admin/get/AllDocumentGroup").then((res) => {
+        if (res.data.status == true) {
+          this.data.AllDocumentgroup_isLoad = false;
+          this.document_group_lists = res.data.document_category;
+        } else {
+          this.$swal.fire(
+            "Error!",
+            "Permission ของคุณไม่สามารถเข้าถึงได้",
+            "error"
+          );
+        }
+      });
+    },
+
+    CreateDocumentGroup() {
+      this.$swal
+        .fire({
+          title: "ชื่อ Group ที่ต้องการสร้าง",
+          input: "text",
+          showCancelButton: true,
+          confirmButtonText: "สร้าง",
+          reverseButtons: true,
+          showLoaderOnConfirm: true,
+          cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "rgb(47, 148, 91)",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            if (result.value != "" && result.value != null) {
+              this.axios
+                .post("api/admin/create/DocumentGroup", {
+                  group_name: result.value,
+                })
+                .then((res) => {
+                  this.$swal.fire(
+                    "Success!",
+                    "ทำการสร้างหมวดหมู่เอกสาร " + result.value + " แล้ว",
+                    "success"
+                  );
+                  this.onLoad();
+                });
+            } else {
+              this.$swal.fire(
+                "Error!",
+                "ไม่สารมารถเว้นการใส่ชื่อหมวดหมู่เอกสารได้",
+                "error"
+              );
+            }
+          }
+        });
+    },
+
+    EditDocumentGroup(group_id, group_name) {
+      this.$swal
+        .fire({
+          title: "ชื่อหมวดหมู่เอกสาร ที่ต้องเปลี่ยนชื่อ",
+          html: "หมวดหมู่เอกสารที่เลือก: " + group_name,
+          input: "text",
+          showCancelButton: true,
+          reverseButtons: true,
+          confirmButtonText: "แก้ไข",
+          showLoaderOnConfirm: true,
+          cancelButtonText: "ยกเลิก",
+          cancelButtonColor: "#3085d6",
+          confirmButtonColor: "rgb(255, 184, 61)",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            if (result.value != "" && result.value != null) {
+              this.axios
+                .post("api/admin/edit/DocumentGroup", {
+                  id: group_id,
+                  group_name: result.value,
+                })
+                .then((res) => {
+                  this.$swal.fire(
+                    "Success!",
+                    "ทำการแก้ไขชื่อหมวดหมู่เอกสารเป็น " +
+                      result.value +
+                      " แล้ว",
+                    "success"
+                  );
+                  this.onLoad();
+                });
+            } else {
+              this.$swal.fire(
+                "Error!",
+                "ไม่สารมารถเว้นการใส่ชื่อหมวดหมู่เอกสารได้",
+                "error"
+              );
+            }
+          }
+        });
+    },
+
+    RemoveDocumentGroup(group_id) {
+      this.$swal
+        .fire({
+          title: "แจ้งเตือน!",
+          html: "คุณแน่ใจหรือไม่ที่จะลบหมวดหมู่เอกสารนี้",
+          reverseButtons: true,
+          showCancelButton: true,
+          confirmButtonText: "ลบ",
+          showLoaderOnConfirm: true,
+          cancelButtonText: "ยกเลิก",
+          cancelButtonColor: "#3085d6",
+          confirmButtonColor: "rgb(235, 64, 52)",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios
+              .post("api/admin/remove/DocumentGroup", {
+                id: group_id,
+              })
+              .then((res) => {
+                this.$swal.fire(
+                  "Success!",
+                  "ทำการลบหมวดหมู่เอกสารนี้แล้ว",
+                  "success"
+                );
+                this.onLoad();
+              });
+          }
+        });
     },
   },
 };

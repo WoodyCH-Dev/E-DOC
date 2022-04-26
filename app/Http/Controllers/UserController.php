@@ -53,6 +53,13 @@ class UserController extends Controller
         return response()->json(['status' => true,'group' => $group]);
     }
 
+    public function Get_AllDocumentgroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $document_category =  DB::table('document_category')->get();
+
+        return response()->json(['status' => true,'document_category' => $document_category]);
+    }
+
     public function SyncWithGoogle(Request $request){
         DB::table('users')
         ->where('id',$request->post('id'))
@@ -106,6 +113,15 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function AdminAddDocumentGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('document_category')
+        ->insertGetId([
+            'group_name'=>$request->post('group_name'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminEditUser(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $password = $request->post('password');
@@ -140,6 +156,16 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function AdminEditDocumentGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('document_category')
+        ->where('id',$request->post('id'))
+        ->update([
+            'group_name'=>$request->post('group_name'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminRemoveUser(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         DB::table('users')
@@ -151,6 +177,14 @@ class UserController extends Controller
     public function AdminRemoveGroup(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         DB::table('user_group')
+        ->where('id',$request->post('id'))
+        ->delete();
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminRemoveDocumentGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('document_category')
         ->where('id',$request->post('id'))
         ->delete();
         return response()->json(['status' => true]);

@@ -17,7 +17,7 @@
               </va-button>
               <va-button
                 icon="description"
-                class="mr-2"
+                class="mr-0"
                 style="background-color: rgb(47, 148, 91)"
                 data-bs-toggle="modal"
                 data-bs-target="#AddUserViaExcelModal"
@@ -294,7 +294,7 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">ยังไม่รองรับ Feature นี้</div>
         <div class="modal-footer">
           <va-button
             icon="close"
@@ -308,6 +308,7 @@
             icon="save"
             class="mr-1"
             style="background-color: rgb(47, 148, 91)"
+            disabled
           >
             บันทึกข้อมูล
           </va-button>

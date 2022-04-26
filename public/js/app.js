@@ -23196,13 +23196,15 @@ __webpack_require__.r(__webpack_exports__);
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year
+        acd_year: acd_year,
+        AllDocumentgroup_isLoad: true
       },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
         access_admin: access_admin
-      }
+      },
+      document_group_lists: new Array()
     };
   },
   methods: {
@@ -23212,6 +23214,99 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.get("api/user/acd_year").then(function (res) {
         if (res.data.status == true) {
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+      this.axios.get("api/admin/get/AllDocumentGroup").then(function (res) {
+        if (res.data.status == true) {
+          _this.data.AllDocumentgroup_isLoad = false;
+          _this.document_group_lists = res.data.document_category;
+        } else {
+          _this.$swal.fire("Error!", "Permission ของคุณไม่สามารถเข้าถึงได้", "error");
+        }
+      });
+    },
+    CreateDocumentGroup: function CreateDocumentGroup() {
+      var _this2 = this;
+
+      this.$swal.fire({
+        title: "ชื่อ Group ที่ต้องการสร้าง",
+        input: "text",
+        showCancelButton: true,
+        confirmButtonText: "สร้าง",
+        reverseButtons: true,
+        showLoaderOnConfirm: true,
+        cancelButtonColor: "#3085d6",
+        cancelButtonText: "ยกเลิก",
+        confirmButtonColor: "rgb(47, 148, 91)"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          if (result.value != "" && result.value != null) {
+            _this2.axios.post("api/admin/create/DocumentGroup", {
+              group_name: result.value
+            }).then(function (res) {
+              _this2.$swal.fire("Success!", "ทำการสร้างหมวดหมู่เอกสาร " + result.value + " แล้ว", "success");
+
+              _this2.onLoad();
+            });
+          } else {
+            _this2.$swal.fire("Error!", "ไม่สารมารถเว้นการใส่ชื่อหมวดหมู่เอกสารได้", "error");
+          }
+        }
+      });
+    },
+    EditDocumentGroup: function EditDocumentGroup(group_id, group_name) {
+      var _this3 = this;
+
+      this.$swal.fire({
+        title: "ชื่อหมวดหมู่เอกสาร ที่ต้องเปลี่ยนชื่อ",
+        html: "หมวดหมู่เอกสารที่เลือก: " + group_name,
+        input: "text",
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonText: "แก้ไข",
+        showLoaderOnConfirm: true,
+        cancelButtonText: "ยกเลิก",
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "rgb(255, 184, 61)"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          if (result.value != "" && result.value != null) {
+            _this3.axios.post("api/admin/edit/DocumentGroup", {
+              id: group_id,
+              group_name: result.value
+            }).then(function (res) {
+              _this3.$swal.fire("Success!", "ทำการแก้ไขชื่อหมวดหมู่เอกสารเป็น " + result.value + " แล้ว", "success");
+
+              _this3.onLoad();
+            });
+          } else {
+            _this3.$swal.fire("Error!", "ไม่สารมารถเว้นการใส่ชื่อหมวดหมู่เอกสารได้", "error");
+          }
+        }
+      });
+    },
+    RemoveDocumentGroup: function RemoveDocumentGroup(group_id) {
+      var _this4 = this;
+
+      this.$swal.fire({
+        title: "แจ้งเตือน!",
+        html: "คุณแน่ใจหรือไม่ที่จะลบหมวดหมู่เอกสารนี้",
+        reverseButtons: true,
+        showCancelButton: true,
+        confirmButtonText: "ลบ",
+        showLoaderOnConfirm: true,
+        cancelButtonText: "ยกเลิก",
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "rgb(235, 64, 52)"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this4.axios.post("api/admin/remove/DocumentGroup", {
+            id: group_id
+          }).then(function (res) {
+            _this4.$swal.fire("Success!", "ทำการลบหมวดหมู่เอกสารนี้แล้ว", "success");
+
+            _this4.onLoad();
+          });
         }
       });
     }
@@ -23488,7 +23583,7 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
               id: group_id,
               group_name: result.value
             }).then(function (res) {
-              _this3.$swal.fire("Success!", "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว", "success");
+              _this3.$swal.fire("Success!", "ทำการแก้ไขกลุ่มผู้ใช้ " + result.value + " แล้ว", "success");
 
               _this3.onLoad();
             });
@@ -23513,17 +23608,13 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
         confirmButtonColor: "rgb(235, 64, 52)"
       }).then(function (result) {
         if (result.isConfirmed) {
-          if (result.value != "" && result.value != null) {
-            _this4.axios.post("api/admin/remove/Group", {
-              id: group_id
-            }).then(function (res) {
-              _this4.$swal.fire("Success!", "ทำการสร้างกลุ่มผู้ใช้ " + result.value + " แล้ว", "success");
+          _this4.axios.post("api/admin/remove/Group", {
+            id: group_id
+          }).then(function (res) {
+            _this4.$swal.fire("Success!", "ทำการลบกลุ่มผู้ใช้นี้แล้ว", "success");
 
-              _this4.onLoad();
-            });
-          } else {
-            _this4.$swal.fire("Error!", "ไม่สารมารถเว้นการใส่ชื่อกลุ่มได้", "error");
-          }
+            _this4.onLoad();
+          });
         }
       });
     },
@@ -25465,17 +25556,15 @@ var _hoisted_11 = {
 
 var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เพิ่มหมวดหมู่ ");
 
-var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "1", -1
-/* HOISTED */
-);
+var _hoisted_13 = {
+  style: {
+    "text-align": "right"
+  }
+};
 
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "X", -1
-/* HOISTED */
-);
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แก้ไข ");
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แก้ไข ");
-
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบ ");
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบ ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
@@ -25502,10 +25591,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_9, _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
             icon: "add",
-            "class": "mr-4",
+            "class": "mr-0",
             style: {
               "background-color": "rgb(47, 148, 91)"
-            }
+            },
+            onClick: _cache[0] || (_cache[0] = function ($event) {
+              return $options.CreateDocumentGroup();
+            })
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [_hoisted_12];
@@ -25513,29 +25605,49 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
             /* STABLE */
 
-          })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_13, _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
-            icon: "edit",
-            "class": "mr-2",
-            color: "warning"
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_15];
-            }),
-            _: 1
-            /* STABLE */
+          })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.document_group_lists, function (doc_category, index) {
+            return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+              key: doc_category.id
+            }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(doc_category.group_name), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+              icon: "edit",
+              "class": "mr-2",
+              color: "warning",
+              onClick: function onClick($event) {
+                return $options.EditDocumentGroup(doc_category.id, doc_category.group_name);
+              }
+            }, {
+              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                return [_hoisted_14];
+              }),
+              _: 2
+              /* DYNAMIC */
 
-          }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
-            icon: "clear",
-            "class": "mr-2",
-            color: "danger"
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_16];
-            }),
-            _: 1
-            /* STABLE */
+            }, 1032
+            /* PROPS, DYNAMIC_SLOTS */
+            , ["onClick"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+              icon: "clear",
+              "class": "mr-2",
+              color: "danger",
+              onClick: function onClick($event) {
+                return $options.RemoveDocumentGroup(doc_category.id);
+              }
+            }, {
+              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                return [_hoisted_15];
+              }),
+              _: 2
+              /* DYNAMIC */
 
-          })])])])])])])])])];
+            }, 1032
+            /* PROPS, DYNAMIC_SLOTS */
+            , ["onClick"])])]);
+          }), 128
+          /* KEYED_FRAGMENT */
+          ))])])])])])])];
         }),
         _: 1
         /* STABLE */
@@ -26118,7 +26230,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_27, " เพิ่มผู้ใช้งานลงในกลุ่ม " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.select_group_name), 1
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_27, " แก้ไขผู้ใช้งานในกลุ่ม " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.select_group_name), 1
   /* TEXT */
   ), _hoisted_28]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_input, {
     "class": "xs12 md12",
@@ -26410,7 +26522,7 @@ var _hoisted_54 = {
   "class": "modal-content"
 };
 
-var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\">เพิ่มผู้ใช้งานด้วย Excel</h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">...</div>", 2);
+var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title\">เพิ่มผู้ใช้งานด้วย Excel</h5><button type=\"button\" data-bs-dismiss=\"modal\" aria-label=\"Close\" class=\"btn\"><i class=\"far fa-times\"></i></button></div><div class=\"modal-body\">ยังไม่รองรับ Feature นี้</div>", 2);
 
 var _hoisted_57 = {
   "class": "modal-footer"
@@ -26644,7 +26756,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
             icon: "description",
-            "class": "mr-2",
+            "class": "mr-0",
             style: {
               "background-color": "rgb(47, 148, 91)"
             },
@@ -26905,7 +27017,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "mr-1",
     style: {
       "background-color": "rgb(47, 148, 91)"
-    }
+    },
+    disabled: ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_59];
