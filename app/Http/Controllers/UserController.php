@@ -19,7 +19,7 @@ class UserController extends Controller
         ->leftJoin('year_list','year_list.id','config.value')
         ->where('config','year_config')
         ->first();
-        return response()->json(['status' => true,'acd_year' => $acd_year->year]);
+        return response()->json(['status' => true,'acd_year' => $acd_year->year , 'acd_year_id' => $acd_year->id]);
     }
 
     public function GetUserCount(Request $request){
@@ -47,7 +47,7 @@ class UserController extends Controller
     }
 
     public function Sender_Get_AlluserAndGroup(Request $request){
-        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $users = DB::table('users')->get();
         $groups = DB::table('user_group')->get();
         return response()->json(['status' => true,'users'=> $users,'groups'=>$groups]);
@@ -282,6 +282,91 @@ class UserController extends Controller
             }
         }
         return response()->json(['status' => true]);
+    }
+
+    public function SenderUploadFiles(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if ($file = $request->file('file')) {
+
+            $name = $file->getClientOriginalName();
+            $path = $file->storeAs('uploads/sender',$name,'public');
+
+            return response()->json([
+                "status" => true,
+                "file" => $name
+            ]);
+        }
+    }
+
+    public function SenderSendDocument(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($request->post('type') == 'user'){
+            $document_id = DB::table('documents')
+            ->insertGetId([
+                'document_title'=> $request->post('document_title'),
+                'document_number'=> $request->post('document_number'),
+                'document_category_id'=> $request->post('document_category_id'),
+                'document_description'=> $request->post('document_description'),
+                'document_stage_id'=> 1,
+                'document_priority'=> $request->post('document_priority'),
+                'document_status'=> 0,
+                'user_id'=> $request->post('user_id'),
+                'year_id'=> $request->post('year_id'),
+                'timestamp'=> Carbon::now(),
+            ]);
+            $document_stage = DB::table('document_stage')
+            ->insertGetId([
+                'stage'=> 1,
+                'document_id'=> $document_id,
+                'sender_user_id'=> $request->post('user_id'),
+                'sender_type'=> 'user',
+                'to'=> $request->post('to_id'),
+                'status'=> 0,
+                'created_timestamp'=> Carbon::now(),
+                'read_timestamp'=> null,
+            ]);
+            foreach($request->post('files') as $file_data){
+                $file_upload = DB::table('document_file')->insert([
+                    "file" => $file_data['file'],
+                    "document_id" => $document_id,
+                    "document_stage_id" => $document_stage,
+                ]);
+            }
+            return response()->json(['status' => true]);
+        }else if($request->post('type') == 'group'){
+            $document_id = DB::table('documents')
+            ->insertGetId([
+                'document_title'=> $request->post('document_title'),
+                'document_number'=> $request->post('document_number'),
+                'document_category_id'=> $request->post('document_category_id'),
+                'document_description'=> $request->post('document_description'),
+                'document_stage_id'=> 1,
+                'document_priority'=> $request->post('document_priority'),
+                'document_status'=> 0,
+                'user_id'=> $request->post('user_id'),
+                'year_id'=> $request->post('year_id'),
+                'timestamp'=> Carbon::now(),
+            ]);
+            $document_stage = DB::table('document_stage')
+            ->insertGetId([
+                'stage'=> 1,
+                'document_id'=> $document_id,
+                'sender_user_id'=> $request->post('user_id'),
+                'sender_type'=> 'group',
+                'to'=> $request->post('to_id'),
+                'status'=> 0,
+                'created_timestamp'=> Carbon::now(),
+                'read_timestamp'=> null,
+            ]);
+            foreach($request->post('files') as $file_data){
+                $file_upload = DB::table('document_file')->insert([
+                    "file" => $file_data['file'],
+                    "document_id" => $document_id,
+                    "document_stage_id" => $document_stage,
+                ]);
+            }
+            return response()->json(['status' => true]);
+        }
     }
 
     //Chk User Function

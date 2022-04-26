@@ -36,15 +36,7 @@
                           <td>ไฟล์.pdf</td>
                           <td>ไฟล์.pdf</td>
                           <td>ไฟล์.pdf</td>
-                          <td>ตรวจสอบ</td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ตรวจสอบ</td>
+                          <td>ติดตามเอกสาร</td>
                         </tr>
                       </tbody>
                     </table>
