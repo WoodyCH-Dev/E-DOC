@@ -46,6 +46,13 @@ class UserController extends Controller
         return response()->json(['status' => true,'users' => $users_withgroup]);
     }
 
+    public function Sender_Get_AlluserAndGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $users = DB::table('users')->get();
+        $groups = DB::table('user_group')->get();
+        return response()->json(['status' => true,'users'=> $users,'groups'=>$groups]);
+    }
+
     public function Get_Allgroup(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $group =  DB::table('user_group')->get();

@@ -23289,6 +23289,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       this.$swal.fire({
+        icon: "warning",
         title: "แจ้งเตือน!",
         html: "คุณแน่ใจหรือไม่ที่จะลบหมวดหมู่เอกสารนี้",
         reverseButtons: true,
@@ -23597,6 +23598,7 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
       var _this4 = this;
 
       this.$swal.fire({
+        icon: "warning",
         title: "แจ้งเตือน!",
         html: "คุณแน่ใจหรือไม่ที่จะลบ Group นี้",
         reverseButtons: true,
@@ -24143,6 +24145,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var username = "";
@@ -24165,8 +24185,6 @@ __webpack_require__.r(__webpack_exports__);
     }
 
     this.onLoad();
-    var category_select_options = ["วิชาการ", "ทั่วไป", "การเงิน", "กิจการนักเรียน"];
-    var user_select_options = ["user1", "user2"];
     var piority_select_options = ["ทั่วไป", "ด่วน", "ด่วนที่สุด"];
     return {
       data: {
@@ -24180,12 +24198,12 @@ __webpack_require__.r(__webpack_exports__);
         access_admin: access_admin
       },
       form: {
-        category_select_value: "",
-        user_select_value: "",
-        piority_select_value: piority_select_options[0],
-        category_select_options: category_select_options,
-        user_select_options: user_select_options,
-        piority_select_options: piority_select_options
+        category_select_options: new Array(),
+        category_select_value: null,
+        user_select_options: new Array(),
+        user_select_value: null,
+        piority_select_options: piority_select_options,
+        piority_select_value: piority_select_options[0]
       }
     };
   },
@@ -24196,6 +24214,193 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.get("api/user/acd_year").then(function (res) {
         if (res.data.status == true) {
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+      this.axios.get("api/sender/get/AllUserAndGroup").then( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+          var i, _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, group, _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, user;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  if (!(res.data.status == true)) {
+                    _context.next = 62;
+                    break;
+                  }
+
+                  i = 0;
+                  _iteratorAbruptCompletion = false;
+                  _didIteratorError = false;
+                  _context.prev = 4;
+                  _iterator = _asyncIterator(res.data.groups);
+
+                case 6:
+                  _context.next = 8;
+                  return _iterator.next();
+
+                case 8:
+                  if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
+                    _context.next = 15;
+                    break;
+                  }
+
+                  group = _step.value;
+                  _context.next = 12;
+                  return _this.form.user_select_options.push({
+                    text: "กลุ่มผู้ใช้: " + group.group_name,
+                    id: i++
+                  });
+
+                case 12:
+                  _iteratorAbruptCompletion = false;
+                  _context.next = 6;
+                  break;
+
+                case 15:
+                  _context.next = 21;
+                  break;
+
+                case 17:
+                  _context.prev = 17;
+                  _context.t0 = _context["catch"](4);
+                  _didIteratorError = true;
+                  _iteratorError = _context.t0;
+
+                case 21:
+                  _context.prev = 21;
+                  _context.prev = 22;
+
+                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+                    _context.next = 26;
+                    break;
+                  }
+
+                  _context.next = 26;
+                  return _iterator["return"]();
+
+                case 26:
+                  _context.prev = 26;
+
+                  if (!_didIteratorError) {
+                    _context.next = 29;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 29:
+                  return _context.finish(26);
+
+                case 30:
+                  return _context.finish(21);
+
+                case 31:
+                  _iteratorAbruptCompletion2 = false;
+                  _didIteratorError2 = false;
+                  _context.prev = 33;
+                  _iterator2 = _asyncIterator(res.data.users);
+
+                case 35:
+                  _context.next = 37;
+                  return _iterator2.next();
+
+                case 37:
+                  if (!(_iteratorAbruptCompletion2 = !(_step2 = _context.sent).done)) {
+                    _context.next = 44;
+                    break;
+                  }
+
+                  user = _step2.value;
+                  _context.next = 41;
+                  return _this.form.user_select_options.push({
+                    text: user.name + " " + user.lastname,
+                    id: i++
+                  });
+
+                case 41:
+                  _iteratorAbruptCompletion2 = false;
+                  _context.next = 35;
+                  break;
+
+                case 44:
+                  _context.next = 50;
+                  break;
+
+                case 46:
+                  _context.prev = 46;
+                  _context.t1 = _context["catch"](33);
+                  _didIteratorError2 = true;
+                  _iteratorError2 = _context.t1;
+
+                case 50:
+                  _context.prev = 50;
+                  _context.prev = 51;
+
+                  if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
+                    _context.next = 55;
+                    break;
+                  }
+
+                  _context.next = 55;
+                  return _iterator2["return"]();
+
+                case 55:
+                  _context.prev = 55;
+
+                  if (!_didIteratorError2) {
+                    _context.next = 58;
+                    break;
+                  }
+
+                  throw _iteratorError2;
+
+                case 58:
+                  return _context.finish(55);
+
+                case 59:
+                  return _context.finish(50);
+
+                case 60:
+                  _context.next = 63;
+                  break;
+
+                case 62:
+                  _this.$swal.fire("Error!", "Permission ของคุณไม่สามารถเข้าถึงได้", "error");
+
+                case 63:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[4, 17, 21, 31], [22,, 26, 30], [33, 46, 50, 60], [51,, 55, 59]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+      this.axios.get("api/admin/get/AllDocumentGroup").then(function (res) {
+        if (res.data.status == true) {
+          var _iterator3 = _createForOfIteratorHelper(res.data.document_category),
+              _step3;
+
+          try {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+              var doc_category = _step3.value;
+
+              _this.form.category_select_options.push({
+                text: doc_category.group_name,
+                id: doc_category.id
+              });
+            }
+          } catch (err) {
+            _iterator3.e(err);
+          } finally {
+            _iterator3.f();
+          }
+        } else {
+          _this.$swal.fire("Error!", "Permission ของคุณไม่สามารถเข้าถึงได้", "error");
         }
       });
     }
@@ -25530,6 +25735,7 @@ var _hoisted_7 = {
   }
 };
 var _hoisted_8 = {
+  key: 0,
   "class": "va-table",
   style: {
     "width": "100%"
@@ -25566,10 +25772,22 @@ var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNo
 
 var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบ ");
 
+var _hoisted_16 = {
+  key: 0,
+  align: "center",
+  style: {
+    "padding-top": "30px"
+  }
+};
+
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กำลังโหลดข้อมูล ");
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
 
   var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
+
+  var _component_va_progress_circle = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-progress-circle");
 
   var _component_va_card_content = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-content");
 
@@ -25589,7 +25807,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_9, _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [!$data.data.AllDocumentgroup_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_9, _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
             icon: "add",
             "class": "mr-0",
             style: {
@@ -25647,7 +25865,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             , ["onClick"])])]);
           }), 128
           /* KEYED_FRAGMENT */
-          ))])])])])])])];
+          ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.data.AllDocumentgroup_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_progress_circle, {
+            size: "large",
+            thickness: 0.4,
+            color: "primary",
+            indeterminate: ""
+          }, null, 8
+          /* PROPS */
+          , ["thickness"]), _hoisted_17])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])];
         }),
         _: 1
         /* STABLE */
@@ -27566,6 +27791,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               return $data.form.category_select_value = $event;
             }),
             options: $data.form.category_select_options,
+            "track-by": "id",
             placeholder: "กรุณาเลือกหมวดหมู"
           }, null, 8
           /* PROPS */
@@ -27587,7 +27813,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
               return $data.form.user_select_value = $event;
             }),
-            multiple: ""
+            "track-by": "id",
+            multiple: "",
+            searchable: ""
           }, null, 8
           /* PROPS */
           , ["options", "modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [_hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {

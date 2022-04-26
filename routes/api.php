@@ -29,6 +29,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
     //Sender
+    Route::get('/sender/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);

@@ -24,6 +24,7 @@
                   required
                   v-model="form.category_select_value"
                   :options="form.category_select_options"
+                  track-by="id"
                   placeholder="กรุณาเลือกหมวดหมู"
                 />
               </div>
@@ -70,7 +71,9 @@
                   placeholder="เลือกผู้รับ"
                   :options="form.user_select_options"
                   v-model="form.user_select_value"
+                  track-by="id"
                   multiple
+                  searchable
                 />
               </div>
             </div>
@@ -124,14 +127,6 @@ export default {
     }
 
     this.onLoad();
-
-    var category_select_options = [
-      "วิชาการ",
-      "ทั่วไป",
-      "การเงิน",
-      "กิจการนักเรียน",
-    ];
-    var user_select_options = ["user1", "user2"];
     var piority_select_options = ["ทั่วไป", "ด่วน", "ด่วนที่สุด"];
 
     return {
@@ -146,12 +141,12 @@ export default {
         access_admin: access_admin,
       },
       form: {
-        category_select_value: "",
-        user_select_value: "",
-        piority_select_value: piority_select_options[0],
-        category_select_options: category_select_options,
-        user_select_options: user_select_options,
+        category_select_options: new Array(),
+        category_select_value: null,
+        user_select_options: new Array(),
+        user_select_value: null,
         piority_select_options: piority_select_options,
+        piority_select_value: piority_select_options[0],
       },
     };
   },
@@ -160,6 +155,47 @@ export default {
       this.axios.get("api/user/acd_year").then((res) => {
         if (res.data.status == true) {
           this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+
+      this.axios.get("api/sender/get/AllUserAndGroup").then(async (res) => {
+        if (res.data.status == true) {
+          var i = 0;
+          for await (let group of res.data.groups) {
+            await this.form.user_select_options.push({
+              text: "กลุ่มผู้ใช้: " + group.group_name,
+              id: i++,
+            });
+          }
+          for await (let user of res.data.users) {
+            await this.form.user_select_options.push({
+              text: user.name + " " + user.lastname,
+              id: i++,
+            });
+          }
+        } else {
+          this.$swal.fire(
+            "Error!",
+            "Permission ของคุณไม่สามารถเข้าถึงได้",
+            "error"
+          );
+        }
+      });
+
+      this.axios.get("api/admin/get/AllDocumentGroup").then((res) => {
+        if (res.data.status == true) {
+          for (let doc_category of res.data.document_category) {
+            this.form.category_select_options.push({
+              text: doc_category.group_name,
+              id: doc_category.id,
+            });
+          }
+        } else {
+          this.$swal.fire(
+            "Error!",
+            "Permission ของคุณไม่สามารถเข้าถึงได้",
+            "error"
+          );
         }
       });
     },

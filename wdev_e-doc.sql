@@ -11,7 +11,7 @@
  Target Server Version : 100422
  File Encoding         : 65001
 
- Date: 26/04/2022 00:24:21
+ Date: 26/04/2022 19:33:48
 */
 
 SET NAMES utf8mb4;
@@ -41,11 +41,15 @@ CREATE TABLE `document_category`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of document_category
 -- ----------------------------
+INSERT INTO `document_category` VALUES (1, 'วิชาการ');
+INSERT INTO `document_category` VALUES (2, 'ทั่วไป');
+INSERT INTO `document_category` VALUES (3, 'การเงิน');
+INSERT INTO `document_category` VALUES (4, 'กิจการนักเรียน');
 
 -- ----------------------------
 -- Table structure for document_file
@@ -72,7 +76,8 @@ CREATE TABLE `document_stage`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `document_id` int NULL DEFAULT NULL,
   `sender_user_id` int NULL DEFAULT NULL,
-  `to_user_id` int NULL DEFAULT NULL,
+  `sender_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'group or user',
+  `to` int NULL DEFAULT NULL COMMENT 'user_id or group_id',
   `status` int NULL DEFAULT NULL COMMENT '0 = wait 1 = read',
   `created_timestamp` datetime NULL DEFAULT NULL,
   `read_timestamp` datetime NULL DEFAULT NULL,
@@ -161,7 +166,7 @@ CREATE TABLE `user_permission`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_permission_ibfk_1`(`user_id` ASC) USING BTREE,
   CONSTRAINT `user_permission_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_permission
