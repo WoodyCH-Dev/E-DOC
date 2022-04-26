@@ -46,6 +46,20 @@ class UserController extends Controller
         return response()->json(['status' => true,'users' => $users_withgroup]);
     }
 
+    public function Get_Allgroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $group =  DB::table('user_group')->get();
+
+        return response()->json(['status' => true,'group' => $group]);
+    }
+
+    public function Get_AllDocumentgroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $document_category =  DB::table('document_category')->get();
+
+        return response()->json(['status' => true,'document_category' => $document_category]);
+    }
+
     public function SyncWithGoogle(Request $request){
         DB::table('users')
         ->where('id',$request->post('id'))
@@ -55,7 +69,18 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function UnSyncWithGoogle(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('users')
+        ->where('id',$request->post('id'))
+        ->update([
+            'google_uid' => null,
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminGetUser(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $userdata = DB::table('users')
         ->where('id',$request->route('user_id'))
         ->first();
@@ -63,6 +88,7 @@ class UserController extends Controller
     }
 
     public function AdminAddUser(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $insertuser = DB::table('users')
         ->insertGetId([
             'name'=>$request->post('name'),
@@ -78,7 +104,26 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function AdminAddGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('user_group')
+        ->insertGetId([
+            'group_name'=>$request->post('group_name'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminAddDocumentGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('document_category')
+        ->insertGetId([
+            'group_name'=>$request->post('group_name'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminEditUser(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $password = $request->post('password');
         if(!empty($password)){
             DB::table('users')
@@ -101,13 +146,138 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function AdminEditGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('user_group')
+        ->where('id',$request->post('id'))
+        ->update([
+            'group_name'=>$request->post('group_name'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminEditDocumentGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('document_category')
+        ->where('id',$request->post('id'))
+        ->update([
+            'group_name'=>$request->post('group_name'),
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     public function AdminRemoveUser(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         DB::table('users')
         ->where('id',$request->post('id'))
         ->delete();
         return response()->json(['status' => true]);
     }
 
+    public function AdminRemoveGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('user_group')
+        ->where('id',$request->post('id'))
+        ->delete();
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminRemoveDocumentGroup(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('document_category')
+        ->where('id',$request->post('id'))
+        ->delete();
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminGetUserPermission(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $userpermission = DB::table('user_permission')
+        ->where('user_id',$request->post('user_id'))
+        ->get();
+        $user = false;
+        $sender = false;
+        $admin = false;
+        foreach($userpermission as $user_perms){
+            if($user_perms->permission_id == 0){
+                $user = true;
+            }
+            if($user_perms->permission_id == 1){
+                $sender = true;
+            }
+            if($user_perms->permission_id == 2){
+                $admin = true;
+            }
+        }
+        return response()->json([
+            'status' => true,
+            'permission_user' => $user,
+            'permission_sender' => $sender,
+            'permission_admin' => $admin
+        ]);
+    }
+
+    public function AdminEditUserPermission(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $userpermissionchk = DB::table('user_permission')
+        ->where('user_id',$request->post('user_id'))
+        ->where('permission_id',$request->post('permission_id'))
+        ->first();
+
+        if($request->post('type') == true){ //Add
+            if(!$userpermissionchk){
+                DB::table('user_permission')
+                ->insert([
+                    'user_id'=> $request->post('user_id'),
+                    'permission_id'=> $request->post('permission_id')
+                ]);
+            }
+        }else if($request->post('type') == false){ //Remove
+            if($userpermissionchk){
+                DB::table('user_permission')
+                ->where('user_id',$request->post('user_id'))
+                ->where('permission_id',$request->post('permission_id'))
+                ->delete();
+            }
+        }
+        return response()->json(['status' => true]);
+    }
+
+    public function Get_Alluser_InGroup(Request $request){
+        $usersingroup =  DB::table('user_ingroup')
+        ->leftJoin('users','users.id','user_ingroup.user_id')
+        ->where('group_id',$request->route('group_id'))
+        ->get();
+        return response()->json(['status' => true, 'users'=>$usersingroup]);
+    }
+
+    public function AdminEditGroupUser(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $userchk = DB::table('user_ingroup')
+        ->where('user_id',$request->post('user_id'))
+        ->where('group_id',$request->post('group_id'))
+        ->first();
+
+        if($request->post('type') == true){ //Add
+            if(!$userchk){
+                DB::table('user_ingroup')
+                ->insert([
+                    'user_id'=> $request->post('user_id'),
+                    'group_id'=> $request->post('group_id')
+                ]);
+            }
+        }else if($request->post('type') == false){ //Remove
+            if($userchk){
+                DB::table('user_ingroup')
+                ->where('user_id',$request->post('user_id'))
+                ->where('group_id',$request->post('group_id'))
+                ->delete();
+            }
+        }
+        return response()->json(['status' => true]);
+    }
+
+    //Chk User Function
     public function ChkUser($req_permission){
         $_user = auth()->user();
         if(!$_user){

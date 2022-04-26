@@ -11,7 +11,7 @@
  Target Server Version : 100422
  File Encoding         : 65001
 
- Date: 25/04/2022 01:23:30
+ Date: 26/04/2022 00:24:21
 */
 
 SET NAMES utf8mb4;
@@ -34,6 +34,85 @@ CREATE TABLE `config`  (
 INSERT INTO `config` VALUES (1, 'year_config', '1');
 
 -- ----------------------------
+-- Table structure for document_category
+-- ----------------------------
+DROP TABLE IF EXISTS `document_category`;
+CREATE TABLE `document_category`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of document_category
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for document_file
+-- ----------------------------
+DROP TABLE IF EXISTS `document_file`;
+CREATE TABLE `document_file`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `document_id` int NULL DEFAULT NULL,
+  `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `document_id`(`document_id` ASC) USING BTREE,
+  CONSTRAINT `document_file_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of document_file
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for document_stage
+-- ----------------------------
+DROP TABLE IF EXISTS `document_stage`;
+CREATE TABLE `document_stage`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `document_id` int NULL DEFAULT NULL,
+  `sender_user_id` int NULL DEFAULT NULL,
+  `to_user_id` int NULL DEFAULT NULL,
+  `status` int NULL DEFAULT NULL COMMENT '0 = wait 1 = read',
+  `created_timestamp` datetime NULL DEFAULT NULL,
+  `read_timestamp` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `document_id`(`document_id` ASC) USING BTREE,
+  CONSTRAINT `document_stage_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of document_stage
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for documents
+-- ----------------------------
+DROP TABLE IF EXISTS `documents`;
+CREATE TABLE `documents`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `document_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `document_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `document_category_id` int NULL DEFAULT NULL,
+  `document_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `document_stage_id` int NULL DEFAULT NULL,
+  `document_priority` int NULL DEFAULT NULL COMMENT '0 ทั่วไป 1 ด่วน 2 ด่วนที่สุด',
+  `document_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '0 เอกสารดำเนินการได้ปกติ 1 เอกสารถูกยกเลิก(ลบ)',
+  `user_id` int NULL DEFAULT NULL,
+  `year_id` int NULL DEFAULT NULL,
+  `timestamp` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `document_category_id`(`document_category_id` ASC) USING BTREE,
+  INDEX `year_id`(`year_id` ASC) USING BTREE,
+  CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`document_category_id`) REFERENCES `document_category` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`year_id`) REFERENCES `year_list` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of documents
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for user_group
 -- ----------------------------
 DROP TABLE IF EXISTS `user_group`;
@@ -41,7 +120,7 @@ CREATE TABLE `user_group`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_group
@@ -62,13 +141,14 @@ CREATE TABLE `user_ingroup`  (
   INDEX `user_ingroup_ibfk_2`(`group_id` ASC) USING BTREE,
   CONSTRAINT `user_ingroup_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_ingroup_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_ingroup
 -- ----------------------------
-INSERT INTO `user_ingroup` VALUES (1, 1, 1);
-INSERT INTO `user_ingroup` VALUES (2, 1, 2);
+INSERT INTO `user_ingroup` VALUES (6, 11, 1);
+INSERT INTO `user_ingroup` VALUES (13, 1, 2);
+INSERT INTO `user_ingroup` VALUES (14, 1, 1);
 
 -- ----------------------------
 -- Table structure for user_permission
@@ -81,7 +161,7 @@ CREATE TABLE `user_permission`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_permission_ibfk_1`(`user_id` ASC) USING BTREE,
   CONSTRAINT `user_permission_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_permission
@@ -89,7 +169,7 @@ CREATE TABLE `user_permission`  (
 INSERT INTO `user_permission` VALUES (1, 1, 0);
 INSERT INTO `user_permission` VALUES (2, 1, 1);
 INSERT INTO `user_permission` VALUES (3, 1, 2);
-INSERT INTO `user_permission` VALUES (5, 11, 0);
+INSERT INTO `user_permission` VALUES (46, 11, 0);
 
 -- ----------------------------
 -- Table structure for users

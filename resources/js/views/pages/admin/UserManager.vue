@@ -17,7 +17,7 @@
               </va-button>
               <va-button
                 icon="description"
-                class="mr-2"
+                class="mr-0"
                 style="background-color: rgb(47, 148, 91)"
                 data-bs-toggle="modal"
                 data-bs-target="#AddUserViaExcelModal"
@@ -294,7 +294,7 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">ยังไม่รองรับ Feature นี้</div>
         <div class="modal-footer">
           <va-button
             icon="close"
@@ -308,6 +308,7 @@
             icon="save"
             class="mr-1"
             style="background-color: rgb(47, 148, 91)"
+            disabled
           >
             บันทึกข้อมูล
           </va-button>
@@ -375,6 +376,26 @@
                 />
               </div>
             </div>
+            <div class="flex xl6 xs12">
+              <b class="mr-1">สถานะการเชื่อมต่อบัญชี Google</b>
+              <va-chip color="success" v-if="editUserForm.google_uid"
+                >เชื่อมต่อแล้ว</va-chip
+              >
+              <va-chip color="danger" v-if="!editUserForm.google_uid"
+                >ยังไม่เชื่อมต่อ</va-chip
+              >
+            </div>
+            <div class="flex xl6 xs12" align="right">
+              <va-button
+                class="mr-1"
+                color="danger"
+                v-if="editUserForm.google_uid"
+                @click="EditUserGoogleResetSubmit()"
+              >
+                <i class="fab fa-google mr-2"></i>
+                ยกเลิกการ Sync Google
+              </va-button>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -426,6 +447,13 @@
                 color="primary"
                 class="mr-4"
                 v-model="editUserPermissionForm.user"
+                v-on:click="
+                  EditUserPermissionSubmit(0) ||
+                    $vaToast.init({
+                      message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+                      color: 'primary',
+                    })
+                "
               >
                 ผู้ใช้งานทั่วไป
               </va-switch>
@@ -435,6 +463,13 @@
                 color="warning"
                 class="mr-4"
                 v-model="editUserPermissionForm.sender"
+                v-on:click="
+                  EditUserPermissionSubmit(1) ||
+                    $vaToast.init({
+                      message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+                      color: 'primary',
+                    })
+                "
               >
                 ผู้ส่ง
               </va-switch>
@@ -444,6 +479,13 @@
                 color="danger"
                 class="mr-4"
                 v-model="editUserPermissionForm.admin"
+                v-on:click="
+                  EditUserPermissionSubmit(2) ||
+                    $vaToast.init({
+                      message: 'แก้ไขสิทธิ์การเข้าถึงของผู้ใช้แล้ว!',
+                      color: 'primary',
+                    })
+                "
               >
                 แอดมิน
               </va-switch>
@@ -456,6 +498,7 @@
             class="mr-1"
             color="danger"
             data-bs-dismiss="modal"
+            v-on:click="EditUserPermissionClose()"
           >
             ปิด
           </va-button>
@@ -516,6 +559,7 @@ export default {
         lastname: "",
         email: "",
         password: "",
+        google_uid: "",
         validation: null,
       },
       editUserPermissionForm: {
@@ -633,6 +677,7 @@ export default {
       this.editUserForm.lastname = "";
       this.editUserForm.email = "";
       this.editUserForm.password = "";
+      this.editUserForm.google_uid = "";
       this.axios.get("api/admin/get/user/" + user_id).then((res) => {
         console.log(res.data);
         if (res.data.status == true) {
@@ -640,6 +685,7 @@ export default {
           this.editUserForm.name = res.data.userdata.name;
           this.editUserForm.lastname = res.data.userdata.lastname;
           this.editUserForm.email = res.data.userdata.email;
+          this.editUserForm.google_uid = res.data.userdata.google_uid;
         }
       });
     },
@@ -661,8 +707,44 @@ export default {
             this.editUserForm.lastname = "";
             this.editUserForm.email = "";
             this.editUserForm.password = "";
+            this.editUserForm.google_uid = "";
             this.onLoad();
             document.getElementById("CloseEditUserModal").click();
+          }
+        });
+    },
+
+    EditUserGoogleResetSubmit() {
+      this.$swal
+        .fire({
+          title: "แจ้งเตือน!",
+          text: "ยืนยันการยกเลิกการเชื่อมต่อบัญชี Google ",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "rgb(235, 64, 52)",
+          confirmButtonText: "ยืนยัน",
+          reverseButtons: true,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios
+              .post("api/admin/edit/User/ResetSyncGoogle", {
+                id: this.editUserForm.id,
+              })
+              .then((res) => {
+                if (res.data.status == true) {
+                  this.$swal.fire(
+                    "Success!",
+                    "แก้ไขข้อมูลสำเร็จแล้ว!",
+                    "success"
+                  );
+                  this.editUserForm.google_uid = "";
+                  this.onLoad();
+                  this.EditUser(this.editUserForm.id);
+                }
+              });
           }
         });
     },
@@ -702,6 +784,47 @@ export default {
 
     EditUserPermission(user_id) {
       this.editUserPermissionForm.id = user_id;
+      this.axios
+        .post("api/admin/get/User/permission", {
+          user_id: this.editUserPermissionForm.id,
+        })
+        .then((res) => {
+          if (res.data.status == true) {
+            this.editUserPermissionForm.user = res.data.permission_user;
+            this.editUserPermissionForm.sender = res.data.permission_sender;
+            this.editUserPermissionForm.admin = res.data.permission_admin;
+          }
+        });
+    },
+
+    EditUserPermissionSubmit(permission_id) {
+      var type = false;
+      if (permission_id == 0) {
+        //User
+        type = !!this.editUserPermissionForm.user;
+      } else if (permission_id == 1) {
+        //Sender
+        type = !!this.editUserPermissionForm.sender;
+      } else if (permission_id == 2) {
+        //Admin
+        type = !!this.editUserPermissionForm.admin;
+      }
+      this.axios
+        .post("api/admin/edit/User/permission", {
+          user_id: this.editUserPermissionForm.id,
+          permission_id: permission_id,
+          type: type,
+        })
+        .then((res) => {
+          this.EditUserPermission(this.editUserPermissionForm.id);
+        });
+    },
+
+    EditUserPermissionClose() {
+      this.editUserPermissionForm.id = 0;
+      this.editUserPermissionForm.user = false;
+      this.editUserPermissionForm.sender = false;
+      this.editUserPermissionForm.admin = false;
     },
   },
 };
