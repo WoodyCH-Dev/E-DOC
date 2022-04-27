@@ -378,6 +378,8 @@ class UserController extends Controller
         ->leftJoin('document_category','document_category.id','documents.document_category_id')
         ->where('user_id',$request->post('user_id'))
         ->where('year_id',$request->post('year_id'))
+        ->where('document_status',0)
+        ->orWhere('document_status',1)
         ->get();
         return response()->json(['status' => true,'lists'=>$lists]);
     }

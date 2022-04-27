@@ -1,3 +1,59 @@
+<style>
+.events li {
+  display: flex;
+  color: #999;
+}
+
+.events time {
+  position: relative;
+  padding: 0 1.5em;
+}
+
+.events time::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  top: 0;
+  transform: translateX(50%);
+  border-radius: 50%;
+  background: #fff;
+  border: 1px #ccc solid;
+  width: 0.8em;
+  height: 0.8em;
+}
+
+.events span {
+  padding: 0 1.5em 1.5em 1.5em;
+  position: relative;
+}
+
+.events span::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  height: 100%;
+  border-left: 1px #ccc solid;
+}
+
+.events strong {
+  display: block;
+  font-weight: bolder;
+}
+
+.events {
+  margin: 1em;
+  width: 100%;
+}
+.events,
+.events *::before,
+.events *::after {
+  box-sizing: border-box;
+  font-family: arial;
+}
+</style>
+
 <template>
   <div class="row">
     <div class="flex xl12 xs12 center">
@@ -62,8 +118,10 @@
                               icon="approval"
                               class="mr-2"
                               style="background-color: rgb(47, 148, 91)"
+                              data-bs-toggle="modal"
+                              data-bs-target="#TrackingStatusModal"
                             >
-                              ติดตามเอกสาร
+                              สถานะเอกสาร
                             </va-button>
                           </td>
                         </tr>
@@ -89,6 +147,94 @@
           </div>
         </va-card-content>
       </va-card>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="TrackingStatusModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">สถานะเอกสาร</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="events">
+            <li>
+              <time datetime="10:03">10:03</time>
+              <span><strong>Bat &amp; Ball</strong> On time</span>
+            </li>
+
+            <li>
+              <time datetime="10:03">10:03</time>
+              <span><strong>Bat &amp; Ball</strong> On time</span>
+            </li>
+
+            <li>
+              <time datetime="10:03">10:03</time>
+              <span>
+                <strong> Bat &amp; Ball</strong>
+                On time and other text that may span over 2 lines
+              </span>
+            </li>
+
+            <li>
+              <time datetime="10:03">10:03</time>
+              <span><strong>Bat &amp; Ball</strong> On time</span>
+            </li>
+
+            <li>
+              <time datetime="10:03">10:03</time>
+              <span><strong>Bat &amp; Ball</strong> On time</span>
+            </li>
+
+            <li>
+              <time datetime="10:03">10:03</time>
+              <span><strong>Bat &amp; Ball</strong> On time</span>
+            </li>
+          </ul>
+
+          <va-button
+            icon="cancel"
+            class="mr-1"
+            color="warning"
+            data-bs-dismiss="modal"
+          >
+            ยกเลิกเอกสาร
+          </va-button>
+          <va-button
+            icon="delete_forever"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ลบเอกสาร
+          </va-button>
+        </div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -70,8 +70,10 @@
                             icon="approval"
                             class="mr-2"
                             style="background-color: rgb(47, 148, 91)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#TrackingStatusModal"
                           >
-                            ติดตามเอกสาร
+                            สถานะเอกสาร
                           </va-button>
                         </td>
                         <td>
@@ -104,6 +106,42 @@
           </div>
         </va-card-content>
       </va-card>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="TrackingStatusModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">สถานะเอกสาร</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">ยังไม่รองรับ Feature นี้</div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -166,7 +204,7 @@ export default {
                   (year_lists) =>
                     year_lists.text == Number(res.data.acd_year) + 543
                 );
-                this.LoadSenderDocumentLists();
+                this.LoadDocumentLists();
               }
             });
           }
@@ -174,7 +212,7 @@ export default {
       });
     },
 
-    LoadSenderDocumentLists() {
+    LoadDocumentLists() {
       this.axios
         .post("api/admin/get/AllSender", {
           year_id: this.data.acd_year_value.id,
