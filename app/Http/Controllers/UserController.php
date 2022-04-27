@@ -370,6 +370,68 @@ class UserController extends Controller
             return response()->json(['status' => true]);
     }
 
+    public function SenderUpdateSendDocument(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+
+            DB::table('documents')
+            ->where('id',$request->post('document_id'))
+            ->update([
+                'document_title'=> $request->post('document_title'),
+                'document_number'=> $request->post('document_number'),
+                'document_category_id'=> $request->post('document_category_id'),
+                'document_description'=> $request->post('document_description'),
+                'document_priority'=> $request->post('document_priority'),
+                'year_id'=> $request->post('year_id'),
+            ]);
+
+            DB::table('document_file')
+            ->where('document_id',$request->post('document_id'))
+            ->delete();
+
+            DB::table('document_stage')
+            ->where('document_id',$request->post('document_id'))
+            ->delete();
+
+            foreach($request->post('send_to') as $user){
+                $document_stage = 0;
+                if($user['type'] == 'user'){
+                    $document_stage = DB::table('document_stage')
+                    ->insertGetId([
+                        'stage'=> 1,
+                        'document_id'=> $request->post('document_id'),
+                        'sender_user_id'=> $request->post('user_id'),
+                        'sender_type'=> 'user',
+                        'to'=> $user['id'],
+                        'status'=> 0,
+                        'created_timestamp'=> Carbon::now(),
+                        'read_timestamp'=> null,
+                    ]);
+                }else if($user['type'] == 'group'){
+                    $document_stage = DB::table('document_stage')
+                    ->insertGetId([
+                        'stage'=> 1,
+                        'document_id'=> $request->post('document_id'),
+                        'sender_user_id'=> $request->post('user_id'),
+                        'sender_type'=> 'group',
+                        'to'=> $user['id'],
+                        'status'=> 0,
+                        'created_timestamp'=> Carbon::now(),
+                        'read_timestamp'=> null,
+                    ]);
+                }
+
+                foreach($request->post('files') as $file_data){
+                    $file_upload = DB::table('document_file')->insert([
+                        "file" => $file_data['file'],
+                        "document_id" => $request->post('document_id'),
+                        "document_stage_id" => $document_stage,
+                    ]);
+                };
+            }
+
+            return response()->json(['status' => true]);
+    }
+
     public function Sender_Get_MySender(Request $request){
         if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $lists = DB::table('documents')

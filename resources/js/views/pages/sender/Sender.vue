@@ -134,6 +134,7 @@
                     track-by="id_key"
                     multiple
                     searchable
+                    required
                   />
                 </div>
               </div>
@@ -333,7 +334,7 @@ export default {
               this.$swal
                 .fire("Success!", "ส่งเอกสารแล้ว!", "success")
                 .then(() => {
-                  this.$router.push("/send/list");
+                  this.$router.push("/sender/send/list");
                 });
             }
           });

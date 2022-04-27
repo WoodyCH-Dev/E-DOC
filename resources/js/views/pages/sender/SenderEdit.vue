@@ -128,6 +128,7 @@
                     v-model="form.user_select_value"
                     track-by="id_key"
                     multiple
+                    required
                     searchable
                   />
                 </div>
@@ -153,7 +154,9 @@
                   </router-link>
                   <va-button
                     style="background-color: rgb(47, 148, 91)"
-                    @click="$refs.form_data.validate()"
+                    @click="
+                      $refs.form_data.validate() && DocumentSendEditSubmit()
+                    "
                   >
                     <i class="fas fa-check-circle mr-2"></i> แก้ไขเอกสาร
                   </va-button>
@@ -229,7 +232,7 @@ export default {
         user_select_options: new Array(),
         user_select_value: null,
         piority_select_options: piority_select_options,
-        piority_select_value: piority_select_options[0],
+        piority_select_value: null,
         validation: null,
       },
     };
@@ -350,11 +353,11 @@ export default {
           this.form.document_description =
             res.data.document_info.document_description;
           this.form.category_select_value =
-            this.form.category_select_options.filter((element) => {
+            this.form.category_select_options.find((element) => {
               return element.id == res.data.document_info.document_category_id;
             });
           this.form.piority_select_value =
-            this.form.piority_select_options.filter(async (element) => {
+            this.form.piority_select_options.find((element) => {
               return element.id == res.data.document_info.document_priority;
             });
           var user_stage_1_lists = res.data.tracking.filter(async (element) => {
@@ -382,6 +385,35 @@ export default {
           }
         }
       });
+    },
+
+    DocumentSendEditSubmit() {
+      if (this.form.document_file.length > 0) {
+        this.axios
+          .post("api/sender/edit/send/document", {
+            document_id: this.$route.params.document_id,
+            document_title: this.form.document_title,
+            document_number: this.form.document_number,
+            document_category_id: this.form.category_select_value.id,
+            document_description: this.form.document_description,
+            document_priority: this.form.piority_select_value.id,
+            user_id: Number(window.localStorage.getItem("user_id")),
+            year_id: this.data.acd_year_id,
+            files: this.form.document_file,
+            send_to: this.form.user_select_value,
+          })
+          .then((res) => {
+            if (res.data.status == true) {
+              this.$swal
+                .fire("Success!", "แก้ไขเอกสารแล้ว!", "success")
+                .then(() => {
+                  this.$router.push("/sender/send/list");
+                });
+            }
+          });
+      } else {
+        this.$swal.fire("Error!", "ไม่มีการ Upload ไฟล์ กรุณาตรวจสอบ", "error");
+      }
     },
   },
 };

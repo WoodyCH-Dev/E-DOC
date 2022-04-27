@@ -24942,7 +24942,7 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
         }).then(function (res) {
           if (res.data.status == true) {
             _this3.$swal.fire("Success!", "ส่งเอกสารแล้ว!", "success").then(function () {
-              _this3.$router.push("/send/list");
+              _this3.$router.push("/sender/send/list");
             });
           }
         });
@@ -25038,7 +25038,7 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
         user_select_options: new Array(),
         user_select_value: null,
         piority_select_options: piority_select_options,
-        piority_select_value: piority_select_options[0],
+        piority_select_value: null,
         validation: null
       }
     };
@@ -25385,37 +25385,40 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
     LoadSenderDocumentInfo: function LoadSenderDocumentInfo(doc_id) {
       var _this4 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 _this4.axios.get("api/sender/get/Sender/" + doc_id).then( /*#__PURE__*/function () {
-                  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5(res) {
+                  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(res) {
                     var user_stage_1_lists, _iteratorAbruptCompletion4, _didIteratorError4, _iteratorError4, _loop, _iterator4, _step4, user_data, group_data, _iterator6, _step6, file;
 
-                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
                       while (1) {
-                        switch (_context5.prev = _context5.next) {
+                        switch (_context4.prev = _context4.next) {
                           case 0:
                             if (!(res.data.status == true)) {
-                              _context5.next = 38;
+                              _context4.next = 38;
                               break;
                             }
 
                             _this4.form.document_title = res.data.document_info.document_title;
                             _this4.form.document_number = res.data.document_info.document_number;
                             _this4.form.document_description = res.data.document_info.document_description;
-                            _this4.form.category_select_value = _this4.form.category_select_options.filter(function (element) {
+                            _this4.form.category_select_value = _this4.form.category_select_options.find(function (element) {
                               return element.id == res.data.document_info.document_category_id;
                             });
-                            _this4.form.piority_select_value = _this4.form.piority_select_options.filter( /*#__PURE__*/function () {
+                            _this4.form.piority_select_value = _this4.form.piority_select_options.find(function (element) {
+                              return element.id == res.data.document_info.document_priority;
+                            });
+                            user_stage_1_lists = res.data.tracking.filter( /*#__PURE__*/function () {
                               var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(element) {
                                 return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
                                   while (1) {
                                     switch (_context3.prev = _context3.next) {
                                       case 0:
-                                        return _context3.abrupt("return", element.id == res.data.document_info.document_priority);
+                                        return _context3.abrupt("return", element.stage == 1);
 
                                       case 1:
                                       case "end":
@@ -25429,30 +25432,10 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
                                 return _ref4.apply(this, arguments);
                               };
                             }());
-                            user_stage_1_lists = res.data.tracking.filter( /*#__PURE__*/function () {
-                              var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(element) {
-                                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
-                                  while (1) {
-                                    switch (_context4.prev = _context4.next) {
-                                      case 0:
-                                        return _context4.abrupt("return", element.stage == 1);
-
-                                      case 1:
-                                      case "end":
-                                        return _context4.stop();
-                                    }
-                                  }
-                                }, _callee4);
-                              }));
-
-                              return function (_x5) {
-                                return _ref5.apply(this, arguments);
-                              };
-                            }());
                             _this4.form.user_select_value = new Array();
                             _iteratorAbruptCompletion4 = false;
                             _didIteratorError4 = false;
-                            _context5.prev = 10;
+                            _context4.prev = 10;
 
                             _loop = function _loop() {
                               var user_stage_1 = _step4.value;
@@ -25475,12 +25458,12 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
                             _iterator4 = _asyncIterator(user_stage_1_lists);
 
                           case 13:
-                            _context5.next = 15;
+                            _context4.next = 15;
                             return _iterator4.next();
 
                           case 15:
-                            if (!(_iteratorAbruptCompletion4 = !(_step4 = _context5.sent).done)) {
-                              _context5.next = 20;
+                            if (!(_iteratorAbruptCompletion4 = !(_step4 = _context4.sent).done)) {
+                              _context4.next = 20;
                               break;
                             }
 
@@ -25488,46 +25471,46 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
 
                           case 17:
                             _iteratorAbruptCompletion4 = false;
-                            _context5.next = 13;
+                            _context4.next = 13;
                             break;
 
                           case 20:
-                            _context5.next = 26;
+                            _context4.next = 26;
                             break;
 
                           case 22:
-                            _context5.prev = 22;
-                            _context5.t0 = _context5["catch"](10);
+                            _context4.prev = 22;
+                            _context4.t0 = _context4["catch"](10);
                             _didIteratorError4 = true;
-                            _iteratorError4 = _context5.t0;
+                            _iteratorError4 = _context4.t0;
 
                           case 26:
-                            _context5.prev = 26;
-                            _context5.prev = 27;
+                            _context4.prev = 26;
+                            _context4.prev = 27;
 
                             if (!(_iteratorAbruptCompletion4 && _iterator4["return"] != null)) {
-                              _context5.next = 31;
+                              _context4.next = 31;
                               break;
                             }
 
-                            _context5.next = 31;
+                            _context4.next = 31;
                             return _iterator4["return"]();
 
                           case 31:
-                            _context5.prev = 31;
+                            _context4.prev = 31;
 
                             if (!_didIteratorError4) {
-                              _context5.next = 34;
+                              _context4.next = 34;
                               break;
                             }
 
                             throw _iteratorError4;
 
                           case 34:
-                            return _context5.finish(31);
+                            return _context4.finish(31);
 
                           case 35:
-                            return _context5.finish(26);
+                            return _context4.finish(26);
 
                           case 36:
                             _iterator6 = _createForOfIteratorHelper(user_stage_1_lists[0].files);
@@ -25548,10 +25531,10 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
 
                           case 38:
                           case "end":
-                            return _context5.stop();
+                            return _context4.stop();
                         }
                       }
-                    }, _callee5, null, [[10, 22, 26, 36], [27,, 31, 35]]);
+                    }, _callee4, null, [[10, 22, 26, 36], [27,, 31, 35]]);
                   }));
 
                   return function (_x3) {
@@ -25561,11 +25544,37 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
 
               case 1:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6);
+        }, _callee5);
       }))();
+    },
+    DocumentSendEditSubmit: function DocumentSendEditSubmit() {
+      var _this5 = this;
+
+      if (this.form.document_file.length > 0) {
+        this.axios.post("api/sender/edit/send/document", {
+          document_id: this.$route.params.document_id,
+          document_title: this.form.document_title,
+          document_number: this.form.document_number,
+          document_category_id: this.form.category_select_value.id,
+          document_description: this.form.document_description,
+          document_priority: this.form.piority_select_value.id,
+          user_id: Number(window.localStorage.getItem("user_id")),
+          year_id: this.data.acd_year_id,
+          files: this.form.document_file,
+          send_to: this.form.user_select_value
+        }).then(function (res) {
+          if (res.data.status == true) {
+            _this5.$swal.fire("Success!", "แก้ไขเอกสารแล้ว!", "success").then(function () {
+              _this5.$router.push("/sender/send/list");
+            });
+          }
+        });
+      } else {
+        this.$swal.fire("Error!", "ไม่มีการ Upload ไฟล์ กรุณาตรวจสอบ", "error");
+      }
     }
   }
 });
@@ -29973,7 +29982,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 rules: [$data.form.user_select_value && $data.form.user_select_value.length > 0 || 'กรุณาเลือกผู้รับ'],
                 "track-by": "id_key",
                 multiple: "",
-                searchable: ""
+                searchable: "",
+                required: ""
               }, null, 8
               /* PROPS */
               , ["options", "modelValue", "rules"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [_hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
@@ -30338,6 +30348,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 }),
                 "track-by": "id_key",
                 multiple: "",
+                required: "",
                 searchable: ""
               }, null, 8
               /* PROPS */
@@ -30376,7 +30387,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                   "background-color": "rgb(47, 148, 91)"
                 },
                 onClick: _cache[8] || (_cache[8] = function ($event) {
-                  return _ctx.$refs.form_data.validate();
+                  return _ctx.$refs.form_data.validate() && $options.DocumentSendEditSubmit();
                 })
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
