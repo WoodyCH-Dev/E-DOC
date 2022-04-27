@@ -316,34 +316,27 @@ export default {
 
     DocumentSendSubmit() {
       if (this.form.document_file.length > 0) {
-        var counter = 0;
-        for (let user of this.form.user_select_value) {
-          this.axios
-            .post("api/sender/send/document", {
-              document_title: this.form.document_title,
-              document_number: this.form.document_number,
-              document_category_id: this.form.category_select_value.id,
-              document_description: this.form.document_description,
-              document_priority: this.form.piority_select_value.id,
-              user_id: Number(window.localStorage.getItem("user_id")),
-              to_id: user.id,
-              year_id: this.data.acd_year_id,
-              files: this.form.document_file,
-              type: user.type,
-            })
-            .then((res) => {
-              if (res.data.status == true) {
-                counter++;
-                if (this.form.user_select_value.length == counter) {
-                  this.$swal
-                    .fire("Success!", "ส่งเอกสารแล้ว!", "success")
-                    .then(() => {
-                      window.location.reload();
-                    });
-                }
-              }
-            });
-        }
+        this.axios
+          .post("api/sender/send/document", {
+            document_title: this.form.document_title,
+            document_number: this.form.document_number,
+            document_category_id: this.form.category_select_value.id,
+            document_description: this.form.document_description,
+            document_priority: this.form.piority_select_value.id,
+            user_id: Number(window.localStorage.getItem("user_id")),
+            year_id: this.data.acd_year_id,
+            files: this.form.document_file,
+            send_to: this.form.user_select_value,
+          })
+          .then((res) => {
+            if (res.data.status == true) {
+              this.$swal
+                .fire("Success!", "ส่งเอกสารแล้ว!", "success")
+                .then(() => {
+                  window.location.reload();
+                });
+            }
+          });
       } else {
         this.$swal.fire("Error!", "ไม่มีการ Upload ไฟล์ กรุณาตรวจสอบ", "error");
       }

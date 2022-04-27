@@ -22,7 +22,11 @@
             <div class="flex xl12 xs12">
               <div class="form-group">
                 <div class="va-table-responsive" style="overflow-y: auto">
-                  <table class="va-table" style="width: 100%">
+                  <table
+                    class="va-table"
+                    style="width: 100%"
+                    v-if="!data.documents_lists_isLoad"
+                  >
                     <thead>
                       <tr>
                         <th>เลขที่เอกสาร</th>
@@ -34,13 +38,33 @@
                         <th>จัดการ</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-if="data.documents_lists.length == 0">
                       <tr>
-                        <td>1</td>
-                        <td>X</td>
-                        <td>Y</td>
-                        <td>T</td>
-                        <td>T</td>
+                        <td colspan="7" style="text-align: center">
+                          -- ยังไม่มีประวัติการของปีที่เลือกส่งในระบบ --
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-if="data.documents_lists.length > 0">
+                      <tr
+                        v-for="doc_list in data.documents_lists"
+                        :key="doc_list.id"
+                      >
+                        <td>{{ doc_list.document_number }}</td>
+                        <td>{{ doc_list.document_title }}</td>
+                        <td>{{ doc_list.group_name }}</td>
+                        <td>
+                          <label v-if="doc_list.document_priority == 0"
+                            >ทั่วไป</label
+                          >
+                          <label v-if="doc_list.document_priority == 1"
+                            >ด่วน</label
+                          >
+                          <label v-if="doc_list.document_priority == 2"
+                            >ด่วนมาก</label
+                          >
+                        </td>
+                        <td>{{ doc_list.name + " " + doc_list.lastname }}</td>
                         <td>
                           <va-button
                             icon="approval"
@@ -61,6 +85,19 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div
+                  align="center"
+                  style="padding-top: 30px"
+                  v-if="data.documents_lists_isLoad"
+                >
+                  <va-progress-circle
+                    size="large"
+                    :thickness="0.4"
+                    color="primary"
+                    indeterminate
+                  />
+                  กำลังโหลดข้อมูล
                 </div>
               </div>
             </div>
@@ -103,6 +140,8 @@ export default {
         lastname: lastname,
         acd_year_options: new Array(),
         acd_year_value: null,
+        documents_lists: new Array(),
+        documents_lists_isLoad: true,
       },
       permission: {
         access_user: access_user,
@@ -132,6 +171,29 @@ export default {
             });
           }
         }
+      });
+    },
+
+    LoadSenderDocumentLists() {
+      this.axios
+        .post("api/admin/get/AllSender", {
+          year_id: this.data.acd_year_value.id,
+          user_id: window.localStorage.getItem("user_id"),
+        })
+        .then((res) => {
+          if (res.data.status == true) {
+            this.data.documents_lists = res.data.lists;
+            this.data.documents_lists_isLoad = false;
+          }
+        });
+    },
+
+    BuddishDate(date) {
+      var date = new Date(date);
+      return date.toLocaleDateString("th-TH", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
       });
     },
   },

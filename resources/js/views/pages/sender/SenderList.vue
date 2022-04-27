@@ -35,14 +35,19 @@
                           <th>รายการผู้รับเอกสาร</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody v-if="data.my_sender_documents_lists.length == 0">
+                        <tr>
+                          <td colspan="6" style="text-align: center">
+                            -- ยังไม่มีประวัติการส่งของคุณในปีที่เลือก --
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-if="data.my_sender_documents_lists.length > 0">
                         <tr
-                          v-for="(
-                            my_send_doc, index
-                          ) in data.my_sender_documents_lists"
+                          v-for="my_send_doc in data.my_sender_documents_lists"
                           :key="my_send_doc.id"
                         >
-                          <td>{{ index + 1 }}</td>
+                          <td>{{ my_send_doc.document_number }}</td>
                           <td>{{ BuddishDate(my_send_doc.timestamp) }}</td>
                           <td>
                             {{
