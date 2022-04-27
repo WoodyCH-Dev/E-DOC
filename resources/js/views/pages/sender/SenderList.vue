@@ -207,20 +207,10 @@
             </li>
           </ul>
 
-          <va-button
-            icon="cancel"
-            class="mr-1"
-            color="warning"
-            data-bs-dismiss="modal"
-          >
+          <va-button icon="cancel" class="mr-1" color="warning">
             ยกเลิกเอกสาร
           </va-button>
-          <va-button
-            icon="delete_forever"
-            class="mr-1"
-            color="danger"
-            data-bs-dismiss="modal"
-          >
+          <va-button icon="delete_forever" class="mr-1" color="danger">
             ลบเอกสาร
           </va-button>
         </div>

@@ -28814,8 +28814,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
     icon: "cancel",
     "class": "mr-1",
-    color: "warning",
-    "data-bs-dismiss": "modal"
+    color: "warning"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_27];
@@ -28826,8 +28825,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
     icon: "delete_forever",
     "class": "mr-1",
-    color: "danger",
-    "data-bs-dismiss": "modal"
+    color: "danger"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_28];
