@@ -122,18 +122,18 @@
                           <td>{{ my_send_doc.document_title }}</td>
                           <td>{{ my_send_doc.group_name }}</td>
                           <td>
-                            <va-button
-                              icon="edit"
-                              class="mr-2"
-                              color="warning"
-                              data-bs-toggle="modal"
-                              data-bs-target="#EditModal"
-                              v-on:click="
-                                LoadSenderDocumentInfo(my_send_doc.doc_id)
-                              "
+                            <router-link
+                              :to="'/sender/send/edit/' + my_send_doc.doc_id"
+                              class="nav-item"
                             >
-                              แก้ไข
-                            </va-button>
+                              <va-button
+                                icon="edit"
+                                class="mr-2"
+                                color="warning"
+                              >
+                                แก้ไข
+                              </va-button>
+                            </router-link>
                             <va-button
                               icon="approval"
                               class="mr-2"
@@ -375,48 +375,6 @@
       </div>
     </div>
   </div>
-  <div
-    class="modal fade"
-    id="EditModal"
-    data-bs-backdrop="static"
-    tabindex="-1"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">แก้ไขเอกสาร</h5>
-          <button
-            type="button"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            class="btn"
-          >
-            <i class="far fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">ยังไม่รองรับ Feature นี้</div>
-        <div class="modal-footer">
-          <va-button
-            icon="close"
-            class="mr-1"
-            color="danger"
-            data-bs-dismiss="modal"
-          >
-            ปิด
-          </va-button>
-          <va-button
-            icon="save"
-            class="mr-1"
-            style="background-color: rgb(47, 148, 91)"
-            disabled
-          >
-            บันทึกข้อมูล
-          </va-button>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -510,9 +468,6 @@ export default {
     },
 
     LoadSenderDocumentInfo(doc_id) {
-      this.data.select_my_sender_documents_data = new Array();
-      this.data.select_my_sender_documents_stage_array = new Array();
-      this.data.select_my_sender_documents_stage = 0;
       this.axios.get("api/sender/get/Sender/" + doc_id).then(async (res) => {
         if (res.data.status == true) {
           this.data.select_my_sender_documents_data = res.data.document_info;
