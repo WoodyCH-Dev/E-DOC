@@ -8,7 +8,11 @@
             <div class="flex xl12 xs12">
               <div class="form-group">
                 <div class="va-table-responsive" style="overflow-y: auto">
-                  <table class="va-table" style="width: 100%">
+                  <table
+                    class="va-table"
+                    style="width: 100%"
+                    v-if="!data.AllDocumentgroup_isLoad"
+                  >
                     <thead>
                       <tr>
                         <th>ลำดับ</th>
@@ -58,6 +62,19 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div
+                  align="center"
+                  style="padding-top: 30px"
+                  v-if="data.AllDocumentgroup_isLoad"
+                >
+                  <va-progress-circle
+                    size="large"
+                    :thickness="0.4"
+                    color="primary"
+                    indeterminate
+                  />
+                  กำลังโหลดข้อมูล
                 </div>
               </div>
             </div>
@@ -216,6 +233,7 @@ export default {
     RemoveDocumentGroup(group_id) {
       this.$swal
         .fire({
+          icon: "warning",
           title: "แจ้งเตือน!",
           html: "คุณแน่ใจหรือไม่ที่จะลบหมวดหมู่เอกสารนี้",
           reverseButtons: true,

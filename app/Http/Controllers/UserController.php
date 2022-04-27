@@ -19,7 +19,12 @@ class UserController extends Controller
         ->leftJoin('year_list','year_list.id','config.value')
         ->where('config','year_config')
         ->first();
-        return response()->json(['status' => true,'acd_year' => $acd_year->year]);
+        return response()->json(['status' => true,'acd_year' => $acd_year->year , 'acd_year_id' => $acd_year->id]);
+    }
+
+    public function Get_acd_year_all(Request $request){
+        $acd_year_lists = DB::table('year_list')->get();
+        return response()->json(['status' => true,'acd_year' => $acd_year_lists]);
     }
 
     public function GetUserCount(Request $request){
@@ -44,6 +49,13 @@ class UserController extends Controller
             ]);
         }
         return response()->json(['status' => true,'users' => $users_withgroup]);
+    }
+
+    public function Sender_Get_AlluserAndGroup(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $users = DB::table('users')->get();
+        $groups = DB::table('user_group')->get();
+        return response()->json(['status' => true,'users'=> $users,'groups'=>$groups]);
     }
 
     public function Get_Allgroup(Request $request){
@@ -277,6 +289,301 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    public function SenderUploadFiles(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if ($file = $request->file('file')) {
+            $full_filename = "";
+
+            if($request->post('stage')){
+                $stage = $request->post('stage');
+                $randstr = $this->RandomString(4);
+                $name = $file->getClientOriginalName();
+                $full_filename = $randstr."_Stage".$stage."_".$name;
+                $file->storeAs('uploads/sender',$full_filename,'public');
+            }else{
+                $randstr = $this->RandomString(4);
+                $name = $file->getClientOriginalName();
+                $full_filename = $randstr."_".$name;
+                $file->storeAs('uploads/sender',$full_filename,'public');
+            }
+
+            return response()->json([
+                "status" => true,
+                "file" => $full_filename
+            ]);
+        }
+    }
+
+    public function SenderSendDocument(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+
+            $document_id = DB::table('documents')
+            ->insertGetId([
+                'document_title'=> $request->post('document_title'),
+                'document_number'=> $request->post('document_number'),
+                'document_category_id'=> $request->post('document_category_id'),
+                'document_description'=> $request->post('document_description'),
+                'document_priority'=> $request->post('document_priority'),
+                'document_status'=> 0,
+                'user_id'=> $request->post('user_id'),
+                'year_id'=> $request->post('year_id'),
+                'timestamp'=> Carbon::now(),
+            ]);
+
+            foreach($request->post('send_to') as $user){
+                $document_stage = 0;
+                if($user['type'] == 'user'){
+                    $document_stage = DB::table('document_stage')
+                    ->insertGetId([
+                        'stage'=> 1,
+                        'document_id'=> $document_id,
+                        'sender_user_id'=> $request->post('user_id'),
+                        'sender_type'=> 'user',
+                        'to'=> $user['id'],
+                        'status'=> 0,
+                        'created_timestamp'=> Carbon::now(),
+                        'read_timestamp'=> null,
+                    ]);
+                }else if($user['type'] == 'group'){
+                    $document_stage = DB::table('document_stage')
+                    ->insertGetId([
+                        'stage'=> 1,
+                        'document_id'=> $document_id,
+                        'sender_user_id'=> $request->post('user_id'),
+                        'sender_type'=> 'group',
+                        'to'=> $user['id'],
+                        'status'=> 0,
+                        'created_timestamp'=> Carbon::now(),
+                        'read_timestamp'=> null,
+                    ]);
+                }
+
+                foreach($request->post('files') as $file_data){
+                    $file_upload = DB::table('document_file')->insert([
+                        "file" => $file_data['file'],
+                        "document_id" => $document_id,
+                        "document_stage_id" => $document_stage,
+                    ]);
+                };
+            }
+
+            return response()->json(['status' => true]);
+    }
+
+    public function SenderUpdateSendDocument(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+
+            DB::table('documents')
+            ->where('id',$request->post('document_id'))
+            ->update([
+                'document_title'=> $request->post('document_title'),
+                'document_number'=> $request->post('document_number'),
+                'document_category_id'=> $request->post('document_category_id'),
+                'document_description'=> $request->post('document_description'),
+                'document_priority'=> $request->post('document_priority'),
+                'year_id'=> $request->post('year_id'),
+            ]);
+
+            DB::table('document_file')
+            ->where('document_id',$request->post('document_id'))
+            ->delete();
+
+            DB::table('document_stage')
+            ->where('document_id',$request->post('document_id'))
+            ->delete();
+
+            foreach($request->post('send_to') as $user){
+                $document_stage = 0;
+                if($user['type'] == 'user'){
+                    $document_stage = DB::table('document_stage')
+                    ->insertGetId([
+                        'stage'=> 1,
+                        'document_id'=> $request->post('document_id'),
+                        'sender_user_id'=> $request->post('user_id'),
+                        'sender_type'=> 'user',
+                        'to'=> $user['id'],
+                        'status'=> 0,
+                        'created_timestamp'=> Carbon::now(),
+                        'read_timestamp'=> null,
+                    ]);
+                }else if($user['type'] == 'group'){
+                    $document_stage = DB::table('document_stage')
+                    ->insertGetId([
+                        'stage'=> 1,
+                        'document_id'=> $request->post('document_id'),
+                        'sender_user_id'=> $request->post('user_id'),
+                        'sender_type'=> 'group',
+                        'to'=> $user['id'],
+                        'status'=> 0,
+                        'created_timestamp'=> Carbon::now(),
+                        'read_timestamp'=> null,
+                    ]);
+                }
+
+                foreach($request->post('files') as $file_data){
+                    $file_upload = DB::table('document_file')->insert([
+                        "file" => $file_data['file'],
+                        "document_id" => $request->post('document_id'),
+                        "document_stage_id" => $document_stage,
+                    ]);
+                };
+            }
+
+            return response()->json(['status' => true]);
+    }
+
+    public function Sender_Get_MySender(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $lists = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
+        ->where('user_id',$request->post('user_id'))
+        ->where('year_id',$request->post('year_id'))
+        ->where('document_status',0)
+        ->orWhere('document_status',1)
+        ->get();
+        return response()->json(['status' => true,'lists'=>$lists]);
+    }
+
+    public function Sender_Get_SenderData(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $document_info = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
+        ->where('documents.id',$request->route('document_id'))
+        ->first();
+
+        $document_tracking = Array();
+        $load_document_tracking = DB::table('document_stage')
+        ->where('document_id',$request->route('document_id'))
+        ->get();
+        foreach($load_document_tracking as $doc_track){
+            $sendby_user = DB::table('users')->where('id',$doc_track->sender_user_id)->first();
+            $to_data = null;
+            if($doc_track->sender_type == 'user'){
+                $to_data = DB::table("users")->where('id',$doc_track->to)->first();
+            }else if($doc_track->sender_type == 'group'){
+                $to_data = DB::table("user_group")->where('id',$doc_track->to)->first();
+            }
+            $files = DB::table('document_file')->where('document_stage_id',$doc_track->id)->get();
+            array_push($document_tracking,[
+                'id'=> $doc_track->id,
+                'stage'=> $doc_track->stage,
+                'document_id'=> $doc_track->document_id,
+                'sender_user_id'=> $doc_track->sender_user_id,
+                'sender_user_data'=> $sendby_user,
+                'sender_type'=> $doc_track->sender_type,
+                'to'=> $doc_track->to,
+                'to_data'=> $to_data,
+                'status'=> $doc_track->status,
+                'read_timestamp'=> $doc_track->read_timestamp,
+                'created_timestamp'=> $doc_track->created_timestamp,
+                'files'=> $files,
+            ]);
+        }
+
+        $document_stage = DB::table('document_stage')
+        ->where('document_id',$request->route('document_id'))
+        ->distinct()
+        ->count('stage');
+
+        return response()->json(['status' => true,'document_info'=>$document_info,'tracking'=>$document_tracking,'stage'=>$document_stage]);
+    }
+
+    public function Admin_Get_SenderData(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $document_info = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
+        ->where('documents.id',$request->route('document_id'))
+        ->first();
+
+        $document_tracking = Array();
+        $load_document_tracking = DB::table('document_stage')
+        ->where('document_id',$request->route('document_id'))
+        ->get();
+        foreach($load_document_tracking as $doc_track){
+            $sendby_user = DB::table('users')->where('id',$doc_track->sender_user_id)->first();
+            $to_data = null;
+            if($doc_track->sender_type == 'user'){
+                $to_data = DB::table("users")->where('id',$doc_track->to)->first();
+            }else if($doc_track->sender_type == 'group'){
+                $to_data = DB::table("user_group")->where('id',$doc_track->to)->first();
+            }
+            $files = DB::table('document_file')->where('document_stage_id',$doc_track->id)->get();
+            array_push($document_tracking,[
+                'id'=> $doc_track->id,
+                'stage'=> $doc_track->stage,
+                'document_id'=> $doc_track->document_id,
+                'sender_user_id'=> $doc_track->sender_user_id,
+                'sender_user_data'=> $sendby_user,
+                'sender_type'=> $doc_track->sender_type,
+                'to'=> $doc_track->to,
+                'to_data'=> $to_data,
+                'status'=> $doc_track->status,
+                'read_timestamp'=> $doc_track->read_timestamp,
+                'created_timestamp'=> $doc_track->created_timestamp,
+                'files'=> $files,
+            ]);
+        }
+
+        $document_stage = DB::table('document_stage')
+        ->where('document_id',$request->route('document_id'))
+        ->distinct()
+        ->count('stage');
+
+        return response()->json(['status' => true,'document_info'=>$document_info,'tracking'=>$document_tracking,'stage'=>$document_stage]);
+    }
+
+    public function SenderCancelDocument(Request $request){
+        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->update([
+            'document_status' => 1
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function SenderDeleteDocument(Request $request){
+        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->update([
+            'document_status' => 2
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function SenderAssignDocument(Request $request){
+        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->update([
+            'document_status' => 0
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminRemoveDocument(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->delete();
+        return response()->json(['status' => true]);
+    }
+
+    public function Admin_Get_AllSender(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $lists = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
+        ->leftJoin('users','users.id','documents.user_id')
+        ->where('year_id',$request->post('year_id'))
+        ->get();
+        return response()->json(['status' => true,'lists'=>$lists]);
+    }
+
     //Chk User Function
     public function ChkUser($req_permission){
         $_user = auth()->user();
@@ -294,5 +601,15 @@ class UserController extends Controller
                 return true;
             }
         }
+    }
+
+    public function RandomString($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

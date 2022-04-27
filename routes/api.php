@@ -26,9 +26,19 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //User
     Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
+    Route::get('/user/acd_year/lists', [UserController::class, 'Get_acd_year_all']);
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
     //Sender
+    Route::get('/sender/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
+    Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
+    Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
+    Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
+    Route::post('/sender/edit/send/document', [UserController::class, 'SenderUpdateSendDocument']);
+    Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
+    Route::post('/sender/document/cancel', [UserController::class, 'SenderCancelDocument']);
+    Route::post('/sender/document/delete', [UserController::class, 'SenderDeleteDocument']);
+    Route::post('/sender/document/assign', [UserController::class, 'SenderAssignDocument']);
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
@@ -51,4 +61,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/admin/get/Group/AllUser/{group_id}', [UserController::class, 'Get_Alluser_InGroup']);
     Route::post('/admin/edit/Group/User', [UserController::class, 'AdminEditGroupUser']);
 
+    Route::post('/admin/get/AllSender', [UserController::class, 'Admin_Get_AllSender']);
+    Route::post('/admin/document/remove', [UserController::class, 'AdminRemoveDocument']);
+    Route::get('/admin/get/Sender/{document_id}', [UserController::class, 'Admin_Get_SenderData']);
 });

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="flex xl12 xs12 center">
       <va-card tag="b" outlined>
-        <va-card-title>ส่งเอกสาร</va-card-title>
+        <va-card-title>แก้ไขเอกสาร</va-card-title>
         <va-card-content>
           <va-form ref="form_data" @validation="form.validation = $event">
             <div class="row">
@@ -126,15 +126,10 @@
                     placeholder="เลือกผู้รับ"
                     :options="form.user_select_options"
                     v-model="form.user_select_value"
-                    :rules="[
-                      (form.user_select_value &&
-                        form.user_select_value.length > 0) ||
-                        'กรุณาเลือกผู้รับ',
-                    ]"
                     track-by="id_key"
                     multiple
-                    searchable
                     required
+                    searchable
                   />
                 </div>
               </div>
@@ -152,11 +147,18 @@
               </div>
               <div class="flex xl12 xs12" align="center">
                 <div class="form-group">
+                  <router-link to="/sender/send/list" class="nav-item">
+                    <va-button class="primary mr-2">
+                      <i class="fas fa-angle-left mr-2"></i> ย้อนกลับ
+                    </va-button>
+                  </router-link>
                   <va-button
                     style="background-color: rgb(47, 148, 91)"
-                    @click="$refs.form_data.validate() && DocumentSendSubmit()"
+                    @click="
+                      $refs.form_data.validate() && DocumentSendEditSubmit()
+                    "
                   >
-                    <i class="fas fa-paper-plane mr-2"></i> ส่งเอกสาร
+                    <i class="fas fa-check-circle mr-2"></i> แก้ไขเอกสาร
                   </va-button>
                 </div>
               </div>
@@ -230,7 +232,7 @@ export default {
         user_select_options: new Array(),
         user_select_value: null,
         piority_select_options: piority_select_options,
-        piority_select_value: piority_select_options[0],
+        piority_select_value: null,
         validation: null,
       },
     };
@@ -263,23 +265,23 @@ export default {
               id_key: i++,
             });
           }
-        } else {
-          this.$swal.fire(
-            "Error!",
-            "Permission ของคุณไม่สามารถเข้าถึงได้",
-            "error"
-          );
-        }
-      });
-
-      this.axios.get("api/admin/get/AllDocumentGroup").then(async (res) => {
-        if (res.data.status == true) {
-          for await (let doc_category of res.data.document_category) {
-            this.form.category_select_options.push({
-              text: doc_category.group_name,
-              id: doc_category.id,
-            });
-          }
+          this.axios.get("api/admin/get/AllDocumentGroup").then(async (res) => {
+            if (res.data.status == true) {
+              for await (let doc_category of res.data.document_category) {
+                this.form.category_select_options.push({
+                  text: doc_category.group_name,
+                  id: doc_category.id,
+                });
+              }
+              this.LoadSenderDocumentInfo(this.$route.params.document_id);
+            } else {
+              this.$swal.fire(
+                "Error!",
+                "Permission ของคุณไม่สามารถเข้าถึงได้",
+                "error"
+              );
+            }
+          });
         } else {
           this.$swal.fire(
             "Error!",
@@ -333,6 +335,77 @@ export default {
             if (res.data.status == true) {
               this.$swal
                 .fire("Success!", "ส่งเอกสารแล้ว!", "success")
+                .then(() => {
+                  this.$router.push("/send/list");
+                });
+            }
+          });
+      } else {
+        this.$swal.fire("Error!", "ไม่มีการ Upload ไฟล์ กรุณาตรวจสอบ", "error");
+      }
+    },
+
+    async LoadSenderDocumentInfo(doc_id) {
+      this.axios.get("api/sender/get/Sender/" + doc_id).then(async (res) => {
+        if (res.data.status == true) {
+          this.form.document_title = res.data.document_info.document_title;
+          this.form.document_number = res.data.document_info.document_number;
+          this.form.document_description =
+            res.data.document_info.document_description;
+          this.form.category_select_value =
+            this.form.category_select_options.find((element) => {
+              return element.id == res.data.document_info.document_category_id;
+            });
+          this.form.piority_select_value =
+            this.form.piority_select_options.find((element) => {
+              return element.id == res.data.document_info.document_priority;
+            });
+          var user_stage_1_lists = res.data.tracking.filter(async (element) => {
+            return element.stage == 1;
+          });
+          this.form.user_select_value = new Array();
+          for await (let user_stage_1 of user_stage_1_lists) {
+            if (user_stage_1.sender_type == "user") {
+              var user_data = this.form.user_select_options.find((element) => {
+                return element.id == user_stage_1.to && element.type == "user";
+              });
+              this.form.user_select_value.push(user_data);
+            } else if (user_stage_1.sender_type == "group") {
+              var group_data = this.form.user_select_options.find((element) => {
+                return element.id == user_stage_1.to && element.type == "group";
+              });
+              this.form.user_select_value.push(group_data);
+            }
+          }
+
+          for (let file of user_stage_1_lists[0].files) {
+            this.form.document_file.push({
+              file: file.file,
+            });
+          }
+        }
+      });
+    },
+
+    DocumentSendEditSubmit() {
+      if (this.form.document_file.length > 0) {
+        this.axios
+          .post("api/sender/edit/send/document", {
+            document_id: this.$route.params.document_id,
+            document_title: this.form.document_title,
+            document_number: this.form.document_number,
+            document_category_id: this.form.category_select_value.id,
+            document_description: this.form.document_description,
+            document_priority: this.form.piority_select_value.id,
+            user_id: Number(window.localStorage.getItem("user_id")),
+            year_id: this.data.acd_year_id,
+            files: this.form.document_file,
+            send_to: this.form.user_select_value,
+          })
+          .then((res) => {
+            if (res.data.status == true) {
+              this.$swal
+                .fire("Success!", "แก้ไขเอกสารแล้ว!", "success")
                 .then(() => {
                   this.$router.push("/sender/send/list");
                 });

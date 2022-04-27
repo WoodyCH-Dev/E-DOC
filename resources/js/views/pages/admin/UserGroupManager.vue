@@ -360,6 +360,7 @@ export default {
     RemoveGroup(group_id) {
       this.$swal
         .fire({
+          icon: "warning",
           title: "แจ้งเตือน!",
           html: "คุณแน่ใจหรือไม่ที่จะลบ Group นี้",
           reverseButtons: true,
