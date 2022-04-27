@@ -428,6 +428,89 @@ class UserController extends Controller
         return response()->json(['status' => true,'document_info'=>$document_info,'tracking'=>$document_tracking,'stage'=>$document_stage]);
     }
 
+    public function Admin_Get_SenderData(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $document_info = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
+        ->where('documents.id',$request->route('document_id'))
+        ->first();
+
+        $document_tracking = Array();
+        $load_document_tracking = DB::table('document_stage')
+        ->where('document_id',$request->route('document_id'))
+        ->get();
+        foreach($load_document_tracking as $doc_track){
+            $sendby_user = DB::table('users')->where('id',$doc_track->sender_user_id)->first();
+            $to_data = null;
+            if($doc_track->sender_type == 'user'){
+                $to_data = DB::table("users")->where('id',$doc_track->to)->first();
+            }else if($doc_track->sender_type == 'group'){
+                $to_data = DB::table("user_group")->where('id',$doc_track->to)->first();
+            }
+            $files = DB::table('document_file')->where('document_stage_id',$doc_track->id)->get();
+            array_push($document_tracking,[
+                'id'=> $doc_track->id,
+                'stage'=> $doc_track->stage,
+                'document_id'=> $doc_track->document_id,
+                'sender_user_id'=> $doc_track->sender_user_id,
+                'sender_user_data'=> $sendby_user,
+                'sender_type'=> $doc_track->sender_type,
+                'to'=> $doc_track->to,
+                'to_data'=> $to_data,
+                'status'=> $doc_track->status,
+                'read_timestamp'=> $doc_track->read_timestamp,
+                'created_timestamp'=> $doc_track->created_timestamp,
+                'files'=> $files,
+            ]);
+        }
+
+        $document_stage = DB::table('document_stage')
+        ->where('document_id',$request->route('document_id'))
+        ->distinct()
+        ->count('stage');
+
+        return response()->json(['status' => true,'document_info'=>$document_info,'tracking'=>$document_tracking,'stage'=>$document_stage]);
+    }
+
+    public function SenderCancelDocument(Request $request){
+        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->update([
+            'document_status' => 1
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function SenderDeleteDocument(Request $request){
+        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->update([
+            'document_status' => 2
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function SenderAssignDocument(Request $request){
+        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->update([
+            'document_status' => 0
+        ]);
+        return response()->json(['status' => true]);
+    }
+
+    public function AdminRemoveDocument(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        DB::table('documents')
+        ->where('id',$request->post('document_id'))
+        ->delete();
+        return response()->json(['status' => true]);
+    }
+
     public function Admin_Get_AllSender(Request $request){
         if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $lists = DB::table('documents')

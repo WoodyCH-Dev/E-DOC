@@ -333,7 +333,7 @@ export default {
               this.$swal
                 .fire("Success!", "ส่งเอกสารแล้ว!", "success")
                 .then(() => {
-                  window.location.reload();
+                  this.$router.push("/send/list");
                 });
             }
           });

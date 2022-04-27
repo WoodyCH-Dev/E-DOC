@@ -35,6 +35,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
     Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
     Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
+    Route::post('/sender/document/cancel', [UserController::class, 'SenderCancelDocument']);
+    Route::post('/sender/document/delete', [UserController::class, 'SenderDeleteDocument']);
+    Route::post('/sender/document/assign', [UserController::class, 'SenderAssignDocument']);
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
@@ -58,5 +61,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/admin/edit/Group/User', [UserController::class, 'AdminEditGroupUser']);
 
     Route::post('/admin/get/AllSender', [UserController::class, 'Admin_Get_AllSender']);
-
+    Route::post('/admin/document/remove', [UserController::class, 'AdminRemoveDocument']);
+    Route::get('/admin/get/Sender/{document_id}', [UserController::class, 'Admin_Get_SenderData']);
 });

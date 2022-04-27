@@ -88,7 +88,7 @@
                           <th>เอกสารลงวันที่</th>
                           <th>หัวข้อเรื่อง</th>
                           <th>หมวดหมู่เอกสาร</th>
-                          <th>รายการผู้รับเอกสาร</th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody v-if="data.my_sender_documents_lists.length == 0">
@@ -103,7 +103,15 @@
                           v-for="my_send_doc in data.my_sender_documents_lists"
                           :key="my_send_doc.doc_id"
                         >
-                          <td>{{ my_send_doc.document_number }}</td>
+                          <td>
+                            {{ my_send_doc.document_number }}
+                            <label
+                              v-if="my_send_doc.document_status == 1"
+                              class="text-danger"
+                            >
+                              (เอกสารถูกยกเลิก)
+                            </label>
+                          </td>
                           <td>{{ BuddishDate(my_send_doc.timestamp) }}</td>
                           <td>
                             {{
@@ -114,6 +122,18 @@
                           <td>{{ my_send_doc.document_title }}</td>
                           <td>{{ my_send_doc.group_name }}</td>
                           <td>
+                            <va-button
+                              icon="edit"
+                              class="mr-2"
+                              color="warning"
+                              data-bs-toggle="modal"
+                              data-bs-target="#EditModal"
+                              v-on:click="
+                                LoadSenderDocumentInfo(my_send_doc.doc_id)
+                              "
+                            >
+                              แก้ไข
+                            </va-button>
                             <va-button
                               icon="approval"
                               class="mr-2"
@@ -201,9 +221,7 @@
                     >
                       <label class="left"></label>
                       <span>
-                        <strong>
-                          เอกสารถูกส่งต่อ {{ documents_stage.stage }}&nbsp;
-                        </strong>
+                        <strong> เอกสารถูกส่งไปที่&nbsp; </strong>
                         <label
                           v-for="(to_data, index) in documents_stage.stage_data"
                           :key="to_data.id"
@@ -300,11 +318,41 @@
                     >ด่วนที่สุด</label
                   >
                   <br />
+                  <b
+                    v-if="
+                      data.select_my_sender_documents_data.document_status == 1
+                    "
+                    class="text-danger"
+                  >
+                    (เอกสารถูกยกเลิก)
+                  </b>
                   <br />
-                  <va-button icon="cancel" class="mr-1" color="warning">
+                  <br />
+                  <va-button
+                    icon="cancel"
+                    class="mr-1"
+                    color="warning"
+                    :disabled="
+                      data.select_my_sender_documents_data.document_status == 1
+                    "
+                    v-on:click="
+                      CancelSenderDocument(
+                        data.select_my_sender_documents_data.doc_id
+                      )
+                    "
+                  >
                     ยกเลิกเอกสาร
                   </va-button>
-                  <va-button icon="delete_forever" class="mr-1" color="danger">
+                  <va-button
+                    icon="delete_forever"
+                    class="mr-1"
+                    color="danger"
+                    v-on:click="
+                      DeleteSenderDocument(
+                        data.select_my_sender_documents_data.doc_id
+                      )
+                    "
+                  >
                     ลบเอกสาร
                   </va-button>
                 </va-card-content>
@@ -322,6 +370,48 @@
             id="CloseTrackingStatusModal"
           >
             ปิด
+          </va-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="EditModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">แก้ไขเอกสาร</h5>
+          <button
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            class="btn"
+          >
+            <i class="far fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">ยังไม่รองรับ Feature นี้</div>
+        <div class="modal-footer">
+          <va-button
+            icon="close"
+            class="mr-1"
+            color="danger"
+            data-bs-dismiss="modal"
+          >
+            ปิด
+          </va-button>
+          <va-button
+            icon="save"
+            class="mr-1"
+            style="background-color: rgb(47, 148, 91)"
+            disabled
+          >
+            บันทึกข้อมูล
           </va-button>
         </div>
       </div>
@@ -420,6 +510,9 @@ export default {
     },
 
     LoadSenderDocumentInfo(doc_id) {
+      this.data.select_my_sender_documents_data = new Array();
+      this.data.select_my_sender_documents_stage_array = new Array();
+      this.data.select_my_sender_documents_stage = 0;
       this.axios.get("api/sender/get/Sender/" + doc_id).then(async (res) => {
         if (res.data.status == true) {
           this.data.select_my_sender_documents_data = res.data.document_info;
@@ -466,6 +559,64 @@ export default {
       this.data.select_my_sender_documents_data = new Array();
       this.data.select_my_sender_documents_stage_array = new Array();
       this.data.select_my_sender_documents_stage = 0;
+    },
+
+    CancelSenderDocument(doc_id) {
+      this.$swal
+        .fire({
+          title: "แจ้งเตือน!",
+          text: "คุณแน่ใจที่จะยกเลิกเอกสาร",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "rgb(235, 64, 52)",
+          confirmButtonText: "ยืนยัน",
+          reverseButtons: true,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios
+              .post("api/sender/document/cancel", {
+                document_id: doc_id,
+              })
+              .then((res) => {
+                if (res.data.status == true) {
+                  document.getElementById("CloseTrackingStatusModal").click();
+                  this.onLoad();
+                }
+              });
+          }
+        });
+    },
+
+    DeleteSenderDocument(doc_id) {
+      this.$swal
+        .fire({
+          title: "แจ้งเตือน!",
+          text: "คุณแน่ใจที่จะลบเอกสาร",
+          icon: "warning",
+          showCancelButton: true,
+          cancelButtonColor: "#3085d6",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "rgb(235, 64, 52)",
+          confirmButtonText: "ยืนยัน",
+          reverseButtons: true,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios
+              .post("api/sender/document/delete", {
+                document_id: doc_id,
+              })
+              .then((res) => {
+                if (res.data.status == true) {
+                  document.getElementById("CloseTrackingStatusModal").click();
+                  this.onLoad();
+                }
+              });
+          }
+        });
     },
   },
 };
