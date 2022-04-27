@@ -288,8 +288,17 @@ class UserController extends Controller
         if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         if ($file = $request->file('file')) {
 
-            $name = $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/sender',$name,'public');
+
+            if($request->post('stage')){
+                $stage = $request->post('stage');
+                $randstr = $this->RandomString(4);
+                $name = $file->getClientOriginalName();
+                $file->storeAs('uploads/sender',$randstr."_Stage".$stage."_".$name,'public');
+            }else{
+                $randstr = $this->RandomString(4);
+                $name = $file->getClientOriginalName();
+                $file->storeAs('uploads/sender',$randstr."_".$name,'public');
+            }
 
             return response()->json([
                 "status" => true,
@@ -386,5 +395,15 @@ class UserController extends Controller
                 return true;
             }
         }
+    }
+
+    public function RandomString($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }
