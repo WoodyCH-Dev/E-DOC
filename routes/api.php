@@ -34,6 +34,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
     Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
+    Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
 
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);

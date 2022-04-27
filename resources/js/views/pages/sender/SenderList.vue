@@ -4,12 +4,12 @@
   color: #999;
 }
 
-.events time {
+.events label.left {
   position: relative;
-  padding: 0 1.5em;
+  padding-right: 0.5em;
 }
 
-.events time::after {
+.events label.left::after {
   content: "";
   position: absolute;
   z-index: 2;
@@ -46,11 +46,11 @@
   margin: 1em;
   width: 100%;
 }
+
 .events,
 .events *::before,
 .events *::after {
   box-sizing: border-box;
-  font-family: arial;
 }
 </style>
 
@@ -101,7 +101,7 @@
                       <tbody v-if="data.my_sender_documents_lists.length > 0">
                         <tr
                           v-for="my_send_doc in data.my_sender_documents_lists"
-                          :key="my_send_doc.id"
+                          :key="my_send_doc.doc_id"
                         >
                           <td>{{ my_send_doc.document_number }}</td>
                           <td>{{ BuddishDate(my_send_doc.timestamp) }}</td>
@@ -120,6 +120,9 @@
                               style="background-color: rgb(47, 148, 91)"
                               data-bs-toggle="modal"
                               data-bs-target="#TrackingStatusModal"
+                              v-on:click="
+                                LoadSenderDocumentInfo(my_send_doc.doc_id)
+                              "
                             >
                               สถานะเอกสาร
                             </va-button>
@@ -172,47 +175,142 @@
           </button>
         </div>
         <div class="modal-body">
-          <ul class="events">
-            <li>
-              <time datetime="10:03">10:03</time>
-              <span><strong>Bat &amp; Ball</strong> On time</span>
-            </li>
+          <div class="row">
+            <div class="flex xs12 md6">
+              <va-card square outlined>
+                <va-card-title>ติดตามเอกสาร</va-card-title>
+                <va-card-content>
+                  <ul class="events">
+                    <li>
+                      <label class="left"></label>
+                      <span>
+                        <strong>
+                          รับเอกสารเข้าระบบ ({{
+                            BuddishDate(
+                              data.select_my_sender_documents_data.timestamp
+                            )
+                          }})
+                        </strong>
+                        {{ data.username + " " + data.lastname }}</span
+                      >
+                    </li>
 
-            <li>
-              <time datetime="10:03">10:03</time>
-              <span><strong>Bat &amp; Ball</strong> On time</span>
-            </li>
+                    <li
+                      v-for="documents_stage in data.select_my_sender_documents_stage_array"
+                      :key="documents_stage.stage"
+                    >
+                      <label class="left"></label>
+                      <span>
+                        <strong>
+                          เอกสารถูกส่งต่อ {{ documents_stage.stage }}&nbsp;
+                        </strong>
+                        <label
+                          v-for="(to_data, index) in documents_stage.stage_data"
+                          :key="to_data.id"
+                        >
+                          <label v-if="index > 0"><br /></label>
+                          <label v-if="to_data.sender_type == 'group'">
+                            กลุ่มผู้ใช้:
+                            {{ to_data.to_data.group_name }}
+                            <va-button
+                              color="info"
+                              class="mr-0"
+                              size="small"
+                              v-on:click="ShowFileDialog(to_data.files)"
+                            >
+                              ไฟล์แนบ
+                            </va-button>
+                          </label>
+                          <label v-if="to_data.sender_type == 'user'">
+                            {{
+                              to_data.to_data.name +
+                              " " +
+                              to_data.to_data.lastname
+                            }}
+                            <va-button
+                              color="info"
+                              class="mr-0"
+                              size="small"
+                              v-on:click="ShowFileDialog(to_data.files)"
+                            >
+                              ไฟล์แนบ
+                            </va-button>
+                          </label>
+                        </label>
+                      </span>
+                    </li>
 
-            <li>
-              <time datetime="10:03">10:03</time>
-              <span>
-                <strong> Bat &amp; Ball</strong>
-                On time and other text that may span over 2 lines
-              </span>
-            </li>
-
-            <li>
-              <time datetime="10:03">10:03</time>
-              <span><strong>Bat &amp; Ball</strong> On time</span>
-            </li>
-
-            <li>
-              <time datetime="10:03">10:03</time>
-              <span><strong>Bat &amp; Ball</strong> On time</span>
-            </li>
-
-            <li>
-              <time datetime="10:03">10:03</time>
-              <span><strong>Bat &amp; Ball</strong> On time</span>
-            </li>
-          </ul>
-
-          <va-button icon="cancel" class="mr-1" color="warning">
-            ยกเลิกเอกสาร
-          </va-button>
-          <va-button icon="delete_forever" class="mr-1" color="danger">
-            ลบเอกสาร
-          </va-button>
+                    <li
+                      v-if="data.select_my_sender_documents_data.sign_timestamp"
+                    >
+                      <label class="left"></label>
+                      <span
+                        ><strong>
+                          เสร็จสิ้นกระบวนการ ({{
+                            BuddishDate(
+                              data.select_my_sender_documents_data
+                                .sign_timestamp
+                            )
+                          }})
+                        </strong></span
+                      >
+                    </li>
+                  </ul>
+                </va-card-content>
+              </va-card>
+            </div>
+            <div class="flex xs12 md6">
+              <va-card square outlined>
+                <va-card-title>รายละเอียดเอกสาร</va-card-title>
+                <va-card-content>
+                  <b>หัวข้อเรื่อง: </b>
+                  {{ data.select_my_sender_documents_data.document_title }}
+                  <br />
+                  <b>เลขที่เอกสาร: </b>
+                  {{ data.select_my_sender_documents_data.document_number }}
+                  <br />
+                  <b>หมวดหมู่: </b>
+                  {{ data.select_my_sender_documents_data.group_name }}
+                  <br />
+                  <b>รายละเอียด: </b>
+                  {{
+                    data.select_my_sender_documents_data.document_description
+                  }}
+                  <br />
+                  <b>ระดับความสำคัญ: </b>
+                  <label
+                    v-if="
+                      data.select_my_sender_documents_data.document_priority ==
+                      0
+                    "
+                    >ทั่วไป</label
+                  >
+                  <label
+                    v-if="
+                      data.select_my_sender_documents_data.document_priority ==
+                      1
+                    "
+                    >ด่วน</label
+                  >
+                  <label
+                    v-if="
+                      data.select_my_sender_documents_data.document_priority ==
+                      2
+                    "
+                    >ด่วนที่สุด</label
+                  >
+                  <br />
+                  <br />
+                  <va-button icon="cancel" class="mr-1" color="warning">
+                    ยกเลิกเอกสาร
+                  </va-button>
+                  <va-button icon="delete_forever" class="mr-1" color="danger">
+                    ลบเอกสาร
+                  </va-button>
+                </va-card-content>
+              </va-card>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <va-button
@@ -220,6 +318,8 @@
             class="mr-1"
             color="danger"
             data-bs-dismiss="modal"
+            v-on:click="CloseSenderDocumentInfo()"
+            id="CloseTrackingStatusModal"
           >
             ปิด
           </va-button>
@@ -261,6 +361,9 @@ export default {
         acd_year_value: null,
         my_sender_documents_lists: new Array(),
         my_sender_documents_lists_isLoad: true,
+        select_my_sender_documents_data: new Array(),
+        select_my_sender_documents_stage_array: new Array(),
+        select_my_sender_documents_stage: 0,
       },
       permission: {
         access_user: access_user,
@@ -314,6 +417,55 @@ export default {
         month: "short",
         year: "numeric",
       });
+    },
+
+    LoadSenderDocumentInfo(doc_id) {
+      this.axios.get("api/sender/get/Sender/" + doc_id).then(async (res) => {
+        if (res.data.status == true) {
+          this.data.select_my_sender_documents_data = res.data.document_info;
+          this.data.select_my_sender_documents_stage = res.data.stage;
+          for (
+            var i = 1;
+            i <= this.data.select_my_sender_documents_stage;
+            i++
+          ) {
+            var to_data_array = new Array();
+            for await (let to_data of res.data.tracking) {
+              if (to_data.stage == i) {
+                to_data_array.push(to_data);
+              }
+            }
+
+            this.data.select_my_sender_documents_stage_array.push({
+              stage: i,
+              stage_data: to_data_array,
+            });
+          }
+        }
+      });
+    },
+
+    ShowFileDialog(file_array) {
+      console.log(file_array);
+      var html_file = "";
+      for (let file of file_array) {
+        html_file =
+          `<a href='public/uploads/sender/${file.file}' target='_blank'>` +
+          file.file +
+          "</a><br>" +
+          html_file;
+      }
+      this.$swal.fire({
+        icon: "info",
+        title: "ไฟล์แนบ (คลิกเพื่อดูไฟล์)",
+        html: html_file,
+      });
+    },
+
+    CloseSenderDocumentInfo() {
+      this.data.select_my_sender_documents_data = new Array();
+      this.data.select_my_sender_documents_stage_array = new Array();
+      this.data.select_my_sender_documents_stage = 0;
     },
   },
 };
