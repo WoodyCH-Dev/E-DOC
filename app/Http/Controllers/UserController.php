@@ -22,6 +22,11 @@ class UserController extends Controller
         return response()->json(['status' => true,'acd_year' => $acd_year->year , 'acd_year_id' => $acd_year->id]);
     }
 
+    public function Get_acd_year_all(Request $request){
+        $acd_year_lists = DB::table('year_list')->get();
+        return response()->json(['status' => true,'acd_year' => $acd_year_lists]);
+    }
+
     public function GetUserCount(Request $request){
         $users =  DB::table('users')->count();
         return response()->json(['status' => true,'count' => $users]);
@@ -287,22 +292,24 @@ class UserController extends Controller
     public function SenderUploadFiles(Request $request){
         if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         if ($file = $request->file('file')) {
-
+            $full_filename = "";
 
             if($request->post('stage')){
                 $stage = $request->post('stage');
                 $randstr = $this->RandomString(4);
                 $name = $file->getClientOriginalName();
-                $file->storeAs('uploads/sender',$randstr."_Stage".$stage."_".$name,'public');
+                $full_filename = $randstr."_Stage".$stage."_".$name;
+                $file->storeAs('uploads/sender',$full_filename,'public');
             }else{
                 $randstr = $this->RandomString(4);
                 $name = $file->getClientOriginalName();
-                $file->storeAs('uploads/sender',$randstr."_".$name,'public');
+                $full_filename = $randstr."_".$name;
+                $file->storeAs('uploads/sender',$full_filename,'public');
             }
 
             return response()->json([
                 "status" => true,
-                "file" => $name
+                "file" => $full_filename
             ]);
         }
     }
@@ -365,7 +372,6 @@ class UserController extends Controller
                 'to'=> $request->post('to_id'),
                 'status'=> 0,
                 'created_timestamp'=> Carbon::now(),
-                'read_timestamp'=> null,
             ]);
             foreach($request->post('files') as $file_data){
                 $file_upload = DB::table('document_file')->insert([
@@ -376,6 +382,14 @@ class UserController extends Controller
             }
             return response()->json(['status' => true]);
         }
+    }
+
+    public function Sender_Get_MySender(Request $request){
+        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $lists = DB::table('documents')
+        ->where('user_id',$request->post('user_id'))
+        ->get();
+        return response()->json(['status' => true,'lists'=>$lists]);
     }
 
     //Chk User Function

@@ -26,10 +26,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //User
     Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
+    Route::get('/user/acd_year/lists', [UserController::class, 'Get_acd_year_all']);
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
     //Sender
     Route::get('/sender/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
+    Route::get('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
     Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
 

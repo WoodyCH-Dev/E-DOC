@@ -62,9 +62,6 @@ export default {
     var access_sender = false;
     var access_admin = false;
 
-    var acd_year = "0";
-    var acd_year_options = ["2565"];
-
     if (window.localStorage.getItem("user_id")) {
       username = window.localStorage.getItem("name");
       lastname = window.localStorage.getItem("lastname");
@@ -82,8 +79,8 @@ export default {
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year,
-        acd_year_options: acd_year_options,
+        acd_year_options: new Array(),
+        acd_year: null,
       },
       permission: {
         access_user: access_user,
@@ -97,6 +94,17 @@ export default {
       this.axios.get("api/user/acd_year").then((res) => {
         if (res.data.status == true) {
           this.data.acd_year = String(Number(res.data.acd_year) + 543);
+        }
+      });
+
+      this.axios.get("api/user/acd_year/lists").then((res) => {
+        if (res.data.status == true) {
+          for (let year_data of res.data.acd_year) {
+            this.data.acd_year_options.push({
+              text: Number(year_data.year) + 543,
+              id: year_data.id,
+            });
+          }
         }
       });
     },
