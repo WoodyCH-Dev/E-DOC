@@ -11,7 +11,7 @@
  Target Server Version : 100422
  File Encoding         : 65001
 
- Date: 26/04/2022 19:33:48
+ Date: 28/04/2022 02:24:38
 */
 
 SET NAMES utf8mb4;
@@ -59,14 +59,21 @@ CREATE TABLE `document_file`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `document_id` int NULL DEFAULT NULL,
   `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `document_stage_id` int NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `document_id`(`document_id` ASC) USING BTREE,
-  CONSTRAINT `document_file_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  INDEX `document_file_ibfk_1`(`document_id` ASC) USING BTREE,
+  INDEX `document_file_ibfk_2`(`document_stage_id` ASC) USING BTREE,
+  CONSTRAINT `document_file_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `document_file_ibfk_2` FOREIGN KEY (`document_stage_id`) REFERENCES `document_stage` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 108 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of document_file
 -- ----------------------------
+INSERT INTO `document_file` VALUES (104, 36, 'DnNi_acf044ebad3858f2a0f61eeb33ca77f8.jpg', 69);
+INSERT INTO `document_file` VALUES (105, 36, 'DgEV_c0f09706d4713aee517078ad6b050996.jpg', 69);
+INSERT INTO `document_file` VALUES (106, 36, 'DnNi_acf044ebad3858f2a0f61eeb33ca77f8.jpg', 70);
+INSERT INTO `document_file` VALUES (107, 36, 'DgEV_c0f09706d4713aee517078ad6b050996.jpg', 70);
 
 -- ----------------------------
 -- Table structure for document_stage
@@ -74,6 +81,7 @@ CREATE TABLE `document_file`  (
 DROP TABLE IF EXISTS `document_stage`;
 CREATE TABLE `document_stage`  (
   `id` int NOT NULL AUTO_INCREMENT,
+  `stage` int NULL DEFAULT NULL COMMENT '1 2 3 4 5 6 ...',
   `document_id` int NULL DEFAULT NULL,
   `sender_user_id` int NULL DEFAULT NULL,
   `sender_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'group or user',
@@ -82,13 +90,15 @@ CREATE TABLE `document_stage`  (
   `created_timestamp` datetime NULL DEFAULT NULL,
   `read_timestamp` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `document_id`(`document_id` ASC) USING BTREE,
-  CONSTRAINT `document_stage_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  INDEX `document_stage_ibfk_1`(`document_id` ASC) USING BTREE,
+  CONSTRAINT `document_stage_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 71 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of document_stage
 -- ----------------------------
+INSERT INTO `document_stage` VALUES (69, 1, 36, 1, 'user', 11, 0, '2022-04-28 02:13:46', NULL);
+INSERT INTO `document_stage` VALUES (70, 1, 36, 1, 'group', 1, 0, '2022-04-28 02:13:46', NULL);
 
 -- ----------------------------
 -- Table structure for documents
@@ -100,22 +110,23 @@ CREATE TABLE `documents`  (
   `document_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `document_category_id` int NULL DEFAULT NULL,
   `document_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `document_stage_id` int NULL DEFAULT NULL,
   `document_priority` int NULL DEFAULT NULL COMMENT '0 ทั่วไป 1 ด่วน 2 ด่วนที่สุด',
-  `document_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '0 เอกสารดำเนินการได้ปกติ 1 เอกสารถูกยกเลิก(ลบ)',
+  `document_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '0 เอกสารดำเนินการได้ปกติ 1 เอกสารถูกยกเลิก 2 เอกสารถูกลบ',
   `user_id` int NULL DEFAULT NULL,
   `year_id` int NULL DEFAULT NULL,
   `timestamp` datetime NULL DEFAULT NULL,
+  `sign_timestamp` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `document_category_id`(`document_category_id` ASC) USING BTREE,
   INDEX `year_id`(`year_id` ASC) USING BTREE,
   CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`document_category_id`) REFERENCES `document_category` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`year_id`) REFERENCES `year_list` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of documents
 -- ----------------------------
+INSERT INTO `documents` VALUES (36, 'ซื้อของทดสอบ', '001', 1, 'ทดสอบการส่งภาพ Lucia Rea Regulus', 1, '0', 1, 1, '2022-04-28 01:52:47', NULL);
 
 -- ----------------------------
 -- Table structure for user_group
