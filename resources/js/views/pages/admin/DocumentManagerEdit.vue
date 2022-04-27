@@ -6,160 +6,167 @@
         <va-card-content>
           <va-form ref="form_data" @validation="form.validation = $event">
             <div class="row">
-              <div class="flex xl8 xs12">
-                <div class="form-group">
-                  <b>หัวข้อเรื่อง (*)</b>
-                  <va-input
-                    placeholder="เรื่อง..."
-                    required
-                    v-model="form.document_title"
-                    :rules="[form.document_title != '' || 'กรุณาใส่หัวข้อ']"
-                  />
-                </div>
-              </div>
-              <div class="flex xl4 xs12">
-                <div class="form-group">
-                  <b>เลขที่เอกสาร (*)</b>
-                  <va-input
-                    placeholder="0"
-                    required
-                    v-model="form.document_number"
-                    :rules="[
-                      form.document_number != '' || 'กรุณาใส่เลขที่เอกสาร',
-                    ]"
-                  />
-                </div>
-              </div>
-              <div class="flex xl4 xs12">
-                <div class="form-group">
-                  <b>หมวดหมู่ (*)</b>
-                  <va-select
-                    required
-                    :options="form.category_select_options"
-                    v-model="form.category_select_value"
-                    :rules="[
-                      form.category_select_value != null ||
-                        'กรุณาเลือกหมวดหมู่',
-                    ]"
-                    track-by="id"
-                    placeholder="กรุณาเลือกหมวดหมู"
-                  />
-                </div>
-              </div>
-              <div class="flex xl8 xs12">
-                <div class="form-group">
-                  <b>รายละเอียด (ถ้ามี)</b>
-                  <va-input
-                    placeholder="รายละเอียด (ถ้ามี)..."
-                    required
-                    v-model="form.document_description"
-                  />
-                </div>
-              </div>
-              <div class="flex xl12 xs12">
-                <div class="form-group">
-                  <b>ไฟล์ที่ Upload (*)</b>
-                  <div class="va-table-responsive">
-                    <table class="va-table" style="width: 100%">
-                      <thead>
-                        <tr>
-                          <th>ลำดับที่</th>
-                          <th>ไฟล์ที่แนบ</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody v-if="form.document_file.length > 0">
-                        <tr
-                          v-for="(file, index) in form.document_file"
-                          :key="file"
-                        >
-                          <td>{{ index + 1 }}</td>
-                          <td>
-                            <a
-                              :href="'public/uploads/sender/' + file.file"
-                              target="_blank"
-                              >{{ file.file }}</a
-                            >
-                          </td>
-                          <td>
-                            <va-button
-                              icon="delete"
-                              class="mr-2"
-                              color="danger"
-                              v-on:click="Documentfile_RemoveFromArray(index)"
-                            >
-                              ลบ
-                            </va-button>
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody v-if="form.document_file.length == 0">
-                        <tr>
-                          <td colspan="2" style="text-align: center">
-                            -- ยังไม่มีการ Upload ไฟล์เอกสาร --
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+              <div class="flex xl2 xs12">Tracking</div>
+              <div class="flex xl10 xs12">
+                <div class="row">
+                  <div class="flex xl8 xs12">
+                    <div class="form-group">
+                      <b>หัวข้อเรื่อง (*)</b>
+                      <va-input
+                        placeholder="เรื่อง..."
+                        required
+                        v-model="form.document_title"
+                        :rules="[form.document_title != '' || 'กรุณาใส่หัวข้อ']"
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="flex xl12 xs12">
-                <div class="form-group">
-                  <va-button v-on:click="Documentfile_selectBtn()">
-                    <i class="fas fa-upload mr-2"></i> เลือกไฟล์
-                  </va-button>
-                  <input
-                    type="file"
-                    hidden
-                    id="SelectFileUploadBtn"
-                    @change="Documentfile_upload"
-                    multiple
-                  />
-                </div>
-              </div>
-              <div class="flex xl8 xs12">
-                <div class="form-group">
-                  <b>เลือกผู้รับ (*)</b>
-                  <va-select
-                    class="mb-4"
-                    placeholder="เลือกผู้รับ"
-                    :options="form.user_select_options"
-                    v-model="form.user_select_value"
-                    track-by="id_key"
-                    multiple
-                    required
-                    searchable
-                  />
-                </div>
-              </div>
-              <div class="flex xl4 xs12">
-                <div class="form-group">
-                  <b>ระดับความสำคัญ (*)</b>
-                  <va-select
-                    required
-                    v-model="form.piority_select_value"
-                    :options="form.piority_select_options"
-                    track-by="id"
-                    placeholder="ระดับความสำคัญ"
-                  />
-                </div>
-              </div>
-              <div class="flex xl12 xs12" align="center">
-                <div class="form-group">
-                  <router-link to="/admin/manage/document" class="nav-item">
-                    <va-button class="primary mr-2">
-                      <i class="fas fa-angle-left mr-2"></i> ย้อนกลับ
-                    </va-button>
-                  </router-link>
-                  <va-button
-                    style="background-color: rgb(47, 148, 91)"
-                    @click="
-                      $refs.form_data.validate() && DocumentSendEditSubmit()
-                    "
-                  >
-                    <i class="fas fa-check-circle mr-2"></i> แก้ไขเอกสาร
-                  </va-button>
+                  <div class="flex xl4 xs12">
+                    <div class="form-group">
+                      <b>เลขที่เอกสาร (*)</b>
+                      <va-input
+                        placeholder="0"
+                        required
+                        v-model="form.document_number"
+                        :rules="[
+                          form.document_number != '' || 'กรุณาใส่เลขที่เอกสาร',
+                        ]"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex xl4 xs12">
+                    <div class="form-group">
+                      <b>หมวดหมู่ (*)</b>
+                      <va-select
+                        required
+                        :options="form.category_select_options"
+                        v-model="form.category_select_value"
+                        :rules="[
+                          form.category_select_value != null ||
+                            'กรุณาเลือกหมวดหมู่',
+                        ]"
+                        track-by="id"
+                        placeholder="กรุณาเลือกหมวดหมู"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex xl8 xs12">
+                    <div class="form-group">
+                      <b>รายละเอียด (ถ้ามี)</b>
+                      <va-input
+                        placeholder="รายละเอียด (ถ้ามี)..."
+                        required
+                        v-model="form.document_description"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex xl12 xs12">
+                    <div class="form-group">
+                      <b>ไฟล์ที่ Upload (*)</b>
+                      <div class="va-table-responsive">
+                        <table class="va-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>ลำดับที่</th>
+                              <th>ไฟล์ที่แนบ</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody v-if="form.document_file.length > 0">
+                            <tr
+                              v-for="(file, index) in form.document_file"
+                              :key="file"
+                            >
+                              <td>{{ index + 1 }}</td>
+                              <td>
+                                <a
+                                  :href="'public/uploads/sender/' + file.file"
+                                  target="_blank"
+                                  >{{ file.file }}</a
+                                >
+                              </td>
+                              <td>
+                                <va-button
+                                  icon="delete"
+                                  class="mr-2"
+                                  color="danger"
+                                  v-on:click="
+                                    Documentfile_RemoveFromArray(index)
+                                  "
+                                >
+                                  ลบ
+                                </va-button>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tbody v-if="form.document_file.length == 0">
+                            <tr>
+                              <td colspan="2" style="text-align: center">
+                                -- ยังไม่มีการ Upload ไฟล์เอกสาร --
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex xl12 xs12">
+                    <div class="form-group">
+                      <va-button v-on:click="Documentfile_selectBtn()">
+                        <i class="fas fa-upload mr-2"></i> เลือกไฟล์
+                      </va-button>
+                      <input
+                        type="file"
+                        hidden
+                        id="SelectFileUploadBtn"
+                        @change="Documentfile_upload"
+                        multiple
+                      />
+                    </div>
+                  </div>
+                  <div class="flex xl8 xs12">
+                    <div class="form-group">
+                      <b>เลือกผู้รับ (*)</b>
+                      <va-select
+                        class="mb-4"
+                        placeholder="เลือกผู้รับ"
+                        :options="form.user_select_options"
+                        v-model="form.user_select_value"
+                        track-by="id_key"
+                        multiple
+                        required
+                        searchable
+                      />
+                    </div>
+                  </div>
+                  <div class="flex xl4 xs12">
+                    <div class="form-group">
+                      <b>ระดับความสำคัญ (*)</b>
+                      <va-select
+                        required
+                        v-model="form.piority_select_value"
+                        :options="form.piority_select_options"
+                        track-by="id"
+                        placeholder="ระดับความสำคัญ"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex xl12 xs12" align="center">
+                    <div class="form-group">
+                      <router-link to="/admin/manage/document" class="nav-item">
+                        <va-button class="primary mr-2">
+                          <i class="fas fa-angle-left mr-2"></i> ย้อนกลับ
+                        </va-button>
+                      </router-link>
+                      <va-button
+                        style="background-color: rgb(47, 148, 91)"
+                        @click="
+                          $refs.form_data.validate() && DocumentSendEditSubmit()
+                        "
+                      >
+                        <i class="fas fa-check-circle mr-2"></i> แก้ไขเอกสาร
+                      </va-button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
