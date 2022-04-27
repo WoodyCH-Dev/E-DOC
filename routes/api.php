@@ -31,7 +31,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     //Sender
     Route::get('/sender/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
-    Route::get('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
+    Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
     Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
 
@@ -55,5 +55,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     Route::get('/admin/get/Group/AllUser/{group_id}', [UserController::class, 'Get_Alluser_InGroup']);
     Route::post('/admin/edit/Group/User', [UserController::class, 'AdminEditGroupUser']);
+
+    Route::post('/admin/get/AllSender', [UserController::class, 'Admin_Get_AllSender']);
 
 });

@@ -10,7 +10,7 @@
                 <div class="form-group">
                   <b>ปีการศึกษา</b>
                   <va-select
-                    v-model="data.acd_year"
+                    v-model="data.acd_year_value"
                     :options="data.acd_year_options"
                   />
                 </div>
@@ -91,7 +91,7 @@ export default {
         username: username,
         lastname: lastname,
         acd_year_options: new Array(),
-        acd_year: null,
+        acd_year_value: null,
       },
       permission: {
         access_user: access_user,
@@ -102,18 +102,21 @@ export default {
   },
   methods: {
     onLoad() {
-      this.axios.get("api/user/acd_year").then((res) => {
+      this.axios.get("api/user/acd_year/lists").then(async (res) => {
         if (res.data.status == true) {
-          this.data.acd_year = String(Number(res.data.acd_year) + 543);
-        }
-      });
-
-      this.axios.get("api/user/acd_year/lists").then((res) => {
-        if (res.data.status == true) {
-          for (let year_data of res.data.acd_year) {
+          for await (let year_data of res.data.acd_year) {
             this.data.acd_year_options.push({
               text: Number(year_data.year) + 543,
               id: year_data.id,
+            });
+
+            this.axios.get("api/user/acd_year").then((res) => {
+              if (res.data.status == true) {
+                this.data.acd_year_value = this.data.acd_year_options.find(
+                  (year_lists) =>
+                    year_lists.text == Number(res.data.acd_year) + 543
+                );
+              }
             });
           }
         }

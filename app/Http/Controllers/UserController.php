@@ -387,7 +387,20 @@ class UserController extends Controller
     public function Sender_Get_MySender(Request $request){
         if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $lists = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
         ->where('user_id',$request->post('user_id'))
+        ->where('year_id',$request->post('year_id'))
+        ->get();
+        return response()->json(['status' => true,'lists'=>$lists]);
+    }
+
+    public function Admin_Get_AllSender(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $lists = DB::table('documents')
+        ->select('*','documents.id as doc_id')
+        ->leftJoin('document_category','document_category.id','documents.document_category_id')
+        ->where('year_id',$request->post('year_id'))
         ->get();
         return response()->json(['status' => true,'lists'=>$lists]);
     }

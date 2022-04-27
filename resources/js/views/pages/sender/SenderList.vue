@@ -10,15 +10,21 @@
                 <div class="form-group">
                   <b>ปีการศึกษา</b>
                   <va-select
-                    v-model="data.acd_year"
+                    v-model="data.acd_year_value"
                     :options="data.acd_year_options"
+                    v-on:change="LoadSenderDocumentLists()"
+                    track-by="id"
                   />
                 </div>
               </div>
               <div class="flex xl12 xs12">
                 <div class="form-group">
                   <div class="va-table-responsive" style="overflow-y: auto">
-                    <table class="va-table" style="width: 100%">
+                    <table
+                      class="va-table"
+                      style="width: 100%"
+                      v-if="!data.my_sender_documents_lists_isLoad"
+                    >
                       <thead>
                         <tr>
                           <th>เลขที่เอกสาร</th>
@@ -30,16 +36,47 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ติดตามเอกสาร</td>
+                        <tr
+                          v-for="(
+                            my_send_doc, index
+                          ) in data.my_sender_documents_lists"
+                          :key="my_send_doc.id"
+                        >
+                          <td>{{ index + 1 }}</td>
+                          <td>{{ BuddishDate(my_send_doc.timestamp) }}</td>
+                          <td>
+                            {{
+                              my_send_doc.sign_timestamp ||
+                              "ยังไม่มีการลงวันที่"
+                            }}
+                          </td>
+                          <td>{{ my_send_doc.document_title }}</td>
+                          <td>{{ my_send_doc.group_name }}</td>
+                          <td>
+                            <va-button
+                              icon="approval"
+                              class="mr-2"
+                              style="background-color: rgb(47, 148, 91)"
+                            >
+                              ติดตามเอกสาร
+                            </va-button>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div
+                    align="center"
+                    style="padding-top: 30px"
+                    v-if="data.my_sender_documents_lists_isLoad"
+                  >
+                    <va-progress-circle
+                      size="large"
+                      :thickness="0.4"
+                      color="primary"
+                      indeterminate
+                    />
+                    กำลังโหลดข้อมูล
                   </div>
                 </div>
               </div>
@@ -80,7 +117,9 @@ export default {
         username: username,
         lastname: lastname,
         acd_year_options: new Array(),
-        acd_year: null,
+        acd_year_value: null,
+        my_sender_documents_lists: new Array(),
+        my_sender_documents_lists_isLoad: true,
       },
       permission: {
         access_user: access_user,
@@ -91,21 +130,48 @@ export default {
   },
   methods: {
     onLoad() {
-      this.axios.get("api/user/acd_year").then((res) => {
+      this.axios.get("api/user/acd_year/lists").then(async (res) => {
         if (res.data.status == true) {
-          this.data.acd_year = String(Number(res.data.acd_year) + 543);
-        }
-      });
-
-      this.axios.get("api/user/acd_year/lists").then((res) => {
-        if (res.data.status == true) {
-          for (let year_data of res.data.acd_year) {
+          for await (let year_data of res.data.acd_year) {
             this.data.acd_year_options.push({
               text: Number(year_data.year) + 543,
               id: year_data.id,
             });
+
+            this.axios.get("api/user/acd_year").then((res) => {
+              if (res.data.status == true) {
+                this.data.acd_year_value = this.data.acd_year_options.find(
+                  (year_lists) =>
+                    year_lists.text == Number(res.data.acd_year) + 543
+                );
+                this.LoadSenderDocumentLists();
+              }
+            });
           }
         }
+      });
+    },
+
+    LoadSenderDocumentLists() {
+      this.axios
+        .post("api/sender/get/MySender", {
+          year_id: this.data.acd_year_value.id,
+          user_id: window.localStorage.getItem("user_id"),
+        })
+        .then((res) => {
+          if (res.data.status == true) {
+            this.data.my_sender_documents_lists = res.data.lists;
+            this.data.my_sender_documents_lists_isLoad = false;
+          }
+        });
+    },
+
+    BuddishDate(date) {
+      var date = new Date(date);
+      return date.toLocaleDateString("th-TH", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
       });
     },
   },

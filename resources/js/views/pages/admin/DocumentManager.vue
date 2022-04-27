@@ -5,7 +5,16 @@
         <va-card-title>จัดการเอกสาร</va-card-title>
         <va-card-content>
           <div class="row">
-            <div class="flex xl12 xs12" align="right">
+            <div class="flex xl4 xs12">
+              <div class="form-group">
+                <b>ปีการศึกษา</b>
+                <va-select
+                  v-model="data.acd_year_value"
+                  :options="data.acd_year_options"
+                />
+              </div>
+            </div>
+            <div class="flex xl8 xs12" align="right">
               <va-button icon="add" class="mr-2" color="primary">
                 เพิ่มเอกสาร
               </va-button>
@@ -92,7 +101,8 @@ export default {
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year,
+        acd_year_options: new Array(),
+        acd_year_value: null,
       },
       permission: {
         access_user: access_user,
@@ -103,9 +113,24 @@ export default {
   },
   methods: {
     onLoad() {
-      this.axios.get("api/user/acd_year").then((res) => {
+      this.axios.get("api/user/acd_year/lists").then(async (res) => {
         if (res.data.status == true) {
-          this.data.acd_year = String(Number(res.data.acd_year) + 543);
+          for await (let year_data of res.data.acd_year) {
+            this.data.acd_year_options.push({
+              text: Number(year_data.year) + 543,
+              id: year_data.id,
+            });
+
+            this.axios.get("api/user/acd_year").then((res) => {
+              if (res.data.status == true) {
+                this.data.acd_year_value = this.data.acd_year_options.find(
+                  (year_lists) =>
+                    year_lists.text == Number(res.data.acd_year) + 543
+                );
+                this.LoadSenderDocumentLists();
+              }
+            });
+          }
         }
       });
     },
