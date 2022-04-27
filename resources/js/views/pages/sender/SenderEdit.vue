@@ -2,7 +2,7 @@
   <div class="row">
     <div class="flex xl12 xs12 center">
       <va-card tag="b" outlined>
-        <va-card-title>ส่งเอกสาร</va-card-title>
+        <va-card-title>แก้ไขเอกสาร</va-card-title>
         <va-card-content>
           <va-form ref="form_data" @validation="form.validation = $event">
             <div class="row">

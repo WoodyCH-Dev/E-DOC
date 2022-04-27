@@ -148,9 +148,16 @@
                           </va-button>
                         </td>
                         <td>
-                          <va-button icon="edit" class="mr-2" color="warning">
-                            แก้ไข
-                          </va-button>
+                          <router-link
+                            :to="
+                              '/admin/manage/editdocument/' + doc_list.doc_id
+                            "
+                            class="nav-item"
+                          >
+                            <va-button icon="edit" class="mr-2" color="warning">
+                              แก้ไข
+                            </va-button>
+                          </router-link>
                           <va-button
                             icon="clear"
                             class="mr-2"
