@@ -52,6 +52,10 @@
 .events *::after {
   box-sizing: border-box;
 }
+
+.row_success {
+  background-color: rgb(212, 255, 223);
+}
 </style>
 
 <template>
@@ -102,6 +106,9 @@
                         <tr
                           v-for="my_send_doc in data.my_sender_documents_lists"
                           :key="my_send_doc.doc_id"
+                          v-bind:class="{
+                            row_success: !!my_send_doc.sign_timestamp,
+                          }"
                         >
                           <td>
                             {{ my_send_doc.document_number }}
@@ -135,6 +142,7 @@
                               สถานะเอกสาร
                             </va-button>
                             <router-link
+                              v-if="!my_send_doc.sign_timestamp"
                               :to="'/sender/send/edit/' + my_send_doc.doc_id"
                               class="nav-item"
                             >
@@ -326,12 +334,17 @@
                   >
                     (เอกสารถูกยกเลิก)
                   </b>
-                  <br />
-                  <br />
+                  <br
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
+                  />
+                  <br
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
+                  />
                   <va-button
                     icon="cancel"
                     class="mr-1"
                     color="warning"
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
                     :disabled="
                       data.select_my_sender_documents_data.document_status == 1
                     "
@@ -347,6 +360,7 @@
                     icon="delete_forever"
                     class="mr-1"
                     color="danger"
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
                     v-on:click="
                       DeleteSenderDocument(
                         data.select_my_sender_documents_data.doc_id

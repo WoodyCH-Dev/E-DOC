@@ -347,7 +347,7 @@ class UserController extends Controller
     }
 
     public function SenderSendDocument(Request $request){
-        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(1) == false && $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
 
             $document_id = DB::table('documents')
             ->insertGetId([
@@ -422,7 +422,7 @@ class UserController extends Controller
     }
 
     public function SenderUpdateSendDocument(Request $request){
-        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(1) == false && $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
 
             DB::table('documents')
             ->where('id',$request->post('document_id'))
@@ -503,7 +503,7 @@ class UserController extends Controller
     }
 
     public function Sender_Get_MySender(Request $request){
-        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(1) == false && $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $lists = DB::table('documents')
         ->select('*','documents.id as doc_id')
         ->leftJoin('document_category','document_category.id','documents.document_category_id')
@@ -650,7 +650,7 @@ class UserController extends Controller
     }
 
     public function Sender_Get_SenderData(Request $request){
-        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(1) == false && $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $document_info = DB::table('documents')
         ->select('*','documents.id as doc_id')
         ->leftJoin('document_category','document_category.id','documents.document_category_id')
@@ -740,7 +740,7 @@ class UserController extends Controller
     }
 
     public function SenderCancelDocument(Request $request){
-        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(2) == false && $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         DB::table('documents')
         ->where('id',$request->post('document_id'))
         ->update([
@@ -750,7 +750,7 @@ class UserController extends Controller
     }
 
     public function SenderDeleteDocument(Request $request){
-        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(2) == false && $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         DB::table('documents')
         ->where('id',$request->post('document_id'))
         ->update([
@@ -760,7 +760,7 @@ class UserController extends Controller
     }
 
     public function SenderAssignDocument(Request $request){
-        if($this->ChkUser(2) == false || $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        if($this->ChkUser(2) == false && $this->ChkUser(1) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         DB::table('documents')
         ->where('id',$request->post('document_id'))
         ->update([
@@ -792,7 +792,7 @@ class UserController extends Controller
     public function ChkUser($req_permission){
         $_user = auth()->user();
         if(!$_user){
-            return response()->json(['status' => false,'message' => 'User Not found']);
+            return false;
         }else{
             $userpermission = DB::table('user_permission')
             ->where('user_id',$_user->id)

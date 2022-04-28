@@ -1,3 +1,9 @@
+<style>
+.row_read {
+  background-color: rgb(221, 221, 221);
+}
+</style>
+
 <template>
   <div class="row">
     <div class="flex xl12 xs12 center">
@@ -38,6 +44,7 @@
                         <tr
                           v-for="inbox in data.inbox_array"
                           :key="inbox.document_id"
+                          v-bind:class="{ row_read: inbox.status == 1 }"
                         >
                           <td>
                             {{ inbox.document_number }}

@@ -26,7 +26,8 @@
     <div class="flex xl12 xs12 center">
       <va-card tag="b" outlined>
         <va-card-title>ดูเอกสาร</va-card-title>
-        <va-card-content>
+        <va-progress-bar indeterminate v-if="!data.isLoad" />
+        <va-card-content v-if="data.isLoad">
           <div class="row">
             <div class="flex xl12 xs12">
               <h2>
@@ -308,6 +309,7 @@ export default {
         lastname: lastname,
         acd_year: acd_year,
         acd_year_id: 0,
+        isLoad: false,
       },
       permission: {
         access_user: access_user,
@@ -440,6 +442,7 @@ export default {
           this.form.document_file = res.data.document_files;
           this.form.document_file_reupload =
             res.data.document_reupload_file_array;
+          this.data.isLoad = true;
         }
       });
     },
