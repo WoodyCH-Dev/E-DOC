@@ -134,7 +134,7 @@ export default {
         }
       });
 
-      this.axios.get("api/admin/get/AllDocumentGroup").then((res) => {
+      this.axios.get("api/user/get/AllDocumentGroup").then((res) => {
         if (res.data.status == true) {
           this.data.AllDocumentgroup_isLoad = false;
           this.document_group_lists = res.data.document_category;

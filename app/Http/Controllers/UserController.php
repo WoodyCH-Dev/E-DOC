@@ -86,7 +86,6 @@ class UserController extends Controller
     }
 
     public function Sender_Get_AlluserAndGroup(Request $request){
-        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $users = DB::table('users')->get();
         $groups = DB::table('user_group')->get();
         return response()->json(['status' => true,'users'=> $users,'groups'=>$groups]);
@@ -100,7 +99,6 @@ class UserController extends Controller
     }
 
     public function Get_AllDocumentgroup(Request $request){
-        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $document_category =  DB::table('document_category')->get();
 
         return response()->json(['status' => true,'document_category' => $document_category]);

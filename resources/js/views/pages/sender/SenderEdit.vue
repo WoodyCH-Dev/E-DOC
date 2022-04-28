@@ -246,7 +246,7 @@ export default {
         }
       });
 
-      this.axios.get("api/sender/get/AllUserAndGroup").then(async (res) => {
+      this.axios.get("api/user/get/AllUserAndGroup").then(async (res) => {
         if (res.data.status == true) {
           var i = 0;
           for await (let group of res.data.groups) {
@@ -265,7 +265,7 @@ export default {
               id_key: i++,
             });
           }
-          this.axios.get("api/admin/get/AllDocumentGroup").then(async (res) => {
+          this.axios.get("api/user/get/AllDocumentGroup").then(async (res) => {
             if (res.data.status == true) {
               for await (let doc_category of res.data.document_category) {
                 this.form.category_select_options.push({

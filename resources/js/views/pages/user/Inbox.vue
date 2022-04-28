@@ -71,12 +71,16 @@
                             </label>
                           </td>
                           <td>
-                            <va-button
-                              icon="ads_click"
-                              style="background-color: rgb(47, 148, 91)"
+                            <router-link
+                              :to="'/user/view/' + inbox.document_id"
                             >
-                              เปิด
-                            </va-button>
+                              <va-button
+                                icon="ads_click"
+                                style="background-color: rgb(47, 148, 91)"
+                              >
+                                เปิด
+                              </va-button>
+                            </router-link>
                           </td>
                         </tr>
                       </tbody>
