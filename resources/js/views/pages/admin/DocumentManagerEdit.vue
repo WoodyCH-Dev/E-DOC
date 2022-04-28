@@ -100,7 +100,7 @@
                           </tbody>
                           <tbody v-if="form.document_file.length == 0">
                             <tr>
-                              <td colspan="2" style="text-align: center">
+                              <td colspan="3" style="text-align: center">
                                 -- ยังไม่มีการ Upload ไฟล์เอกสาร --
                               </td>
                             </tr>
@@ -253,7 +253,7 @@ export default {
         }
       });
 
-      this.axios.get("api/sender/get/AllUserAndGroup").then(async (res) => {
+      this.axios.get("api/user/get/AllUserAndGroup").then(async (res) => {
         if (res.data.status == true) {
           var i = 0;
           for await (let group of res.data.groups) {
@@ -272,7 +272,7 @@ export default {
               id_key: i++,
             });
           }
-          this.axios.get("api/admin/get/AllDocumentGroup").then(async (res) => {
+          this.axios.get("api/user/get/AllDocumentGroup").then(async (res) => {
             if (res.data.status == true) {
               for await (let doc_category of res.data.document_category) {
                 this.form.category_select_options.push({
@@ -414,7 +414,9 @@ export default {
               this.$swal
                 .fire("Success!", "แก้ไขเอกสารแล้ว!", "success")
                 .then(() => {
-                  this.$router.push("/sender/send/list");
+                  this.$router.push("/admin/manage/document").then(() => {
+                    location.reload();
+                  });
                 });
             }
           });

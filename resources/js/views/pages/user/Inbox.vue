@@ -1,3 +1,9 @@
+<style>
+.row_read {
+  background-color: rgb(221, 221, 221);
+}
+</style>
+
 <template>
   <div class="row">
     <div class="flex xl12 xs12 center">
@@ -18,7 +24,11 @@
               <div class="flex xl12 xs12">
                 <div class="form-group">
                   <div class="va-table-responsive" style="overflow-y: auto">
-                    <table class="va-table" style="width: 100%">
+                    <table
+                      class="va-table"
+                      style="width: 100%"
+                      v-if="!data.inbox_isLoad"
+                    >
                       <thead>
                         <tr>
                           <th>เลขที่เอกสาร</th>
@@ -27,30 +37,93 @@
                           <th>หัวข้อเรื่อง</th>
                           <th>ชื่อผู้ส่ง</th>
                           <th>สถานะ</th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ยังไม่เปิด</td>
-                        </tr>
-                        <tr style="background-color: rgb(158, 255, 189)">
-                          <td>2</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
-                          <td>ไฟล์.pdf</td>
+                        <tr
+                          v-for="inbox in data.inbox_array"
+                          :key="inbox.document_id"
+                          v-bind:class="{ row_read: inbox.status == 1 }"
+                        >
                           <td>
-                            เปิดแล้ว
-                            <i class="fas fa-check-circle"></i>
+                            {{ inbox.document_number }}
+                            <label
+                              v-if="inbox.document_status == 1"
+                              class="text-danger"
+                            >
+                              (เอกสารถูกยกเลิก)
+                            </label>
+                            <label v-if="inbox.sender_type == 'group'">
+                              (กลุ่ม)
+                            </label>
+                          </td>
+                          <td>{{ BuddishDate(inbox.timestamp) }}</td>
+                          <td>
+                            {{
+                              BuddishDate(inbox.sign_timestamp) ||
+                              "ยังไม่ลงวันที่"
+                            }}
+                          </td>
+                          <td>{{ inbox.document_title }}</td>
+                          <td>{{ inbox.name + " " + inbox.lastname }}</td>
+                          <td>
+                            <label v-if="inbox.status == 1">
+                              <va-badge
+                                text="เปิดแล้ว"
+                                color="success"
+                                class="mr-0"
+                              />
+                            </label>
+                            <label v-if="inbox.status == 0">
+                              <va-badge
+                                text="ยังไม่เปิด"
+                                color="warning"
+                                class="mr-0"
+                              />
+                            </label>
+                          </td>
+                          <td>
+                            <router-link
+                              v-if="
+                                !inbox.sign_timestamp &&
+                                inbox.document_status == 0
+                              "
+                              :to="'/user/view/' + inbox.stage_id"
+                              class="nav-item"
+                            >
+                              <va-button
+                                icon="ads_click"
+                                style="background-color: rgb(47, 148, 91)"
+                              >
+                                เปิด
+                              </va-button>
+                            </router-link>
+                            <va-button
+                              icon="ads_click"
+                              style="background-color: rgb(47, 148, 91)"
+                              v-if="inbox.sign_timestamp"
+                              @click="markAsread(inbox.stage_id)"
+                            >
+                              เปิด
+                            </va-button>
                           </td>
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div
+                    align="center"
+                    style="padding-top: 30px"
+                    v-if="data.inbox_isLoad"
+                  >
+                    <va-progress-circle
+                      size="large"
+                      :thickness="0.4"
+                      color="primary"
+                      indeterminate
+                    />
+                    กำลังโหลดข้อมูล
                   </div>
                 </div>
               </div>
@@ -92,6 +165,8 @@ export default {
         lastname: lastname,
         acd_year_options: new Array(),
         acd_year_value: null,
+        inbox_array: new Array(),
+        inbox_isLoad: true,
       },
       permission: {
         access_user: access_user,
@@ -118,9 +193,50 @@ export default {
                 );
               }
             });
+
+            this.axios.get("api/user/get/inbox").then(async (res) => {
+              if (res.data.status == true) {
+                for await (let to_user of res.data.sendto_user) {
+                  this.data.inbox_array.push(to_user);
+                }
+                for await (let group of res.data.sendto_group) {
+                  for await (let to_group of group)
+                    this.data.inbox_array.push(to_group);
+                }
+                this.data.inbox_array.sort((a, b) => {
+                  return a.status - b.status;
+                });
+                this.data.inbox_isLoad = false;
+              }
+            });
           }
         }
       });
+    },
+
+    BuddishDate(date) {
+      if (date) {
+        var date = new Date(date);
+        return date.toLocaleDateString("th-TH", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+      } else {
+        return false;
+      }
+    },
+
+    markAsread(stage_id) {
+      this.axios
+        .post("api/user/inbox/markasread", {
+          document_stage_id: stage_id,
+        })
+        .then(async (res) => {
+          this.$router.push("/user/view/" + stage_id).then(() => {
+            location.reload();
+          });
+        });
     },
   },
 };

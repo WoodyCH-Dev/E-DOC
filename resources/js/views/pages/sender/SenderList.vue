@@ -52,6 +52,10 @@
 .events *::after {
   box-sizing: border-box;
 }
+
+.row_success {
+  background-color: rgb(212, 255, 223);
+}
 </style>
 
 <template>
@@ -102,6 +106,9 @@
                         <tr
                           v-for="my_send_doc in data.my_sender_documents_lists"
                           :key="my_send_doc.doc_id"
+                          v-bind:class="{
+                            row_success: !!my_send_doc.sign_timestamp,
+                          }"
                         >
                           <td>
                             {{ my_send_doc.document_number }}
@@ -122,18 +129,6 @@
                           <td>{{ my_send_doc.document_title }}</td>
                           <td>{{ my_send_doc.group_name }}</td>
                           <td>
-                            <router-link
-                              :to="'/sender/send/edit/' + my_send_doc.doc_id"
-                              class="nav-item"
-                            >
-                              <va-button
-                                icon="edit"
-                                class="mr-2"
-                                color="warning"
-                              >
-                                แก้ไข
-                              </va-button>
-                            </router-link>
                             <va-button
                               icon="approval"
                               class="mr-2"
@@ -146,6 +141,19 @@
                             >
                               สถานะเอกสาร
                             </va-button>
+                            <router-link
+                              v-if="!my_send_doc.sign_timestamp"
+                              :to="'/sender/send/edit/' + my_send_doc.doc_id"
+                              class="nav-item"
+                            >
+                              <va-button
+                                icon="edit"
+                                class="mr-2"
+                                color="warning"
+                              >
+                                แก้ไข
+                              </va-button>
+                            </router-link>
                           </td>
                         </tr>
                       </tbody>
@@ -222,11 +230,10 @@
                       <label class="left"></label>
                       <span>
                         <strong> เอกสารถูกส่งไปที่&nbsp; </strong>
-                        <label
-                          v-for="(to_data, index) in documents_stage.stage_data"
+                        <p
+                          v-for="to_data in documents_stage.stage_data"
                           :key="to_data.id"
                         >
-                          <label v-if="index > 0"><br /></label>
                           <label v-if="to_data.sender_type == 'group'">
                             กลุ่มผู้ใช้:
                             {{ to_data.to_data.group_name }}
@@ -240,6 +247,7 @@
                             </va-button>
                           </label>
                           <label v-if="to_data.sender_type == 'user'">
+                            ผู้ใช้:
                             {{
                               to_data.to_data.name +
                               " " +
@@ -254,7 +262,7 @@
                               ไฟล์แนบ
                             </va-button>
                           </label>
-                        </label>
+                        </p>
                       </span>
                     </li>
 
@@ -326,12 +334,17 @@
                   >
                     (เอกสารถูกยกเลิก)
                   </b>
-                  <br />
-                  <br />
+                  <br
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
+                  />
+                  <br
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
+                  />
                   <va-button
                     icon="cancel"
                     class="mr-1"
                     color="warning"
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
                     :disabled="
                       data.select_my_sender_documents_data.document_status == 1
                     "
@@ -347,6 +360,7 @@
                     icon="delete_forever"
                     class="mr-1"
                     color="danger"
+                    v-if="!data.select_my_sender_documents_data.sign_timestamp"
                     v-on:click="
                       DeleteSenderDocument(
                         data.select_my_sender_documents_data.doc_id
@@ -468,6 +482,9 @@ export default {
     },
 
     LoadSenderDocumentInfo(doc_id) {
+      this.data.select_my_sender_documents_data = new Array();
+      this.data.select_my_sender_documents_stage_array = new Array();
+      this.data.select_my_sender_documents_stage = 0;
       this.axios.get("api/sender/get/Sender/" + doc_id).then(async (res) => {
         if (res.data.status == true) {
           this.data.select_my_sender_documents_data = res.data.document_info;

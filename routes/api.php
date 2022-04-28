@@ -25,17 +25,24 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     //User
     Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
+    Route::get('/user/dashboard/getdocumentcount/{year_id}', [UserController::class, 'GetDocumentCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
     Route::get('/user/acd_year/lists', [UserController::class, 'Get_acd_year_all']);
+    Route::get('/user/get/inbox', [UserController::class, 'GetMyInbox']);
+    Route::get('/user/get/AllDocumentGroup', [UserController::class, 'Get_AllDocumentgroup']);
+    Route::get('/user/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
-    //Sender
-    Route::get('/sender/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
-    Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
+    Route::get('/user/get/Sender/{stage_id}', [UserController::class, 'User_Get_SenderData']);
+    Route::post('/user/submit/Sender', [UserController::class, 'User_Submit_SenderData']);
+    Route::post('/user/inbox/markasread', [UserController::class, 'User_MarkAsRead_Inbox']);
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
+
+    //Sender
+    Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
+    Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
     Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
     Route::post('/sender/edit/send/document', [UserController::class, 'SenderUpdateSendDocument']);
-    Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
     Route::post('/sender/document/cancel', [UserController::class, 'SenderCancelDocument']);
     Route::post('/sender/document/delete', [UserController::class, 'SenderDeleteDocument']);
     Route::post('/sender/document/assign', [UserController::class, 'SenderAssignDocument']);
@@ -43,7 +50,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //Admin
     Route::get('/admin/get/AllUser', [UserController::class, 'Get_Alluser']);
     Route::get('/admin/get/AllGroup', [UserController::class, 'Get_Allgroup']);
-    Route::get('/admin/get/AllDocumentGroup', [UserController::class, 'Get_AllDocumentgroup']);
     Route::get('/admin/get/user/{user_id}', [UserController::class, 'AdminGetUser']);
     Route::post('/admin/create/User', [UserController::class, 'AdminAddUser']);
     Route::post('/admin/create/Group', [UserController::class, 'AdminAddGroup']);

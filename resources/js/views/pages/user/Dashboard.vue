@@ -31,7 +31,7 @@
                   เอกสารที่จำเป็นต้องตรวจสอบ
                 </va-card-title>
                 <va-card-content class="card-subtitle-dashboard">
-                  0
+                  {{ data.AllInbox_Unread_count }}
                 </va-card-content>
               </va-card>
             </div>
@@ -41,7 +41,7 @@
                   ยอดเอกสารทั้งหมดของปี
                 </va-card-title>
                 <va-card-content class="card-subtitle-dashboard">
-                  0
+                  {{ data.AllDoc_count }}
                 </va-card-content>
               </va-card>
             </div>
@@ -93,7 +93,11 @@ export default {
         username: username,
         lastname: lastname,
         acd_year: acd_year,
+        acd_year_id: 0,
         user_count: 0,
+        AllInbox_Unread_count: 0,
+        AllDoc_count: 0,
+        inbox_array: new Array(),
       },
       permission: {
         access_user: access_user,
@@ -107,11 +111,38 @@ export default {
       this.axios.get("api/user/acd_year").then((res) => {
         if (res.data.status == true) {
           this.data.acd_year = String(Number(res.data.acd_year) + 543);
+          this.data.acd_year_id = res.data.acd_year_id;
+
+          this.axios
+            .get("api/user/dashboard/getdocumentcount/" + this.data.acd_year_id)
+            .then((res) => {
+              if (res.data.status == true) {
+                this.data.AllDoc_count = res.data.count;
+              }
+            });
         }
       });
+
       this.axios.get("api/user/dashboard/getusercount").then((res) => {
         if (res.data.status == true) {
           this.data.user_count = res.data.count;
+        }
+      });
+
+      this.axios.get("api/user/get/inbox").then(async (res) => {
+        if (res.data.status == true) {
+          for await (let to_user of res.data.sendto_user) {
+            this.data.inbox_array.push(to_user);
+          }
+          for await (let group of res.data.sendto_group) {
+            for await (let to_group of group)
+              this.data.inbox_array.push(to_group);
+          }
+          this.data.AllInbox_Unread_count = this.data.inbox_array.filter(
+            (element) => {
+              return element.status == 0;
+            }
+          ).length;
         }
       });
     },

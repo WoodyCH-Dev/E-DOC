@@ -74,6 +74,10 @@
   text-align: right;
   padding-left: 10px;
 }
+
+.va-table {
+  word-break: break-all;
+}
 </style>
 <template>
   <!-- Bootstrap NavBar -->
@@ -166,7 +170,7 @@
 
         <!-- Mobile only -->
         <li
-          class="nav-item dropdown"
+          class="nav-item dropdown d-sm-block d-md-none"
           data-toggle="collapse"
           data-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown"
@@ -210,7 +214,9 @@
           <li class="nav-item dropdown">
             <a class="nav-link" id="smallerscreenmenu">
               <i class="fas fa-inbox-in mr-1"></i> กล่องเอกสารเข้า &nbsp;
-              <span class="badge badge-warning">0</span>
+              <span class="badge badge-warning">
+                {{ data.AllInbox_Unread_count }}
+              </span>
             </a>
           </li>
         </router-link>
@@ -389,7 +395,9 @@
           <div class="d-flex w-100 justify-content-start align-items-center">
             <i class="fas fa-inbox-in mr-3"></i>
             <span class="menu-collapsed">
-              กล่องเอกสารเข้า &nbsp;<span class="badge badge-warning">0</span>
+              กล่องเอกสารเข้า &nbsp;<span class="badge badge-warning">
+                {{ data.AllInbox_Unread_count }}
+              </span>
             </span>
           </div>
         </router-link>
@@ -544,6 +552,8 @@ export default {
         google_uid: google_uid,
         username: username,
         AllUser_count: 0,
+        AllInbox_Unread_count: 0,
+        inbox_array: new Array(),
       },
       permission: {
         access_user: access_user,
@@ -558,7 +568,24 @@ export default {
       window.location.reload();
     },
 
-    onLoad() {},
+    onLoad() {
+      this.axios.get("api/user/get/inbox").then(async (res) => {
+        if (res.data.status == true) {
+          for await (let to_user of res.data.sendto_user) {
+            this.data.inbox_array.push(to_user);
+          }
+          for await (let group of res.data.sendto_group) {
+            for await (let to_group of group)
+              this.data.inbox_array.push(to_group);
+          }
+          this.data.AllInbox_Unread_count = this.data.inbox_array.filter(
+            (element) => {
+              return element.status == 0;
+            }
+          ).length;
+        }
+      });
+    },
 
     async onSubmitWithGoogle() {
       try {
