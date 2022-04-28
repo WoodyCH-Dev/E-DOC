@@ -27903,7 +27903,8 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
         user_select_value: null,
         piority_select_value: null,
         validation: null,
-        document_stage: 0
+        document_stage: 0,
+        sign_check: false
       }
     };
   },
@@ -28458,7 +28459,7 @@ var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 );
 
 var _hoisted_20 = {
-  "class": "nav-item dropdown",
+  "class": "nav-item dropdown d-sm-block d-md-none",
   "data-toggle": "collapse",
   "data-target": "#navbarNavDropdown",
   "aria-controls": "navbarNavDropdown"
@@ -34064,39 +34065,56 @@ var _hoisted_43 = {
 var _hoisted_44 = {
   "class": "form-group"
 };
-
-var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลือกผู้ที่จะส่งต่อถึง (*)", -1
-/* HOISTED */
-);
-
-var _hoisted_46 = {
-  "class": "flex xl12 xs12",
-  align: "center"
+var _hoisted_45 = {
+  key: 0,
+  "class": "flex xl12 xs12"
 };
-var _hoisted_47 = {
+var _hoisted_46 = {
   "class": "form-group"
 };
 
-var _hoisted_48 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลือกผู้ที่จะส่งต่อถึง (*)", -1
+/* HOISTED */
+);
+
+var _hoisted_48 = {
+  "class": "flex xl12 xs12",
+  align: "center"
+};
+var _hoisted_49 = {
+  "class": "form-group"
+};
+
+var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-angle-left mr-2"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_49 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ย้อนกลับ ");
+var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ย้อนกลับ ");
 
-var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_52 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-paper-plane mr-2"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ส่งต่อเอกสาร ");
+var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ส่งต่อเอกสาร ");
+
+var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fas fa-badge-check mr-2"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" จบกระบวนการ ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
 
   var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
+
+  var _component_va_checkbox = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-checkbox");
 
   var _component_va_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-select");
 
@@ -34197,12 +34215,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             multiple: ""
           }, null, 32
           /* HYDRATE_EVENTS */
-          )])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+          )])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_checkbox, {
+            color: "primary",
+            modelValue: $data.form.sign_check,
+            "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+              return $data.form.sign_check = $event;
+            }),
+            label: "ลงวันที่ (เมื่อลงวันที่แล้ว เอกสารจะมีสถานะจบกระบวนการ)"
+          }, null, 8
+          /* PROPS */
+          , ["modelValue"])])]), !$data.form.sign_check ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
             "class": "mb-4",
             placeholder: "เลือกผู้ที่จะส่งต่อถึง",
             options: $data.form.user_select_options,
             modelValue: $data.form.user_select_value,
-            "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+            "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
               return $data.form.user_select_value = $event;
             }),
             "track-by": "id_key",
@@ -34211,7 +34238,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             searchable: ""
           }, null, 8
           /* PROPS */
-          , ["options", "modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+          , ["options", "modelValue"])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
             to: "/user/inbox",
             "class": "nav-item"
           }, {
@@ -34220,7 +34247,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "class": "primary mr-2"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_48, _hoisted_49];
+                  return [_hoisted_50, _hoisted_51];
                 }),
                 _: 1
                 /* STABLE */
@@ -34230,21 +34257,37 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
             /* STABLE */
 
-          }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+          }), !$data.form.sign_check ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_button, {
+            key: 0,
             style: {
               "background-color": "rgb(47, 148, 91)"
             },
             disabled: $data.form.document_file_reupload.length == 0
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_50, _hoisted_51];
+              return [_hoisted_52, _hoisted_53];
             }),
             _: 1
             /* STABLE */
 
           }, 8
           /* PROPS */
-          , ["disabled"])])])])];
+          , ["disabled"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.sign_check ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_button, {
+            key: 1,
+            style: {
+              "background-color": "rgb(47, 148, 91)"
+            },
+            disabled: $data.form.document_file_reupload.length == 0
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_54, _hoisted_55];
+            }),
+            _: 1
+            /* STABLE */
+
+          }, 8
+          /* PROPS */
+          , ["disabled"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])];
         }),
         _: 1
         /* STABLE */

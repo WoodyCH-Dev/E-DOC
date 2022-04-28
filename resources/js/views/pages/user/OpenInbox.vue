@@ -160,6 +160,15 @@
 
             <div class="flex xl12 xs12">
               <div class="form-group">
+                <va-checkbox
+                  color="primary"
+                  v-model="form.sign_check"
+                  label="ลงวันที่ (เมื่อลงวันที่แล้ว เอกสารจะมีสถานะจบกระบวนการ)"
+                />
+              </div>
+            </div>
+            <div class="flex xl12 xs12" v-if="!form.sign_check">
+              <div class="form-group">
                 <b>เลือกผู้ที่จะส่งต่อถึง (*)</b>
                 <va-select
                   class="mb-4"
@@ -181,10 +190,19 @@
                   </va-button>
                 </router-link>
                 <va-button
+                  v-if="!form.sign_check"
                   style="background-color: rgb(47, 148, 91)"
                   :disabled="form.document_file_reupload.length == 0"
                 >
                   <i class="fas fa-paper-plane mr-2"></i> ส่งต่อเอกสาร
+                </va-button>
+
+                <va-button
+                  v-if="form.sign_check"
+                  style="background-color: rgb(47, 148, 91)"
+                  :disabled="form.document_file_reupload.length == 0"
+                >
+                  <i class="fas fa-badge-check mr-2"></i> จบกระบวนการ
                 </va-button>
               </div>
             </div>
@@ -246,6 +264,7 @@ export default {
         piority_select_value: null,
         validation: null,
         document_stage: 0,
+        sign_check: false,
       },
     };
   },

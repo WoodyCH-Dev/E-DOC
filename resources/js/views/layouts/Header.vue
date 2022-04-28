@@ -166,7 +166,7 @@
 
         <!-- Mobile only -->
         <li
-          class="nav-item dropdown"
+          class="nav-item dropdown d-sm-block d-md-none"
           data-toggle="collapse"
           data-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown"
