@@ -407,7 +407,9 @@ export default {
               this.$swal
                 .fire("Success!", "แก้ไขเอกสารแล้ว!", "success")
                 .then(() => {
-                  this.$router.push("/sender/send/list");
+                  this.$router.push("/sender/send/list").then(() => {
+                    location.reload();
+                  });
                 });
             }
           });

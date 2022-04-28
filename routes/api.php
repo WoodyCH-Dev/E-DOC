@@ -34,6 +34,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
     Route::get('/user/get/Sender/{stage_id}', [UserController::class, 'User_Get_SenderData']);
+    Route::post('/user/submit/Sender', [UserController::class, 'User_Submit_SenderData']);
+    Route::post('/user/inbox/markasread', [UserController::class, 'User_MarkAsRead_Inbox']);
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
 
     //Sender

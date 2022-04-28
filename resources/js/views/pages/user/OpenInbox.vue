@@ -59,7 +59,7 @@
             <br />
             <br />
             <br />
-            <div class="flex xl6 xs12">
+            <div class="flex xl12 xs12" v-if="form.finished_check == true">
               <div class="form-group">
                 <b>ไฟล์ที่แนบมา (คลิกเพื่อเปิดไฟล์)</b>
                 <div class="va-table-responsive">
@@ -96,7 +96,51 @@
                 </div>
               </div>
             </div>
-            <div class="flex xl6 xs12">
+
+            <div class="flex xl6 xs12" v-if="form.finished_check == false">
+              <div class="form-group">
+                <b>ไฟล์ที่แนบมา (คลิกเพื่อเปิดไฟล์)</b>
+                <div class="va-table-responsive">
+                  <table class="va-table" style="width: 100%">
+                    <thead>
+                      <tr>
+                        <th>ลำดับที่</th>
+                        <th>ไฟล์ที่แนบ</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="form.document_file.length > 0">
+                      <tr
+                        v-for="(file, index) in form.document_file"
+                        :key="file"
+                      >
+                        <td>{{ index + 1 }}</td>
+                        <td>
+                          <a
+                            :href="'public/uploads/sender/' + file.file"
+                            target="_blank"
+                            >{{ file.file }}</a
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-if="form.document_file.length == 0">
+                      <tr>
+                        <td colspan="2" style="text-align: center">
+                          -- ยังไม่มีการ Upload ไฟล์เอกสาร --
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="flex xl6 xs12"
+              v-if="
+                form.finished_check == false && form.finished_check == false
+              "
+            >
               <div class="form-group">
                 <b>ไฟล์ที่ส่งต่อ (กรุณา Upload)</b>
                 <div class="va-table-responsive">
@@ -105,7 +149,7 @@
                       <tr>
                         <th>ลำดับที่</th>
                         <th>ไฟล์ที่แนบ</th>
-                        <th></th>
+                        <th v-if="form.stage_status != 1"></th>
                       </tr>
                     </thead>
                     <tbody v-if="form.document_file_reupload.length > 0">
@@ -121,14 +165,13 @@
                             >{{ file.file }}</a
                           >
                         </td>
-                        <td>
+                        <td v-if="form.stage_status != 1">
                           <va-button
                             icon="delete"
                             class="mr-2"
                             color="danger"
                             v-on:click="Documentfile_RemoveFromArray(index)"
                           >
-                            ลบ
                           </va-button>
                         </td>
                       </tr>
@@ -143,7 +186,7 @@
                   </table>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" v-if="form.stage_status != 1">
                   <va-button v-on:click="Documentfile_selectBtn()">
                     <i class="fas fa-upload mr-2"></i> เลือกไฟล์
                   </va-button>
@@ -158,16 +201,26 @@
               </div>
             </div>
 
-            <div class="flex xl12 xs12">
+            <div
+              class="flex xl12 xs12"
+              v-if="form.stage_status != 1 && form.finished_check == false"
+            >
               <div class="form-group">
                 <va-checkbox
                   color="primary"
                   v-model="form.sign_check"
-                  label="ลงวันที่ (เมื่อลงวันที่แล้ว เอกสารจะมีสถานะจบกระบวนการ)"
+                  label="ลงวันที่ (เมื่อลงวันที่แล้ว เอกสารจะมีสถานะจบกระบวนการ และถูกส่งกลับไปที่ผู้ส่ง)"
                 />
               </div>
             </div>
-            <div class="flex xl12 xs12" v-if="!form.sign_check">
+            <div
+              class="flex xl12 xs12"
+              v-if="
+                !form.sign_check &&
+                form.stage_status != 1 &&
+                form.finished_check == false
+              "
+            >
               <div class="form-group">
                 <b>เลือกผู้ที่จะส่งต่อถึง (*)</b>
                 <va-select
@@ -190,17 +243,27 @@
                   </va-button>
                 </router-link>
                 <va-button
-                  v-if="!form.sign_check"
+                  v-if="
+                    !form.sign_check &&
+                    form.stage_status != 1 &&
+                    form.finished_check == false
+                  "
                   style="background-color: rgb(47, 148, 91)"
                   :disabled="form.document_file_reupload.length == 0"
+                  v-on:click="DocumentSendEditSubmit()"
                 >
                   <i class="fas fa-paper-plane mr-2"></i> ส่งต่อเอกสาร
                 </va-button>
 
                 <va-button
-                  v-if="form.sign_check"
+                  v-if="
+                    form.sign_check &&
+                    form.stage_status != 1 &&
+                    form.finished_check == false
+                  "
                   style="background-color: rgb(47, 148, 91)"
                   :disabled="form.document_file_reupload.length == 0"
+                  v-on:click="DocumentSendEditSubmit()"
                 >
                   <i class="fas fa-badge-check mr-2"></i> จบกระบวนการ
                 </va-button>
@@ -252,8 +315,10 @@ export default {
         access_admin: access_admin,
       },
       form: {
+        finished_check: false,
         document_title: "",
         document_number: "",
+        document_id: 0,
         category_select_options: new Array(),
         category_select_value: null,
         document_description: "",
@@ -265,6 +330,7 @@ export default {
         validation: null,
         document_stage: 0,
         sign_check: false,
+        stage_status: 1,
       },
     };
   },
@@ -360,6 +426,10 @@ export default {
           }
           this.form.document_number = res.data.document_info.document_number;
           this.form.document_title = res.data.document_info.document_title;
+          this.form.document_id = res.data.document_info.doc_id;
+          this.form.document_stage = res.data.document_info.stage;
+          this.form.stage_status = res.data.document_info.status;
+          this.form.finished_check = !!res.data.document_info.sign_timestamp;
           this.form.document_description =
             res.data.document_info.document_description;
           this.form.category_select_value =
@@ -368,8 +438,41 @@ export default {
             }).text;
 
           this.form.document_file = res.data.document_files;
+          this.form.document_file_reupload =
+            res.data.document_reupload_file_array;
         }
       });
+    },
+
+    DocumentSendEditSubmit() {
+      if (
+        (this.form.user_select_value && this.form.sign_check == false) ||
+        this.form.sign_check == true
+      ) {
+        this.axios
+          .post("api/user/submit/Sender", {
+            document_stage_id: this.$route.params.stage_id,
+            document_id: this.form.document_id,
+            sign_check: this.form.sign_check,
+            user_id: Number(window.localStorage.getItem("user_id")),
+            files: this.form.document_file_reupload,
+            send_to: this.form.user_select_value,
+            stage: this.form.document_stage,
+          })
+          .then((res) => {
+            if (res.data.status == true) {
+              this.$swal
+                .fire("Success!", "ส่งต่อเอกสารแล้ว!", "success")
+                .then(() => {
+                  this.$router.push("/user/inbox").then(() => {
+                    location.reload();
+                  });
+                });
+            }
+          });
+      } else {
+        this.$swal.fire("Error!", "ไม่มีการเลือกผู้รับ", "error");
+      }
     },
   },
 };

@@ -72,6 +72,7 @@
                           </td>
                           <td>
                             <router-link
+                              v-if="!inbox.sign_timestamp"
                               :to="'/user/view/' + inbox.stage_id"
                               class="nav-item"
                             >
@@ -82,6 +83,13 @@
                                 เปิด
                               </va-button>
                             </router-link>
+                            <va-button
+                              icon="ads_click"
+                              style="background-color: rgb(47, 148, 91)"
+                              @click="markAsread(inbox.stage_id)"
+                            >
+                              เปิด
+                            </va-button>
                           </td>
                         </tr>
                       </tbody>
@@ -197,6 +205,18 @@ export default {
       } else {
         return false;
       }
+    },
+
+    markAsread(stage_id) {
+      this.axios
+        .post("api/user/inbox/markasread", {
+          document_stage_id: stage_id,
+        })
+        .then(async (res) => {
+          this.$router.push("/user/view/" + stage_id).then(() => {
+            location.reload();
+          });
+        });
     },
   },
 };

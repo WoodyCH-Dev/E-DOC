@@ -74,6 +74,10 @@
   text-align: right;
   padding-left: 10px;
 }
+
+.va-table {
+  word-break: break-all;
+}
 </style>
 <template>
   <!-- Bootstrap NavBar -->
