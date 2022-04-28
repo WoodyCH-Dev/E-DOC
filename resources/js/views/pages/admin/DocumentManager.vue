@@ -243,11 +243,10 @@
                       <label class="left"></label>
                       <span>
                         <strong> เอกสารถูกส่งไปที่&nbsp; </strong>
-                        <label
-                          v-for="(to_data, index) in documents_stage.stage_data"
+                        <p
+                          v-for="to_data in documents_stage.stage_data"
                           :key="to_data.id"
                         >
-                          <label v-if="index > 0"><br /></label>
                           <label v-if="to_data.sender_type == 'group'">
                             กลุ่มผู้ใช้:
                             {{ to_data.to_data.group_name }}
@@ -261,6 +260,7 @@
                             </va-button>
                           </label>
                           <label v-if="to_data.sender_type == 'user'">
+                            ผู้ใช้:
                             {{
                               to_data.to_data.name +
                               " " +
@@ -275,7 +275,7 @@
                               ไฟล์แนบ
                             </va-button>
                           </label>
-                        </label>
+                        </p>
                       </span>
                     </li>
 
