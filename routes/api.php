@@ -25,8 +25,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     //User
     Route::get('/user/dashboard/getusercount', [UserController::class, 'GetUserCount']);
+    Route::get('/user/dashboard/getdocumentcount/{year_id}', [UserController::class, 'GetDocumentCount']);
     Route::get('/user/acd_year', [UserController::class, 'Get_acd_year']);
     Route::get('/user/acd_year/lists', [UserController::class, 'Get_acd_year_all']);
+    Route::get('/user/get/inbox', [UserController::class, 'GetMyInbox']);
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
     //Sender

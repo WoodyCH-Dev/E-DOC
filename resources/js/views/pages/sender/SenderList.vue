@@ -468,6 +468,9 @@ export default {
     },
 
     LoadSenderDocumentInfo(doc_id) {
+      this.data.select_my_sender_documents_data = new Array();
+      this.data.select_my_sender_documents_stage_array = new Array();
+      this.data.select_my_sender_documents_stage = 0;
       this.axios.get("api/sender/get/Sender/" + doc_id).then(async (res) => {
         if (res.data.status == true) {
           this.data.select_my_sender_documents_data = res.data.document_info;

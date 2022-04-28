@@ -23174,6 +23174,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var isLogin = false;
@@ -23200,7 +23204,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         isLogin: isLogin,
         google_uid: google_uid,
         username: username,
-        AllUser_count: 0
+        AllUser_count: 0,
+        AllInbox_Unread_count: 0,
+        inbox_array: new Array()
       },
       permission: {
         access_user: access_user,
@@ -23214,36 +23220,253 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       window.localStorage.clear();
       window.location.reload();
     },
-    onLoad: function onLoad() {},
-    onSubmitWithGoogle: function onSubmitWithGoogle() {
+    onLoad: function onLoad() {
       var _this = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+      this.axios.get("api/user/get/inbox").then( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+          var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, to_user, _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, group, _iteratorAbruptCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, to_group;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  if (!(res.data.status == true)) {
+                    _context.next = 85;
+                    break;
+                  }
+
+                  _iteratorAbruptCompletion = false;
+                  _didIteratorError = false;
+                  _context.prev = 3;
+                  _iterator = _asyncIterator(res.data.sendto_user);
+
+                case 5:
+                  _context.next = 7;
+                  return _iterator.next();
+
+                case 7:
+                  if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
+                    _context.next = 13;
+                    break;
+                  }
+
+                  to_user = _step.value;
+
+                  _this.data.inbox_array.push(to_user);
+
+                case 10:
+                  _iteratorAbruptCompletion = false;
+                  _context.next = 5;
+                  break;
+
+                case 13:
+                  _context.next = 19;
+                  break;
+
+                case 15:
+                  _context.prev = 15;
+                  _context.t0 = _context["catch"](3);
+                  _didIteratorError = true;
+                  _iteratorError = _context.t0;
+
+                case 19:
+                  _context.prev = 19;
+                  _context.prev = 20;
+
+                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+                    _context.next = 24;
+                    break;
+                  }
+
+                  _context.next = 24;
+                  return _iterator["return"]();
+
+                case 24:
+                  _context.prev = 24;
+
+                  if (!_didIteratorError) {
+                    _context.next = 27;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 27:
+                  return _context.finish(24);
+
+                case 28:
+                  return _context.finish(19);
+
+                case 29:
+                  _iteratorAbruptCompletion2 = false;
+                  _didIteratorError2 = false;
+                  _context.prev = 31;
+                  _iterator2 = _asyncIterator(res.data.sendto_group);
+
+                case 33:
+                  _context.next = 35;
+                  return _iterator2.next();
+
+                case 35:
+                  if (!(_iteratorAbruptCompletion2 = !(_step2 = _context.sent).done)) {
+                    _context.next = 68;
+                    break;
+                  }
+
+                  group = _step2.value;
+                  _iteratorAbruptCompletion3 = false;
+                  _didIteratorError3 = false;
+                  _context.prev = 39;
+                  _iterator3 = _asyncIterator(group);
+
+                case 41:
+                  _context.next = 43;
+                  return _iterator3.next();
+
+                case 43:
+                  if (!(_iteratorAbruptCompletion3 = !(_step3 = _context.sent).done)) {
+                    _context.next = 49;
+                    break;
+                  }
+
+                  to_group = _step3.value;
+
+                  _this.data.inbox_array.push(to_group);
+
+                case 46:
+                  _iteratorAbruptCompletion3 = false;
+                  _context.next = 41;
+                  break;
+
+                case 49:
+                  _context.next = 55;
+                  break;
+
+                case 51:
+                  _context.prev = 51;
+                  _context.t1 = _context["catch"](39);
+                  _didIteratorError3 = true;
+                  _iteratorError3 = _context.t1;
+
+                case 55:
+                  _context.prev = 55;
+                  _context.prev = 56;
+
+                  if (!(_iteratorAbruptCompletion3 && _iterator3["return"] != null)) {
+                    _context.next = 60;
+                    break;
+                  }
+
+                  _context.next = 60;
+                  return _iterator3["return"]();
+
+                case 60:
+                  _context.prev = 60;
+
+                  if (!_didIteratorError3) {
+                    _context.next = 63;
+                    break;
+                  }
+
+                  throw _iteratorError3;
+
+                case 63:
+                  return _context.finish(60);
+
+                case 64:
+                  return _context.finish(55);
+
+                case 65:
+                  _iteratorAbruptCompletion2 = false;
+                  _context.next = 33;
+                  break;
+
+                case 68:
+                  _context.next = 74;
+                  break;
+
+                case 70:
+                  _context.prev = 70;
+                  _context.t2 = _context["catch"](31);
+                  _didIteratorError2 = true;
+                  _iteratorError2 = _context.t2;
+
+                case 74:
+                  _context.prev = 74;
+                  _context.prev = 75;
+
+                  if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
+                    _context.next = 79;
+                    break;
+                  }
+
+                  _context.next = 79;
+                  return _iterator2["return"]();
+
+                case 79:
+                  _context.prev = 79;
+
+                  if (!_didIteratorError2) {
+                    _context.next = 82;
+                    break;
+                  }
+
+                  throw _iteratorError2;
+
+                case 82:
+                  return _context.finish(79);
+
+                case 83:
+                  return _context.finish(74);
+
+                case 84:
+                  _this.data.AllInbox_Unread_count = _this.data.inbox_array.filter(function (element) {
+                    return element.status == 0;
+                  }).length;
+
+                case 85:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[3, 15, 19, 29], [20,, 24, 28], [31, 70, 74, 84], [39, 51, 55, 65], [56,, 60, 64], [75,, 79, 83]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+    },
+    onSubmitWithGoogle: function onSubmitWithGoogle() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         var googleUser, google_gmail, google_uid, user_id;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return _this.$gAuth.signIn();
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _this2.$gAuth.signIn();
 
               case 3:
-                googleUser = _context.sent;
+                googleUser = _context2.sent;
 
                 if (googleUser) {
-                  _context.next = 6;
+                  _context2.next = 6;
                   break;
                 }
 
-                return _context.abrupt("return", null);
+                return _context2.abrupt("return", null);
 
               case 6:
                 google_gmail = googleUser.Ru.Hv;
                 google_uid = googleUser.Ru.fX;
                 user_id = window.localStorage.getItem("user_id");
 
-                _this.$swal.fire({
+                _this2.$swal.fire({
                   title: "ยืนยันข้อมูล!",
                   html: "บัญชี Google ที่เลือก <br> <b>" + google_gmail + "<b>",
                   icon: "warning",
@@ -23255,36 +23478,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   reverseButtons: true
                 }).then(function (result) {
                   if (result.isConfirmed) {
-                    _this.axios.post("api/user/sync/google", {
+                    _this2.axios.post("api/user/sync/google", {
                       id: user_id,
                       google_uid: google_uid
                     }).then(function (res) {
                       if (res.data.status == true) {
                         window.localStorage.setItem("google_uid", google_uid);
-                        _this.data.google_uid = google_uid;
+                        _this2.data.google_uid = google_uid;
 
-                        _this.onLoad();
+                        _this2.onLoad();
 
-                        _this.$swal.fire("Success!", "ทำการเชื่อมต่อบัญชี Google แล้ว", "success");
+                        _this2.$swal.fire("Success!", "ทำการเชื่อมต่อบัญชี Google แล้ว", "success");
                       }
                     });
                   }
                 });
 
-                _context.next = 15;
+                _context2.next = 15;
                 break;
 
               case 12:
-                _context.prev = 12;
-                _context.t0 = _context["catch"](0);
-                return _context.abrupt("return", null);
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](0);
+                return _context2.abrupt("return", null);
 
               case 15:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 12]]);
+        }, _callee2, null, [[0, 12]]);
       }))();
     }
   }
@@ -26705,6 +26928,9 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
     LoadSenderDocumentInfo: function LoadSenderDocumentInfo(doc_id) {
       var _this3 = this;
 
+      this.data.select_my_sender_documents_data = new Array();
+      this.data.select_my_sender_documents_stage_array = new Array();
+      this.data.select_my_sender_documents_stage = 0;
       this.axios.get("api/sender/get/Sender/" + doc_id).then( /*#__PURE__*/function () {
         var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2(res) {
           var i, to_data_array, _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, to_data;
@@ -26916,6 +27142,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var username = "";
@@ -26943,7 +27181,11 @@ __webpack_require__.r(__webpack_exports__);
         username: username,
         lastname: lastname,
         acd_year: acd_year,
-        user_count: 0
+        acd_year_id: 0,
+        user_count: 0,
+        AllInbox_Unread_count: 0,
+        AllDoc_count: 0,
+        inbox_array: new Array()
       },
       permission: {
         access_user: access_user,
@@ -26959,6 +27201,13 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.get("api/user/acd_year").then(function (res) {
         if (res.data.status == true) {
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
+          _this.data.acd_year_id = res.data.acd_year_id;
+
+          _this.axios.get("api/user/dashboard/getdocumentcount/" + _this.data.acd_year_id).then(function (res) {
+            if (res.data.status == true) {
+              _this.data.AllDoc_count = res.data.count;
+            }
+          });
         }
       });
       this.axios.get("api/user/dashboard/getusercount").then(function (res) {
@@ -26966,6 +27215,220 @@ __webpack_require__.r(__webpack_exports__);
           _this.data.user_count = res.data.count;
         }
       });
+      this.axios.get("api/user/get/inbox").then( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+          var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, to_user, _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, group, _iteratorAbruptCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, to_group;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  if (!(res.data.status == true)) {
+                    _context.next = 85;
+                    break;
+                  }
+
+                  _iteratorAbruptCompletion = false;
+                  _didIteratorError = false;
+                  _context.prev = 3;
+                  _iterator = _asyncIterator(res.data.sendto_user);
+
+                case 5:
+                  _context.next = 7;
+                  return _iterator.next();
+
+                case 7:
+                  if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
+                    _context.next = 13;
+                    break;
+                  }
+
+                  to_user = _step.value;
+
+                  _this.data.inbox_array.push(to_user);
+
+                case 10:
+                  _iteratorAbruptCompletion = false;
+                  _context.next = 5;
+                  break;
+
+                case 13:
+                  _context.next = 19;
+                  break;
+
+                case 15:
+                  _context.prev = 15;
+                  _context.t0 = _context["catch"](3);
+                  _didIteratorError = true;
+                  _iteratorError = _context.t0;
+
+                case 19:
+                  _context.prev = 19;
+                  _context.prev = 20;
+
+                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+                    _context.next = 24;
+                    break;
+                  }
+
+                  _context.next = 24;
+                  return _iterator["return"]();
+
+                case 24:
+                  _context.prev = 24;
+
+                  if (!_didIteratorError) {
+                    _context.next = 27;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 27:
+                  return _context.finish(24);
+
+                case 28:
+                  return _context.finish(19);
+
+                case 29:
+                  _iteratorAbruptCompletion2 = false;
+                  _didIteratorError2 = false;
+                  _context.prev = 31;
+                  _iterator2 = _asyncIterator(res.data.sendto_group);
+
+                case 33:
+                  _context.next = 35;
+                  return _iterator2.next();
+
+                case 35:
+                  if (!(_iteratorAbruptCompletion2 = !(_step2 = _context.sent).done)) {
+                    _context.next = 68;
+                    break;
+                  }
+
+                  group = _step2.value;
+                  _iteratorAbruptCompletion3 = false;
+                  _didIteratorError3 = false;
+                  _context.prev = 39;
+                  _iterator3 = _asyncIterator(group);
+
+                case 41:
+                  _context.next = 43;
+                  return _iterator3.next();
+
+                case 43:
+                  if (!(_iteratorAbruptCompletion3 = !(_step3 = _context.sent).done)) {
+                    _context.next = 49;
+                    break;
+                  }
+
+                  to_group = _step3.value;
+
+                  _this.data.inbox_array.push(to_group);
+
+                case 46:
+                  _iteratorAbruptCompletion3 = false;
+                  _context.next = 41;
+                  break;
+
+                case 49:
+                  _context.next = 55;
+                  break;
+
+                case 51:
+                  _context.prev = 51;
+                  _context.t1 = _context["catch"](39);
+                  _didIteratorError3 = true;
+                  _iteratorError3 = _context.t1;
+
+                case 55:
+                  _context.prev = 55;
+                  _context.prev = 56;
+
+                  if (!(_iteratorAbruptCompletion3 && _iterator3["return"] != null)) {
+                    _context.next = 60;
+                    break;
+                  }
+
+                  _context.next = 60;
+                  return _iterator3["return"]();
+
+                case 60:
+                  _context.prev = 60;
+
+                  if (!_didIteratorError3) {
+                    _context.next = 63;
+                    break;
+                  }
+
+                  throw _iteratorError3;
+
+                case 63:
+                  return _context.finish(60);
+
+                case 64:
+                  return _context.finish(55);
+
+                case 65:
+                  _iteratorAbruptCompletion2 = false;
+                  _context.next = 33;
+                  break;
+
+                case 68:
+                  _context.next = 74;
+                  break;
+
+                case 70:
+                  _context.prev = 70;
+                  _context.t2 = _context["catch"](31);
+                  _didIteratorError2 = true;
+                  _iteratorError2 = _context.t2;
+
+                case 74:
+                  _context.prev = 74;
+                  _context.prev = 75;
+
+                  if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
+                    _context.next = 79;
+                    break;
+                  }
+
+                  _context.next = 79;
+                  return _iterator2["return"]();
+
+                case 79:
+                  _context.prev = 79;
+
+                  if (!_didIteratorError2) {
+                    _context.next = 82;
+                    break;
+                  }
+
+                  throw _iteratorError2;
+
+                case 82:
+                  return _context.finish(79);
+
+                case 83:
+                  return _context.finish(74);
+
+                case 84:
+                  _this.data.AllInbox_Unread_count = _this.data.inbox_array.filter(function (element) {
+                    return element.status == 0;
+                  }).length;
+
+                case 85:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[3, 15, 19, 29], [20,, 24, 28], [31, 70, 74, 84], [39, 51, 55, 65], [56,, 60, 64], [75,, 79, 83]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
     }
   }
 });
@@ -27021,7 +27484,9 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
         username: username,
         lastname: lastname,
         acd_year_options: new Array(),
-        acd_year_value: null
+        acd_year_value: null,
+        inbox_array: new Array(),
+        inbox_isLoad: true
       },
       permission: {
         access_user: access_user,
@@ -27035,30 +27500,30 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
       var _this = this;
 
       this.axios.get("api/user/acd_year/lists").then( /*#__PURE__*/function () {
-        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2(res) {
           var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, year_data;
 
-          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
             while (1) {
-              switch (_context.prev = _context.next) {
+              switch (_context2.prev = _context2.next) {
                 case 0:
                   if (!(res.data.status == true)) {
-                    _context.next = 30;
+                    _context2.next = 31;
                     break;
                   }
 
                   _iteratorAbruptCompletion = false;
                   _didIteratorError = false;
-                  _context.prev = 3;
+                  _context2.prev = 3;
                   _iterator = _asyncIterator(res.data.acd_year);
 
                 case 5:
-                  _context.next = 7;
+                  _context2.next = 7;
                   return _iterator.next();
 
                 case 7:
-                  if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
-                    _context.next = 14;
+                  if (!(_iteratorAbruptCompletion = !(_step = _context2.sent).done)) {
+                    _context2.next = 15;
                     break;
                   }
 
@@ -27077,61 +27542,286 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
                     }
                   });
 
-                case 11:
+                  _this.axios.get("api/user/get/inbox").then( /*#__PURE__*/function () {
+                    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+                      var _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, to_user, _iteratorAbruptCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, group, _iteratorAbruptCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, to_group;
+
+                      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+                        while (1) {
+                          switch (_context.prev = _context.next) {
+                            case 0:
+                              if (!(res.data.status == true)) {
+                                _context.next = 85;
+                                break;
+                              }
+
+                              _iteratorAbruptCompletion2 = false;
+                              _didIteratorError2 = false;
+                              _context.prev = 3;
+                              _iterator2 = _asyncIterator(res.data.sendto_user);
+
+                            case 5:
+                              _context.next = 7;
+                              return _iterator2.next();
+
+                            case 7:
+                              if (!(_iteratorAbruptCompletion2 = !(_step2 = _context.sent).done)) {
+                                _context.next = 13;
+                                break;
+                              }
+
+                              to_user = _step2.value;
+
+                              _this.data.inbox_array.push(to_user);
+
+                            case 10:
+                              _iteratorAbruptCompletion2 = false;
+                              _context.next = 5;
+                              break;
+
+                            case 13:
+                              _context.next = 19;
+                              break;
+
+                            case 15:
+                              _context.prev = 15;
+                              _context.t0 = _context["catch"](3);
+                              _didIteratorError2 = true;
+                              _iteratorError2 = _context.t0;
+
+                            case 19:
+                              _context.prev = 19;
+                              _context.prev = 20;
+
+                              if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
+                                _context.next = 24;
+                                break;
+                              }
+
+                              _context.next = 24;
+                              return _iterator2["return"]();
+
+                            case 24:
+                              _context.prev = 24;
+
+                              if (!_didIteratorError2) {
+                                _context.next = 27;
+                                break;
+                              }
+
+                              throw _iteratorError2;
+
+                            case 27:
+                              return _context.finish(24);
+
+                            case 28:
+                              return _context.finish(19);
+
+                            case 29:
+                              _iteratorAbruptCompletion3 = false;
+                              _didIteratorError3 = false;
+                              _context.prev = 31;
+                              _iterator3 = _asyncIterator(res.data.sendto_group);
+
+                            case 33:
+                              _context.next = 35;
+                              return _iterator3.next();
+
+                            case 35:
+                              if (!(_iteratorAbruptCompletion3 = !(_step3 = _context.sent).done)) {
+                                _context.next = 68;
+                                break;
+                              }
+
+                              group = _step3.value;
+                              _iteratorAbruptCompletion4 = false;
+                              _didIteratorError4 = false;
+                              _context.prev = 39;
+                              _iterator4 = _asyncIterator(group);
+
+                            case 41:
+                              _context.next = 43;
+                              return _iterator4.next();
+
+                            case 43:
+                              if (!(_iteratorAbruptCompletion4 = !(_step4 = _context.sent).done)) {
+                                _context.next = 49;
+                                break;
+                              }
+
+                              to_group = _step4.value;
+
+                              _this.data.inbox_array.push(to_group);
+
+                            case 46:
+                              _iteratorAbruptCompletion4 = false;
+                              _context.next = 41;
+                              break;
+
+                            case 49:
+                              _context.next = 55;
+                              break;
+
+                            case 51:
+                              _context.prev = 51;
+                              _context.t1 = _context["catch"](39);
+                              _didIteratorError4 = true;
+                              _iteratorError4 = _context.t1;
+
+                            case 55:
+                              _context.prev = 55;
+                              _context.prev = 56;
+
+                              if (!(_iteratorAbruptCompletion4 && _iterator4["return"] != null)) {
+                                _context.next = 60;
+                                break;
+                              }
+
+                              _context.next = 60;
+                              return _iterator4["return"]();
+
+                            case 60:
+                              _context.prev = 60;
+
+                              if (!_didIteratorError4) {
+                                _context.next = 63;
+                                break;
+                              }
+
+                              throw _iteratorError4;
+
+                            case 63:
+                              return _context.finish(60);
+
+                            case 64:
+                              return _context.finish(55);
+
+                            case 65:
+                              _iteratorAbruptCompletion3 = false;
+                              _context.next = 33;
+                              break;
+
+                            case 68:
+                              _context.next = 74;
+                              break;
+
+                            case 70:
+                              _context.prev = 70;
+                              _context.t2 = _context["catch"](31);
+                              _didIteratorError3 = true;
+                              _iteratorError3 = _context.t2;
+
+                            case 74:
+                              _context.prev = 74;
+                              _context.prev = 75;
+
+                              if (!(_iteratorAbruptCompletion3 && _iterator3["return"] != null)) {
+                                _context.next = 79;
+                                break;
+                              }
+
+                              _context.next = 79;
+                              return _iterator3["return"]();
+
+                            case 79:
+                              _context.prev = 79;
+
+                              if (!_didIteratorError3) {
+                                _context.next = 82;
+                                break;
+                              }
+
+                              throw _iteratorError3;
+
+                            case 82:
+                              return _context.finish(79);
+
+                            case 83:
+                              return _context.finish(74);
+
+                            case 84:
+                              _this.data.inbox_isLoad = false;
+
+                            case 85:
+                            case "end":
+                              return _context.stop();
+                          }
+                        }
+                      }, _callee, null, [[3, 15, 19, 29], [20,, 24, 28], [31, 70, 74, 84], [39, 51, 55, 65], [56,, 60, 64], [75,, 79, 83]]);
+                    }));
+
+                    return function (_x2) {
+                      return _ref2.apply(this, arguments);
+                    };
+                  }());
+
+                case 12:
                   _iteratorAbruptCompletion = false;
-                  _context.next = 5;
+                  _context2.next = 5;
                   break;
 
-                case 14:
-                  _context.next = 20;
+                case 15:
+                  _context2.next = 21;
                   break;
 
-                case 16:
-                  _context.prev = 16;
-                  _context.t0 = _context["catch"](3);
+                case 17:
+                  _context2.prev = 17;
+                  _context2.t0 = _context2["catch"](3);
                   _didIteratorError = true;
-                  _iteratorError = _context.t0;
+                  _iteratorError = _context2.t0;
 
-                case 20:
-                  _context.prev = 20;
-                  _context.prev = 21;
+                case 21:
+                  _context2.prev = 21;
+                  _context2.prev = 22;
 
                   if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
-                    _context.next = 25;
+                    _context2.next = 26;
                     break;
                   }
 
-                  _context.next = 25;
+                  _context2.next = 26;
                   return _iterator["return"]();
 
-                case 25:
-                  _context.prev = 25;
+                case 26:
+                  _context2.prev = 26;
 
                   if (!_didIteratorError) {
-                    _context.next = 28;
+                    _context2.next = 29;
                     break;
                   }
 
                   throw _iteratorError;
 
-                case 28:
-                  return _context.finish(25);
-
                 case 29:
-                  return _context.finish(20);
+                  return _context2.finish(26);
 
                 case 30:
+                  return _context2.finish(21);
+
+                case 31:
                 case "end":
-                  return _context.stop();
+                  return _context2.stop();
               }
             }
-          }, _callee, null, [[3, 16, 20, 30], [21,, 25, 29]]);
+          }, _callee2, null, [[3, 17, 21, 31], [22,, 26, 30]]);
         }));
 
         return function (_x) {
           return _ref.apply(this, arguments);
         };
       }());
+    },
+    BuddishDate: function BuddishDate(date) {
+      if (date) {
+        var date = new Date(date);
+        return date.toLocaleDateString("th-TH", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        });
+      } else {
+        return false;
+      }
     }
   }
 });
@@ -27344,20 +28034,27 @@ var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_25 = {
   "class": "nav-item dropdown"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+};
+var _hoisted_26 = {
   "class": "nav-link",
   id: "smallerscreenmenu"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+};
+
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-inbox-in mr-1"
-}), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กล่องเอกสารเข้า   "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "badge badge-warning"
-}, "0")])], -1
+}, null, -1
 /* HOISTED */
 );
 
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กล่องเอกสารเข้า   ");
+
+var _hoisted_29 = {
+  "class": "badge badge-warning"
+};
+
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdown"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27368,7 +28065,7 @@ var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdown"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27379,7 +28076,7 @@ var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdown"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27390,7 +28087,7 @@ var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdown"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27401,7 +28098,7 @@ var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27412,7 +28109,7 @@ var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdown"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27423,7 +28120,7 @@ var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "nav-item dropdown"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   "class": "nav-link",
@@ -27434,62 +28131,62 @@ var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_33 = {
+var _hoisted_37 = {
   key: 3,
   "class": "nav-link text-white nav-item d-none d-md-block"
 };
 
-var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fab fa-google"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เชื่อมต่อบัญชี Google ");
+var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เชื่อมต่อบัญชี Google ");
 
-var _hoisted_36 = {
+var _hoisted_40 = {
   key: 4,
   "class": "nav-link text-white nav-item d-none d-md-block"
 };
 
-var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_41 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-user"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_42 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-sign-out"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ออกจากระบบ ");
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ออกจากระบบ ");
 
-var _hoisted_40 = [_hoisted_38, _hoisted_39];
-var _hoisted_41 = {
+var _hoisted_44 = [_hoisted_42, _hoisted_43];
+var _hoisted_45 = {
   "class": "row",
   id: "body-row"
 };
-var _hoisted_42 = {
+var _hoisted_46 = {
   key: 0,
   id: "sidebar-container",
   "class": "sidebar-expanded d-none d-md-block"
 };
-var _hoisted_43 = {
+var _hoisted_47 = {
   "class": "list-group sticky-top sticky-offset",
   style: {
     "padding-top": "56px"
   }
 };
 
-var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+var _hoisted_48 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
   "class": "list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, "เมนู")], -1
 /* HOISTED */
 );
 
-var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_49 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "far fa-tachometer mr-3"
@@ -27499,30 +28196,37 @@ var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_46 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_50 = {
   "class": "d-flex w-100 justify-content-start align-items-center"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+};
+
+var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-inbox-in mr-3"
-}), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "menu-collapsed"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กล่องเอกสารเข้า  "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "badge badge-warning"
-}, "0")])], -1
+}, null, -1
 /* HOISTED */
 );
 
-var _hoisted_47 = {
+var _hoisted_52 = {
+  "class": "menu-collapsed"
+};
+
+var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กล่องเอกสารเข้า  ");
+
+var _hoisted_54 = {
+  "class": "badge badge-warning"
+};
+var _hoisted_55 = {
   key: 2,
   "class": "list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed"
 };
 
-var _hoisted_48 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, "เมนูผู้ส่ง", -1
+var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, "เมนูผู้ส่ง", -1
 /* HOISTED */
 );
 
-var _hoisted_49 = [_hoisted_48];
+var _hoisted_57 = [_hoisted_56];
 
-var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-paper-plane mr-3"
@@ -27532,7 +28236,7 @@ var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-clipboard-list-check mr-3"
@@ -27542,18 +28246,18 @@ var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_52 = {
+var _hoisted_60 = {
   key: 5,
   "class": "list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed"
 };
 
-var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, "เมนูของแอดมิน", -1
+var _hoisted_61 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, "เมนูของแอดมิน", -1
 /* HOISTED */
 );
 
-var _hoisted_54 = [_hoisted_53];
+var _hoisted_62 = [_hoisted_61];
 
-var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_63 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-user-cog mr-3"
@@ -27563,7 +28267,7 @@ var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_64 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fad fa-users-cog mr-3"
@@ -27573,7 +28277,7 @@ var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_65 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fad fa-file-alt mr-3"
@@ -27583,7 +28287,7 @@ var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_66 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fad fa-books mr-3"
@@ -27593,7 +28297,7 @@ var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "d-flex w-100 justify-content-start align-items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-cog mr-3"
@@ -27603,16 +28307,16 @@ var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_60 = {
+var _hoisted_68 = {
   "class": "col py-3"
 };
-var _hoisted_61 = {
+var _hoisted_69 = {
   "class": "content",
   style: {
     "padding-top": "56px"
   }
 };
-var _hoisted_62 = {
+var _hoisted_70 = {
   "class": "layout gutter--sm"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -27715,7 +28419,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "aria-controls": "navbarNavDropdown"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_25];
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_26, [_hoisted_27, _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.AllInbox_Unread_count), 1
+      /* TEXT */
+      )])])];
     }),
     _: 1
     /* STABLE */
@@ -27729,7 +28435,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "aria-controls": "navbarNavDropdown"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_26];
+      return [_hoisted_30];
     }),
     _: 1
     /* STABLE */
@@ -27737,62 +28443,6 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_sender == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
     key: 5,
     to: "/sender/send/list",
-    "class": "nav-item dropdown d-sm-block d-md-none",
-    "data-toggle": "collapse",
-    "data-target": "#navbarNavDropdown",
-    "aria-controls": "navbarNavDropdown"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_27];
-    }),
-    _: 1
-    /* STABLE */
-
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
-    key: 6,
-    to: "/admin/manage/user",
-    "class": "nav-item dropdown d-sm-block d-md-none",
-    "data-toggle": "collapse",
-    "data-target": "#navbarNavDropdown",
-    "aria-controls": "navbarNavDropdown"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_28];
-    }),
-    _: 1
-    /* STABLE */
-
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
-    key: 7,
-    to: "/admin/manage/user/group",
-    "class": "nav-item dropdown d-sm-block d-md-none",
-    "data-toggle": "collapse",
-    "data-target": "#navbarNavDropdown",
-    "aria-controls": "navbarNavDropdown"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_29];
-    }),
-    _: 1
-    /* STABLE */
-
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
-    key: 8,
-    to: "/admin/manage/document",
-    "class": "nav-item dropdown d-sm-block d-md-none",
-    "data-toggle": "collapse",
-    "data-target": "#navbarNavDropdown",
-    "aria-controls": "navbarNavDropdown"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_30];
-    }),
-    _: 1
-    /* STABLE */
-
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
-    key: 9,
-    to: "/admin/manage/category/document",
     "class": "nav-item dropdown d-sm-block d-md-none",
     "data-toggle": "collapse",
     "data-target": "#navbarNavDropdown",
@@ -27805,8 +28455,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STABLE */
 
   })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
-    key: 10,
-    to: "/admin/manage/system",
+    key: 6,
+    to: "/admin/manage/user",
     "class": "nav-item dropdown d-sm-block d-md-none",
     "data-toggle": "collapse",
     "data-target": "#navbarNavDropdown",
@@ -27818,21 +28468,77 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), $data.data.google_uid == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+    key: 7,
+    to: "/admin/manage/user/group",
+    "class": "nav-item dropdown d-sm-block d-md-none",
+    "data-toggle": "collapse",
+    "data-target": "#navbarNavDropdown",
+    "aria-controls": "navbarNavDropdown"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_33];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+    key: 8,
+    to: "/admin/manage/document",
+    "class": "nav-item dropdown d-sm-block d-md-none",
+    "data-toggle": "collapse",
+    "data-target": "#navbarNavDropdown",
+    "aria-controls": "navbarNavDropdown"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_34];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+    key: 9,
+    to: "/admin/manage/category/document",
+    "class": "nav-item dropdown d-sm-block d-md-none",
+    "data-toggle": "collapse",
+    "data-target": "#navbarNavDropdown",
+    "aria-controls": "navbarNavDropdown"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_35];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+    key: 10,
+    to: "/admin/manage/system",
+    "class": "nav-item dropdown d-sm-block d-md-none",
+    "data-toggle": "collapse",
+    "data-target": "#navbarNavDropdown",
+    "aria-controls": "navbarNavDropdown"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_36];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), $data.data.google_uid == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
     color: "danger",
     size: "small",
     gradient: "",
     onClick: $options.onSubmitWithGoogle
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_34, _hoisted_35];
+      return [_hoisted_38, _hoisted_39];
     }),
     _: 1
     /* STABLE */
 
   }, 8
   /* PROPS */
-  , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.isLogin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", _hoisted_36, [_hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.username), 1
+  , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.isLogin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", _hoisted_40, [_hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.username), 1
   /* TEXT */
   )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.isLogin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", {
     key: 5,
@@ -27840,13 +28546,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[2] || (_cache[2] = function ($event) {
       return $options.Logout();
     })
-  }, _hoisted_40)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" NavBar END "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [$data.data.isLogin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Separator with title "), _hoisted_44, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /END Separator "), $data.permission.access_user == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+  }, _hoisted_44)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" NavBar END "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [$data.data.isLogin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Separator with title "), _hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /END Separator "), $data.permission.access_user == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
     key: 0,
     to: "/user/dashboard",
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_45];
+      return [_hoisted_49];
     }),
     _: 1
     /* STABLE */
@@ -27857,18 +28563,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_46];
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [_hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_52, [_hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.AllInbox_Unread_count), 1
+      /* TEXT */
+      )])])];
     }),
     _: 1
     /* STABLE */
 
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Separator with title "), $data.permission.access_sender == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_47, _hoisted_49)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /END Separator "), $data.permission.access_sender == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Separator with title "), $data.permission.access_sender == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_55, _hoisted_57)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /END Separator "), $data.permission.access_sender == true || $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
     key: 3,
     to: "/sender/send",
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_50];
+      return [_hoisted_58];
     }),
     _: 1
     /* STABLE */
@@ -27879,18 +28587,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_51];
+      return [_hoisted_59];
     }),
     _: 1
     /* STABLE */
 
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Separator with title "), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_52, _hoisted_54)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /END Separator "), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Separator with title "), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_60, _hoisted_62)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /END Separator "), $data.permission.access_admin == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
     key: 6,
     to: "/admin/manage/user",
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_55];
+      return [_hoisted_63];
     }),
     _: 1
     /* STABLE */
@@ -27901,7 +28609,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_56];
+      return [_hoisted_64];
     }),
     _: 1
     /* STABLE */
@@ -27912,7 +28620,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_57];
+      return [_hoisted_65];
     }),
     _: 1
     /* STABLE */
@@ -27923,7 +28631,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_58];
+      return [_hoisted_66];
     }),
     _: 1
     /* STABLE */
@@ -27934,12 +28642,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-dark list-group-item list-group-item-action"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_59];
+      return [_hoisted_67];
     }),
     _: 1
     /* STABLE */
 
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MAIN "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_61, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_view)])])])])], 64
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MAIN "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_68, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_69, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_70, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_view)])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -32335,21 +33043,17 @@ var _hoisted_9 = {
 
 var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เอกสารที่จำเป็นต้องตรวจสอบ ");
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 0 ");
-
-var _hoisted_12 = {
+var _hoisted_11 = {
   "class": "flex lg3 xs12"
 };
 
-var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ยอดเอกสารทั้งหมดของปี ");
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ยอดเอกสารทั้งหมดของปี ");
 
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 0 ");
-
-var _hoisted_15 = {
+var _hoisted_13 = {
   "class": "flex lg3 xs12"
 };
 
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" จำนวนผู้ใช้งานทั้งหมด ");
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" จำนวนผู้ใช้งานทั้งหมด ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
@@ -32443,7 +33147,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "class": "card-subtitle-dashboard"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_11];
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.AllInbox_Unread_count), 1
+                  /* TEXT */
+                  )];
                 }),
                 _: 1
                 /* STABLE */
@@ -32453,7 +33159,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
             /* STABLE */
 
-          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
             color: "warning",
             gradient: ""
           }, {
@@ -32462,7 +33168,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "class": "card-title-dashboard"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_13];
+                  return [_hoisted_12];
                 }),
                 _: 1
                 /* STABLE */
@@ -32471,7 +33177,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "class": "card-subtitle-dashboard"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_14];
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.AllDoc_count), 1
+                  /* TEXT */
+                  )];
                 }),
                 _: 1
                 /* STABLE */
@@ -32481,7 +33189,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
             /* STABLE */
 
-          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
             color: "danger",
             gradient: ""
           }, {
@@ -32490,7 +33198,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "class": "text-white card-title-dashboard"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_16];
+                  return [_hoisted_14];
                 }),
                 _: 1
                 /* STABLE */
@@ -32565,34 +33273,62 @@ var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_9 = {
   "class": "flex xl12 xs12"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+};
+var _hoisted_10 = {
   "class": "form-group"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+};
+var _hoisted_11 = {
   "class": "va-table-responsive",
   style: {
     "overflow-y": "auto"
   }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", {
+};
+var _hoisted_12 = {
+  key: 0,
   "class": "va-table",
   style: {
     "width": "100%"
   }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เลขที่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "วันที่ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เอกสารลงวันที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หัวข้อเรื่อง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อผู้ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "สถานะ")])]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "1"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ยังไม่เปิด")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-  style: {
-    "background-color": "rgb(158, 255, 189)"
-  }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "2"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "ไฟล์.pdf"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เปิดแล้ว "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "fas fa-check-circle"
-})])])])])])])], -1
+};
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เลขที่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "วันที่ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เอกสารลงวันที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หัวข้อเรื่อง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อผู้ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "สถานะ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th")])], -1
 /* HOISTED */
 );
+
+var _hoisted_14 = {
+  key: 0
+};
+var _hoisted_15 = {
+  key: 0
+};
+var _hoisted_16 = {
+  key: 1
+};
+
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เปิด ");
+
+var _hoisted_18 = {
+  key: 0,
+  align: "center",
+  style: {
+    "padding-top": "30px"
+  }
+};
+
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กำลังโหลดข้อมูล ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
 
   var _component_va_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-select");
+
+  var _component_va_badge = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-badge");
+
+  var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
+
+  var _component_va_progress_circle = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-progress-circle");
 
   var _component_va_card_content = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-content");
 
@@ -32620,7 +33356,50 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             options: $data.data.acd_year_options
           }, null, 8
           /* PROPS */
-          , ["modelValue", "options"])])]), _hoisted_9])])];
+          , ["modelValue", "options"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [!$data.data.inbox_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_12, [_hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.inbox_array, function (inbox) {
+            return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+              key: inbox.document_id
+            }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(inbox.document_number) + " ", 1
+            /* TEXT */
+            ), inbox.sender_type == 'group' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_14, " (กลุ่ม) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(inbox.timestamp)), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(inbox.sign_timestamp) || "ยังไม่ลงวันที่"), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(inbox.document_title), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(inbox.name + " " + inbox.lastname), 1
+            /* TEXT */
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [inbox.status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_badge, {
+              text: "เปิดแล้ว",
+              color: "success",
+              "class": "mr-0"
+            })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), inbox.status == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_badge, {
+              text: "ยังไม่เปิด",
+              color: "warning",
+              "class": "mr-0"
+            })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+              icon: "ads_click",
+              style: {
+                "background-color": "rgb(47, 148, 91)"
+              }
+            }, {
+              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                return [_hoisted_17];
+              }),
+              _: 1
+              /* STABLE */
+
+            })])]);
+          }), 128
+          /* KEYED_FRAGMENT */
+          ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.data.inbox_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_progress_circle, {
+            size: "large",
+            thickness: 0.4,
+            color: "primary",
+            indeterminate: ""
+          }, null, 8
+          /* PROPS */
+          , ["thickness"]), _hoisted_19])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])];
         }),
         _: 1
         /* STABLE */
