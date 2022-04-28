@@ -203,6 +203,9 @@ export default {
                   for await (let to_group of group)
                     this.data.inbox_array.push(to_group);
                 }
+                this.data.inbox_array.sort((a, b) => {
+                  return a.status - b.status;
+                });
                 this.data.inbox_isLoad = false;
               }
             });
