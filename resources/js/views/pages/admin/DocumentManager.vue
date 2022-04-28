@@ -97,7 +97,7 @@
                     <tbody v-if="data.documents_lists.length == 0">
                       <tr>
                         <td colspan="7" style="text-align: center">
-                          -- ยังไม่มีประวัติการของปีที่เลือกส่งในระบบ --
+                          -- ยังไม่มีประวัติการส่งเอกสารในปีที่เลือก ในระบบ --
                         </td>
                       </tr>
                     </tbody>
