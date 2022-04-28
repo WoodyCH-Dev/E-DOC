@@ -52,15 +52,24 @@
               </h2>
             </div>
             <div class="flex xl12 xs12">
-              <h4><b>เรื่อง:</b> {{ form.document_title }}</h4>
+              <h4>
+                <b>เรื่อง:</b> {{ form.document_title }}
+                <b v-if="form.document_status == 1" class="text-danger">
+                  (เอกสารถูกยกเลิก)
+                </b>
+              </h4>
             </div>
             <div class="flex xl12 xs12">
-              <b>รายะละเอียด:</b> {{ form.document_description }}
+              <b>รายะละเอียด:</b>
+              {{ form.document_description || "ไม่มีรายละเอียด" }}
             </div>
             <br />
             <br />
             <br />
-            <div class="flex xl12 xs12" v-if="form.finished_check == true">
+            <div
+              class="flex xl12 xs12"
+              v-if="form.finished_check == true || form.document_status != 0"
+            >
               <div class="form-group">
                 <b>ไฟล์ที่แนบมา (คลิกเพื่อเปิดไฟล์)</b>
                 <div class="va-table-responsive">
@@ -98,7 +107,10 @@
               </div>
             </div>
 
-            <div class="flex xl6 xs12" v-if="form.finished_check == false">
+            <div
+              class="flex xl6 xs12"
+              v-if="form.finished_check == false && form.document_status == 0"
+            >
               <div class="form-group">
                 <b>ไฟล์ที่แนบมา (คลิกเพื่อเปิดไฟล์)</b>
                 <div class="va-table-responsive">
@@ -139,7 +151,9 @@
             <div
               class="flex xl6 xs12"
               v-if="
-                form.finished_check == false && form.finished_check == false
+                form.finished_check == false &&
+                form.finished_check == false &&
+                form.document_status == 0
               "
             >
               <div class="form-group">
@@ -204,7 +218,11 @@
 
             <div
               class="flex xl12 xs12"
-              v-if="form.stage_status != 1 && form.finished_check == false"
+              v-if="
+                form.stage_status != 1 &&
+                form.finished_check == false &&
+                form.document_status == 0
+              "
             >
               <div class="form-group">
                 <va-checkbox
@@ -219,7 +237,8 @@
               v-if="
                 !form.sign_check &&
                 form.stage_status != 1 &&
-                form.finished_check == false
+                form.finished_check == false &&
+                form.document_status == 0
               "
             >
               <div class="form-group">
@@ -321,6 +340,7 @@ export default {
         document_title: "",
         document_number: "",
         document_id: 0,
+        document_status: 0,
         category_select_options: new Array(),
         category_select_value: null,
         document_description: "",
@@ -431,6 +451,7 @@ export default {
           this.form.document_id = res.data.document_info.doc_id;
           this.form.document_stage = res.data.document_info.stage;
           this.form.stage_status = res.data.document_info.status;
+          this.form.document_status = res.data.document_info.document_status;
           this.form.finished_check = !!res.data.document_info.sign_timestamp;
           this.form.document_description =
             res.data.document_info.document_description;

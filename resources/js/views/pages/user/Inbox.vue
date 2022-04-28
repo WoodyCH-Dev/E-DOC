@@ -48,6 +48,12 @@
                         >
                           <td>
                             {{ inbox.document_number }}
+                            <label
+                              v-if="inbox.document_status == 1"
+                              class="text-danger"
+                            >
+                              (เอกสารถูกยกเลิก)
+                            </label>
                             <label v-if="inbox.sender_type == 'group'">
                               (กลุ่ม)
                             </label>
@@ -79,12 +85,14 @@
                           </td>
                           <td>
                             <router-link
-                              v-if="!inbox.sign_timestamp"
+                              v-if="
+                                !inbox.sign_timestamp &&
+                                inbox.document_status == 0
+                              "
                               :to="'/user/view/' + inbox.stage_id"
                               class="nav-item"
                             >
                               <va-button
-                                v-if="inbox.sign_timestamp"
                                 icon="ads_click"
                                 style="background-color: rgb(47, 148, 91)"
                               >
@@ -94,6 +102,7 @@
                             <va-button
                               icon="ads_click"
                               style="background-color: rgb(47, 148, 91)"
+                              v-if="inbox.sign_timestamp"
                               @click="markAsread(inbox.stage_id)"
                             >
                               เปิด
