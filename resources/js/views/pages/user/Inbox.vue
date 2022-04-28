@@ -84,6 +84,7 @@
                               class="nav-item"
                             >
                               <va-button
+                                v-if="inbox.sign_timestamp"
                                 icon="ads_click"
                                 style="background-color: rgb(47, 148, 91)"
                               >
