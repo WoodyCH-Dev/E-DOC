@@ -100,7 +100,7 @@
                           </tbody>
                           <tbody v-if="form.document_file.length == 0">
                             <tr>
-                              <td colspan="2" style="text-align: center">
+                              <td colspan="3" style="text-align: center">
                                 -- ยังไม่มีการ Upload ไฟล์เอกสาร --
                               </td>
                             </tr>

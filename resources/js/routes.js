@@ -30,7 +30,7 @@ export default [
     { path: "/user/dashboard", component: Dashboard, name: "Dashboard" },
     { path: "/user/inbox", component: Inbox, name: "Inbox" },
     {
-        path: "/user/view/:document_id",
+        path: "/user/view/:stage_id",
         component: OpenInbox,
         name: "OpenInbox",
     },

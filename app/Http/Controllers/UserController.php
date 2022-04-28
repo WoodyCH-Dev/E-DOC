@@ -64,6 +64,7 @@ class UserController extends Controller
         ->get();
 
         $sendto_userid = DB::table('document_stage')
+        ->select('*','document_stage.id as stage_id')
         ->leftJoin('documents','documents.id','document_stage.document_id')
         ->leftJoin('users','users.id','document_stage.sender_user_id')
         ->where('sender_type','user')
@@ -322,7 +323,6 @@ class UserController extends Controller
     }
 
     public function SenderUploadFiles(Request $request){
-        if($this->ChkUser(1) == false || $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         if ($file = $request->file('file')) {
             $full_filename = "";
 
@@ -513,6 +513,17 @@ class UserController extends Controller
         ->orWhere('document_status',1)
         ->get();
         return response()->json(['status' => true,'lists'=>$lists]);
+    }
+
+    public function User_Get_SenderData(Request $request){
+        $document_info = DB::table('document_stage')
+        ->select('*','document_stage.id as doc_stage_id')
+        ->leftJoin('documents','documents.id','document_stage.document_id')
+        ->where('document_stage.id',$request->route('stage_id'))
+        ->first();
+        $document_file_array = DB::table('document_file')->where('document_id',$document_info->document_id)->where('document_stage_id',$document_info->doc_stage_id)->get();
+
+        return response()->json(['status' => true,'document_info'=>$document_info,'document_file','document_files'=>$document_file_array]);
     }
 
     public function Sender_Get_SenderData(Request $request){

@@ -33,12 +33,14 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/user/get/AllUserAndGroup', [UserController::class, 'Sender_Get_AlluserAndGroup']);
     Route::post('/user/sync/google', [UserController::class, 'SyncWithGoogle']);
 
-    //Sender
-    Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
+    Route::get('/user/get/Sender/{stage_id}', [UserController::class, 'User_Get_SenderData']);
     Route::post('/sender/upload/files', [UserController::class, 'SenderUploadFiles']);
+
+    //Sender
+    Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
+    Route::post('/sender/get/MySender', [UserController::class, 'Sender_Get_MySender']);
     Route::post('/sender/send/document', [UserController::class, 'SenderSendDocument']);
     Route::post('/sender/edit/send/document', [UserController::class, 'SenderUpdateSendDocument']);
-    Route::get('/sender/get/Sender/{document_id}', [UserController::class, 'Sender_Get_SenderData']);
     Route::post('/sender/document/cancel', [UserController::class, 'SenderCancelDocument']);
     Route::post('/sender/document/delete', [UserController::class, 'SenderDeleteDocument']);
     Route::post('/sender/document/assign', [UserController::class, 'SenderAssignDocument']);

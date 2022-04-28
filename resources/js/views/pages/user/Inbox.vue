@@ -72,7 +72,8 @@
                           </td>
                           <td>
                             <router-link
-                              :to="'/user/view/' + inbox.document_id"
+                              :to="'/user/view/' + inbox.stage_id"
+                              class="nav-item"
                             >
                               <va-button
                                 icon="ads_click"
