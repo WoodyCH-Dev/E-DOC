@@ -180,7 +180,10 @@
                     <i class="fas fa-angle-left mr-2"></i> ย้อนกลับ
                   </va-button>
                 </router-link>
-                <va-button style="background-color: rgb(47, 148, 91)">
+                <va-button
+                  style="background-color: rgb(47, 148, 91)"
+                  :disabled="form.document_file_reupload.length == 0"
+                >
                   <i class="fas fa-paper-plane mr-2"></i> ส่งต่อเอกสาร
                 </va-button>
               </div>

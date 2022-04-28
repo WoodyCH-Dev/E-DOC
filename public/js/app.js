@@ -32491,7 +32491,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 },
                 onClick: _cache[8] || (_cache[8] = function ($event) {
                   return _ctx.$refs.form_data.validate() && $options.DocumentSendSubmit();
-                })
+                }),
+                disabled: $data.form.document_file.length == 0
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [_hoisted_41, _hoisted_42];
@@ -32499,7 +32500,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 _: 1
                 /* STABLE */
 
-              })])])])];
+              }, 8
+              /* PROPS */
+              , ["disabled"])])])])];
             }),
             _: 1
             /* STABLE */
@@ -34230,7 +34233,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
             style: {
               "background-color": "rgb(47, 148, 91)"
-            }
+            },
+            disabled: $data.form.document_file_reupload.length == 0
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [_hoisted_50, _hoisted_51];
@@ -34238,7 +34242,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
             /* STABLE */
 
-          })])])])];
+          }, 8
+          /* PROPS */
+          , ["disabled"])])])])];
         }),
         _: 1
         /* STABLE */

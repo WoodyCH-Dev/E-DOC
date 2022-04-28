@@ -155,6 +155,7 @@
                   <va-button
                     style="background-color: rgb(47, 148, 91)"
                     @click="$refs.form_data.validate() && DocumentSendSubmit()"
+                    :disabled="form.document_file.length == 0"
                   >
                     <i class="fas fa-paper-plane mr-2"></i> ส่งเอกสาร
                   </va-button>
