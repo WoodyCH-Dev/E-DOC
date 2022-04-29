@@ -70,4 +70,5 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/admin/get/AllSender', [UserController::class, 'Admin_Get_AllSender']);
     Route::post('/admin/document/remove', [UserController::class, 'AdminRemoveDocument']);
     Route::get('/admin/get/Sender/{document_id}', [UserController::class, 'Admin_Get_SenderData']);
+    Route::post('/admin/edit/sender/document', [UserController::class, 'AdminUpdateSendDocument']);
 });

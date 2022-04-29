@@ -40,7 +40,14 @@
                           <th></th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody v-if="data.inbox_array.length == 0">
+                        <tr>
+                          <td colspan="6" style="text-align: center">
+                            -- ไม่มีเอกสารเข้าในขณะนี้ --
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-if="data.inbox_array.length > 0">
                         <tr
                           v-for="inbox in data.inbox_array"
                           :key="inbox.document_id"

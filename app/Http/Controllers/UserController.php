@@ -502,6 +502,23 @@ class UserController extends Controller
             return response()->json(['status' => true]);
     }
 
+    public function AdminUpdateSendDocument(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+
+            DB::table('documents')
+            ->where('id',$request->post('document_id'))
+            ->update([
+                'document_title'=> $request->post('document_title'),
+                'document_number'=> $request->post('document_number'),
+                'document_category_id'=> $request->post('document_category_id'),
+                'document_description'=> $request->post('document_description'),
+                'document_priority'=> $request->post('document_priority'),
+                'year_id'=> $request->post('year_id'),
+            ]);
+
+            return response()->json(['status' => true]);
+    }
+
     public function Sender_Get_MySender(Request $request){
         if($this->ChkUser(1) == false && $this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
         $lists = DB::table('documents')
