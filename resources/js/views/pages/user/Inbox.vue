@@ -15,10 +15,22 @@
               <div class="flex xl4 xs12">
                 <div class="form-group">
                   <b>ปีการศึกษา</b>
-                  <va-select
-                    v-model="data.acd_year_value"
-                    :options="data.acd_year_options"
-                  />
+                  <div class="row">
+                    <div class="flex xl10 xs10">
+                      <va-select
+                        v-model="data.acd_year_value"
+                        :options="data.acd_year_options"
+                        track-by="id"
+                      />
+                    </div>
+                    <div class="flex xl2 xs2">
+                      <va-button
+                        icon="done"
+                        color="primary"
+                        v-on:click="getInbox()"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="flex xl12 xs12">
@@ -40,7 +52,14 @@
                           <th></th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody v-if="data.inbox_array.length == 0">
+                        <tr>
+                          <td colspan="6" style="text-align: center">
+                            -- ไม่มีเอกสารเข้าในขณะนี้ --
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-if="data.inbox_array.length > 0">
                         <tr
                           v-for="inbox in data.inbox_array"
                           :key="inbox.document_id"
@@ -184,32 +203,36 @@ export default {
               text: Number(year_data.year) + 543,
               id: year_data.id,
             });
-
-            this.axios.get("api/user/acd_year").then((res) => {
-              if (res.data.status == true) {
-                this.data.acd_year_value = this.data.acd_year_options.find(
-                  (year_lists) =>
-                    year_lists.text == Number(res.data.acd_year) + 543
-                );
-              }
-            });
-
-            this.axios.get("api/user/get/inbox").then(async (res) => {
-              if (res.data.status == true) {
-                for await (let to_user of res.data.sendto_user) {
-                  this.data.inbox_array.push(to_user);
-                }
-                for await (let group of res.data.sendto_group) {
-                  for await (let to_group of group)
-                    this.data.inbox_array.push(to_group);
-                }
-                this.data.inbox_array.sort((a, b) => {
-                  return a.status - b.status;
-                });
-                this.data.inbox_isLoad = false;
-              }
-            });
           }
+
+          this.axios.get("api/user/acd_year").then(async (res) => {
+            if (res.data.status == true) {
+              this.data.acd_year_value = this.data.acd_year_options.find(
+                (year_lists) =>
+                  year_lists.text == Number(res.data.acd_year) + 543
+              );
+            }
+          });
+
+          this.getInbox();
+        }
+      });
+    },
+
+    getInbox() {
+      this.axios.get("api/user/get/inbox").then(async (res) => {
+        if (res.data.status == true) {
+          for await (let to_user of res.data.sendto_user) {
+            this.data.inbox_array.push(to_user);
+          }
+          for await (let group of res.data.sendto_group) {
+            for await (let to_group of group)
+              this.data.inbox_array.push(to_group);
+          }
+          this.data.inbox_array.sort((a, b) => {
+            return a.status - b.status;
+          });
+          this.data.inbox_isLoad = false;
         }
       });
     },
