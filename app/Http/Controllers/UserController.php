@@ -579,14 +579,71 @@ class UserController extends Controller
                'created_timestamp'=> Carbon::now(),
                'read_timestamp'=> null,
            ]);
-
            foreach($request->post('files') as $file_data){
-               $file_upload = DB::table('document_file')->insert([
-                   "file" => $file_data['file'],
-                   "document_id" => $request->post('document_id'),
-                   "document_stage_id" => $document_stage,
-               ]);
-           };
+                $file_upload = DB::table('document_file')->insert([
+                    "file" => $file_data['file'],
+                    "document_id" => $request->post('document_id'),
+                    "document_stage_id" => $document_stage,
+                ]);
+            };
+
+            if($request->post('send_to') != NULL){
+                foreach($request->post('send_to') as $user){
+                    $document_stage = 0;
+                    if($user['type'] == 'user'){
+                        $document_stage = DB::table('document_stage')
+                        ->insertGetId([
+                            'stage'=> $stage,
+                            'document_id'=> $request->post('document_id'),
+                            'sender_user_id'=> $request->post('user_id'),
+                            'sender_type'=> 'user',
+                            'to'=> $user['id'],
+                            'status'=> 0,
+                            'created_timestamp'=> Carbon::now(),
+                            'read_timestamp'=> null,
+                        ]);
+
+                        foreach($request->post('files') as $file_data){
+                            $file_upload = DB::table('document_file')->insert([
+                                "file" => $file_data['file'],
+                                "document_id" => $request->post('document_id'),
+                                "document_stage_id" => $document_stage,
+                            ]);
+                        };
+                    }else if($user['type'] == 'group'){
+                        $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
+                        foreach($user_ingroup as $user_id){
+                            $chk2 = DB::table('document_stage')
+                            ->where('document_id',$request->post('document_id'))
+                            ->where('sender_type','user')
+                            ->where('to',$user_id->user_id)
+                            ->where('stage',$stage)
+                            ->first();
+                            if(empty($chk2)){
+                                $document_stage = DB::table('document_stage')
+                                ->insertGetId([
+                                    'stage'=> $stage,
+                                    'document_id'=> $request->post('document_id'),
+                                    'sender_user_id'=> $request->post('user_id'),
+                                    'sender_type'=> 'user',
+                                    'to'=> $user_id->user_id,
+                                    'status'=> 0,
+                                    'created_timestamp'=> Carbon::now(),
+                                    'read_timestamp'=> null,
+                                ]);
+
+                                foreach($request->post('files') as $file_data){
+                                    $file_upload = DB::table('document_file')->insert([
+                                        "file" => $file_data['file'],
+                                        "document_id" =>  $request->post('document_id'),
+                                        "document_stage_id" => $document_stage,
+                                    ]);
+                                };
+                            }
+                        }
+                    }
+                }
+            }
         } else {
             foreach($request->post('send_to') as $user){
             $document_stage = 0;
@@ -614,11 +671,11 @@ class UserController extends Controller
                 $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                 foreach($user_ingroup as $user_id){
                     $chk2 = DB::table('document_stage')
-                            ->where('document_id',$request->post('document_id'))
-                            ->where('sender_type','user')
-                            ->where('to',$user_id->user_id)
-                            ->where('stage',$stage)
-                            ->first();
+                    ->where('document_id',$request->post('document_id'))
+                    ->where('sender_type','user')
+                    ->where('to',$user_id->user_id)
+                    ->where('stage',$stage)
+                    ->first();
                     if(empty($chk2)){
                         $document_stage = DB::table('document_stage')
                         ->insertGetId([
@@ -641,7 +698,7 @@ class UserController extends Controller
                         };
                     }
                 }
-                }
+            }
             }
         }
 

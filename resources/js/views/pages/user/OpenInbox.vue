@@ -228,14 +228,13 @@
                 <va-checkbox
                   color="primary"
                   v-model="form.sign_check"
-                  label="ลงวันที่ (เมื่อลงวันที่แล้ว เอกสารจะมีสถานะจบกระบวนการ และถูกส่งกลับไปที่ผู้ส่ง)"
+                  label="ลงวันที่ (เมื่อลงวันที่แล้ว เอกสารจะมีสถานะจบกระบวนการ และถูกส่งกลับไปที่ผู้ส่งหรือส่งต่อไปที่กำหนดได้)"
                 />
               </div>
             </div>
             <div
               class="flex xl12 xs12"
               v-if="
-                !form.sign_check &&
                 form.stage_status != 1 &&
                 form.finished_check == false &&
                 form.document_status == 0

@@ -237,6 +237,7 @@
                           <label v-if="to_data.sender_type == 'group'">
                             กลุ่มผู้ใช้:
                             {{ to_data.to_data.group_name }}
+                            <label v-if="to_data.sttaus == 1">(อ่านแล้ว)</label>
                             <va-button
                               color="info"
                               class="mr-0"
@@ -253,6 +254,8 @@
                               " " +
                               to_data.to_data.lastname
                             }}
+                            <label v-if="to_data.status == 1">(อ่านแล้ว)</label>
+                            &nbsp;
                             <va-button
                               color="info"
                               class="mr-0"
