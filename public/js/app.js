@@ -24864,6 +24864,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var username = "";
@@ -24890,12 +24902,19 @@ __webpack_require__.r(__webpack_exports__);
       data: {
         username: username,
         lastname: lastname,
-        acd_year: acd_year
+        acd_year: 0,
+        acd_year_options: new Array(),
+        acd_year_value: null,
+        user_count: 0,
+        AllDoc_count: 0
       },
       permission: {
         access_user: access_user,
         access_sender: access_sender,
         access_admin: access_admin
+      },
+      edu_manage: {
+        new_year: null
       }
     };
   },
@@ -24903,9 +24922,180 @@ __webpack_require__.r(__webpack_exports__);
     onLoad: function onLoad() {
       var _this = this;
 
+      this.axios.get("api/user/acd_year/lists").then( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
+          var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, year_data;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  _this.data.acd_year_options = new Array();
+                  _this.data.acd_year_value = null;
+
+                  if (!(res.data.status == true)) {
+                    _context.next = 32;
+                    break;
+                  }
+
+                  _iteratorAbruptCompletion = false;
+                  _didIteratorError = false;
+                  _context.prev = 5;
+                  _iterator = _asyncIterator(res.data.acd_year);
+
+                case 7:
+                  _context.next = 9;
+                  return _iterator.next();
+
+                case 9:
+                  if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
+                    _context.next = 16;
+                    break;
+                  }
+
+                  year_data = _step.value;
+
+                  _this.data.acd_year_options.push({
+                    text: Number(year_data.year) + 543,
+                    id: year_data.id
+                  });
+
+                  _this.axios.get("api/user/acd_year").then(function (res) {
+                    if (res.data.status == true) {
+                      _this.data.acd_year_value = _this.data.acd_year_options.find(function (year_lists) {
+                        return year_lists.text == Number(res.data.acd_year) + 543;
+                      });
+
+                      _this.LoadSenderDocumentLists();
+                    }
+                  });
+
+                case 13:
+                  _iteratorAbruptCompletion = false;
+                  _context.next = 7;
+                  break;
+
+                case 16:
+                  _context.next = 22;
+                  break;
+
+                case 18:
+                  _context.prev = 18;
+                  _context.t0 = _context["catch"](5);
+                  _didIteratorError = true;
+                  _iteratorError = _context.t0;
+
+                case 22:
+                  _context.prev = 22;
+                  _context.prev = 23;
+
+                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+                    _context.next = 27;
+                    break;
+                  }
+
+                  _context.next = 27;
+                  return _iterator["return"]();
+
+                case 27:
+                  _context.prev = 27;
+
+                  if (!_didIteratorError) {
+                    _context.next = 30;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 30:
+                  return _context.finish(27);
+
+                case 31:
+                  return _context.finish(22);
+
+                case 32:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[5, 18, 22, 32], [23,, 27, 31]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
       this.axios.get("api/user/acd_year").then(function (res) {
         if (res.data.status == true) {
           _this.data.acd_year = String(Number(res.data.acd_year) + 543);
+
+          _this.axios.get("api/user/dashboard/getdocumentcount/" + res.data.acd_year_id).then(function (res) {
+            if (res.data.status == true) {
+              _this.data.AllDoc_count = res.data.count;
+            }
+          });
+        }
+      });
+      this.axios.get("api/user/dashboard/getusercount").then(function (res) {
+        if (res.data.status == true) {
+          _this.data.user_count = res.data.count;
+        }
+      });
+    },
+    createEdu_year: function createEdu_year() {
+      var _this2 = this;
+
+      if (this.edu_manage.new_year != "" && this.edu_manage.new_year != null) {
+        this.axios.post("api/admin/create/acd_year", {
+          year: Number(this.edu_manage.new_year) - 543
+        }).then(function (res) {
+          if (res.data.status == true) {
+            _this2.edu_manage.new_year = null;
+
+            _this2.onLoad();
+          } else {
+            _this2.$swal.fire("Error!", "ระบบพบการสร้างปีการศึกษานี้แล้ว", "error");
+          }
+        });
+      }
+    },
+    removeEduYear: function removeEduYear(year_id) {
+      var _this3 = this;
+
+      this.$swal.fire({
+        title: "แจ้งเตือน!",
+        text: "ยืนยันการลบปีการศึกษา ",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#3085d6",
+        cancelButtonText: "ยกเลิก",
+        confirmButtonColor: "rgb(235, 64, 52)",
+        confirmButtonText: "ยืนยัน",
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this3.axios.post("api/admin/remove/acd_year", {
+            year_id: year_id
+          }).then(function (res) {
+            if (res.data.status == true) {
+              _this3.onLoad();
+            } else {
+              _this3.$swal.fire("Error!", "มีการใช้งานข้อมูลปีการศึกษานี้อยู่ ไม่สามารถลบได้", "error");
+            }
+          });
+        }
+      });
+    },
+    changeMainEduYear: function changeMainEduYear() {
+      var _this4 = this;
+
+      this.axios.post("api/admin/edit/main_edu_year", {
+        year_id: this.data.acd_year_value.id
+      }).then(function (res) {
+        if (res.data.status == true) {
+          _this4.$swal.fire("Success", "แก้ไขปีการศึกษาปัจจุบันแล้ว", "success").then(function () {
+            location.reload();
+          });
         }
       });
     }
@@ -27460,7 +27650,7 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
 
                 case 7:
                   if (!(_iteratorAbruptCompletion = !(_step = _context2.sent).done)) {
-                    _context2.next = 15;
+                    _context2.next = 13;
                     break;
                   }
 
@@ -27471,224 +27661,68 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
                     id: year_data.id
                   });
 
-                  _this.axios.get("api/user/acd_year").then(function (res) {
-                    if (res.data.status == true) {
-                      _this.data.acd_year_value = _this.data.acd_year_options.find(function (year_lists) {
-                        return year_lists.text == Number(res.data.acd_year) + 543;
-                      });
-                    }
-                  });
+                case 10:
+                  _iteratorAbruptCompletion = false;
+                  _context2.next = 5;
+                  break;
 
-                  _this.axios.get("api/user/get/inbox").then( /*#__PURE__*/function () {
+                case 13:
+                  _context2.next = 19;
+                  break;
+
+                case 15:
+                  _context2.prev = 15;
+                  _context2.t0 = _context2["catch"](3);
+                  _didIteratorError = true;
+                  _iteratorError = _context2.t0;
+
+                case 19:
+                  _context2.prev = 19;
+                  _context2.prev = 20;
+
+                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+                    _context2.next = 24;
+                    break;
+                  }
+
+                  _context2.next = 24;
+                  return _iterator["return"]();
+
+                case 24:
+                  _context2.prev = 24;
+
+                  if (!_didIteratorError) {
+                    _context2.next = 27;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 27:
+                  return _context2.finish(24);
+
+                case 28:
+                  return _context2.finish(19);
+
+                case 29:
+                  _this.axios.get("api/user/acd_year").then( /*#__PURE__*/function () {
                     var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(res) {
-                      var _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, to_user, _iteratorAbruptCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, group, _iteratorAbruptCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, to_group;
-
                       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
                         while (1) {
                           switch (_context.prev = _context.next) {
                             case 0:
-                              if (!(res.data.status == true)) {
-                                _context.next = 86;
-                                break;
+                              if (res.data.status == true) {
+                                _this.data.acd_year_value = _this.data.acd_year_options.find(function (year_lists) {
+                                  return year_lists.text == Number(res.data.acd_year) + 543;
+                                });
                               }
 
-                              _iteratorAbruptCompletion2 = false;
-                              _didIteratorError2 = false;
-                              _context.prev = 3;
-                              _iterator2 = _asyncIterator(res.data.sendto_user);
-
-                            case 5:
-                              _context.next = 7;
-                              return _iterator2.next();
-
-                            case 7:
-                              if (!(_iteratorAbruptCompletion2 = !(_step2 = _context.sent).done)) {
-                                _context.next = 13;
-                                break;
-                              }
-
-                              to_user = _step2.value;
-
-                              _this.data.inbox_array.push(to_user);
-
-                            case 10:
-                              _iteratorAbruptCompletion2 = false;
-                              _context.next = 5;
-                              break;
-
-                            case 13:
-                              _context.next = 19;
-                              break;
-
-                            case 15:
-                              _context.prev = 15;
-                              _context.t0 = _context["catch"](3);
-                              _didIteratorError2 = true;
-                              _iteratorError2 = _context.t0;
-
-                            case 19:
-                              _context.prev = 19;
-                              _context.prev = 20;
-
-                              if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
-                                _context.next = 24;
-                                break;
-                              }
-
-                              _context.next = 24;
-                              return _iterator2["return"]();
-
-                            case 24:
-                              _context.prev = 24;
-
-                              if (!_didIteratorError2) {
-                                _context.next = 27;
-                                break;
-                              }
-
-                              throw _iteratorError2;
-
-                            case 27:
-                              return _context.finish(24);
-
-                            case 28:
-                              return _context.finish(19);
-
-                            case 29:
-                              _iteratorAbruptCompletion3 = false;
-                              _didIteratorError3 = false;
-                              _context.prev = 31;
-                              _iterator3 = _asyncIterator(res.data.sendto_group);
-
-                            case 33:
-                              _context.next = 35;
-                              return _iterator3.next();
-
-                            case 35:
-                              if (!(_iteratorAbruptCompletion3 = !(_step3 = _context.sent).done)) {
-                                _context.next = 68;
-                                break;
-                              }
-
-                              group = _step3.value;
-                              _iteratorAbruptCompletion4 = false;
-                              _didIteratorError4 = false;
-                              _context.prev = 39;
-                              _iterator4 = _asyncIterator(group);
-
-                            case 41:
-                              _context.next = 43;
-                              return _iterator4.next();
-
-                            case 43:
-                              if (!(_iteratorAbruptCompletion4 = !(_step4 = _context.sent).done)) {
-                                _context.next = 49;
-                                break;
-                              }
-
-                              to_group = _step4.value;
-
-                              _this.data.inbox_array.push(to_group);
-
-                            case 46:
-                              _iteratorAbruptCompletion4 = false;
-                              _context.next = 41;
-                              break;
-
-                            case 49:
-                              _context.next = 55;
-                              break;
-
-                            case 51:
-                              _context.prev = 51;
-                              _context.t1 = _context["catch"](39);
-                              _didIteratorError4 = true;
-                              _iteratorError4 = _context.t1;
-
-                            case 55:
-                              _context.prev = 55;
-                              _context.prev = 56;
-
-                              if (!(_iteratorAbruptCompletion4 && _iterator4["return"] != null)) {
-                                _context.next = 60;
-                                break;
-                              }
-
-                              _context.next = 60;
-                              return _iterator4["return"]();
-
-                            case 60:
-                              _context.prev = 60;
-
-                              if (!_didIteratorError4) {
-                                _context.next = 63;
-                                break;
-                              }
-
-                              throw _iteratorError4;
-
-                            case 63:
-                              return _context.finish(60);
-
-                            case 64:
-                              return _context.finish(55);
-
-                            case 65:
-                              _iteratorAbruptCompletion3 = false;
-                              _context.next = 33;
-                              break;
-
-                            case 68:
-                              _context.next = 74;
-                              break;
-
-                            case 70:
-                              _context.prev = 70;
-                              _context.t2 = _context["catch"](31);
-                              _didIteratorError3 = true;
-                              _iteratorError3 = _context.t2;
-
-                            case 74:
-                              _context.prev = 74;
-                              _context.prev = 75;
-
-                              if (!(_iteratorAbruptCompletion3 && _iterator3["return"] != null)) {
-                                _context.next = 79;
-                                break;
-                              }
-
-                              _context.next = 79;
-                              return _iterator3["return"]();
-
-                            case 79:
-                              _context.prev = 79;
-
-                              if (!_didIteratorError3) {
-                                _context.next = 82;
-                                break;
-                              }
-
-                              throw _iteratorError3;
-
-                            case 82:
-                              return _context.finish(79);
-
-                            case 83:
-                              return _context.finish(74);
-
-                            case 84:
-                              _this.data.inbox_array.sort(function (a, b) {
-                                return a.status - b.status;
-                              });
-
-                              _this.data.inbox_isLoad = false;
-
-                            case 86:
+                            case 1:
                             case "end":
                               return _context.stop();
                           }
                         }
-                      }, _callee, null, [[3, 15, 19, 29], [20,, 24, 28], [31, 70, 74, 84], [39, 51, 55, 65], [56,, 60, 64], [75,, 79, 83]]);
+                      }, _callee);
                     }));
 
                     return function (_x2) {
@@ -27696,59 +27730,238 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
                     };
                   }());
 
-                case 12:
-                  _iteratorAbruptCompletion = false;
-                  _context2.next = 5;
-                  break;
-
-                case 15:
-                  _context2.next = 21;
-                  break;
-
-                case 17:
-                  _context2.prev = 17;
-                  _context2.t0 = _context2["catch"](3);
-                  _didIteratorError = true;
-                  _iteratorError = _context2.t0;
-
-                case 21:
-                  _context2.prev = 21;
-                  _context2.prev = 22;
-
-                  if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
-                    _context2.next = 26;
-                    break;
-                  }
-
-                  _context2.next = 26;
-                  return _iterator["return"]();
-
-                case 26:
-                  _context2.prev = 26;
-
-                  if (!_didIteratorError) {
-                    _context2.next = 29;
-                    break;
-                  }
-
-                  throw _iteratorError;
-
-                case 29:
-                  return _context2.finish(26);
-
-                case 30:
-                  return _context2.finish(21);
+                  _this.getInbox();
 
                 case 31:
                 case "end":
                   return _context2.stop();
               }
             }
-          }, _callee2, null, [[3, 17, 21, 31], [22,, 26, 30]]);
+          }, _callee2, null, [[3, 15, 19, 29], [20,, 24, 28]]);
         }));
 
         return function (_x) {
           return _ref.apply(this, arguments);
+        };
+      }());
+    },
+    getInbox: function getInbox() {
+      var _this2 = this;
+
+      this.axios.get("api/user/get/inbox").then( /*#__PURE__*/function () {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(res) {
+          var _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, to_user, _iteratorAbruptCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, group, _iteratorAbruptCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, to_group;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  if (!(res.data.status == true)) {
+                    _context3.next = 86;
+                    break;
+                  }
+
+                  _iteratorAbruptCompletion2 = false;
+                  _didIteratorError2 = false;
+                  _context3.prev = 3;
+                  _iterator2 = _asyncIterator(res.data.sendto_user);
+
+                case 5:
+                  _context3.next = 7;
+                  return _iterator2.next();
+
+                case 7:
+                  if (!(_iteratorAbruptCompletion2 = !(_step2 = _context3.sent).done)) {
+                    _context3.next = 13;
+                    break;
+                  }
+
+                  to_user = _step2.value;
+
+                  _this2.data.inbox_array.push(to_user);
+
+                case 10:
+                  _iteratorAbruptCompletion2 = false;
+                  _context3.next = 5;
+                  break;
+
+                case 13:
+                  _context3.next = 19;
+                  break;
+
+                case 15:
+                  _context3.prev = 15;
+                  _context3.t0 = _context3["catch"](3);
+                  _didIteratorError2 = true;
+                  _iteratorError2 = _context3.t0;
+
+                case 19:
+                  _context3.prev = 19;
+                  _context3.prev = 20;
+
+                  if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
+                    _context3.next = 24;
+                    break;
+                  }
+
+                  _context3.next = 24;
+                  return _iterator2["return"]();
+
+                case 24:
+                  _context3.prev = 24;
+
+                  if (!_didIteratorError2) {
+                    _context3.next = 27;
+                    break;
+                  }
+
+                  throw _iteratorError2;
+
+                case 27:
+                  return _context3.finish(24);
+
+                case 28:
+                  return _context3.finish(19);
+
+                case 29:
+                  _iteratorAbruptCompletion3 = false;
+                  _didIteratorError3 = false;
+                  _context3.prev = 31;
+                  _iterator3 = _asyncIterator(res.data.sendto_group);
+
+                case 33:
+                  _context3.next = 35;
+                  return _iterator3.next();
+
+                case 35:
+                  if (!(_iteratorAbruptCompletion3 = !(_step3 = _context3.sent).done)) {
+                    _context3.next = 68;
+                    break;
+                  }
+
+                  group = _step3.value;
+                  _iteratorAbruptCompletion4 = false;
+                  _didIteratorError4 = false;
+                  _context3.prev = 39;
+                  _iterator4 = _asyncIterator(group);
+
+                case 41:
+                  _context3.next = 43;
+                  return _iterator4.next();
+
+                case 43:
+                  if (!(_iteratorAbruptCompletion4 = !(_step4 = _context3.sent).done)) {
+                    _context3.next = 49;
+                    break;
+                  }
+
+                  to_group = _step4.value;
+
+                  _this2.data.inbox_array.push(to_group);
+
+                case 46:
+                  _iteratorAbruptCompletion4 = false;
+                  _context3.next = 41;
+                  break;
+
+                case 49:
+                  _context3.next = 55;
+                  break;
+
+                case 51:
+                  _context3.prev = 51;
+                  _context3.t1 = _context3["catch"](39);
+                  _didIteratorError4 = true;
+                  _iteratorError4 = _context3.t1;
+
+                case 55:
+                  _context3.prev = 55;
+                  _context3.prev = 56;
+
+                  if (!(_iteratorAbruptCompletion4 && _iterator4["return"] != null)) {
+                    _context3.next = 60;
+                    break;
+                  }
+
+                  _context3.next = 60;
+                  return _iterator4["return"]();
+
+                case 60:
+                  _context3.prev = 60;
+
+                  if (!_didIteratorError4) {
+                    _context3.next = 63;
+                    break;
+                  }
+
+                  throw _iteratorError4;
+
+                case 63:
+                  return _context3.finish(60);
+
+                case 64:
+                  return _context3.finish(55);
+
+                case 65:
+                  _iteratorAbruptCompletion3 = false;
+                  _context3.next = 33;
+                  break;
+
+                case 68:
+                  _context3.next = 74;
+                  break;
+
+                case 70:
+                  _context3.prev = 70;
+                  _context3.t2 = _context3["catch"](31);
+                  _didIteratorError3 = true;
+                  _iteratorError3 = _context3.t2;
+
+                case 74:
+                  _context3.prev = 74;
+                  _context3.prev = 75;
+
+                  if (!(_iteratorAbruptCompletion3 && _iterator3["return"] != null)) {
+                    _context3.next = 79;
+                    break;
+                  }
+
+                  _context3.next = 79;
+                  return _iterator3["return"]();
+
+                case 79:
+                  _context3.prev = 79;
+
+                  if (!_didIteratorError3) {
+                    _context3.next = 82;
+                    break;
+                  }
+
+                  throw _iteratorError3;
+
+                case 82:
+                  return _context3.finish(79);
+
+                case 83:
+                  return _context3.finish(74);
+
+                case 84:
+                  _this2.data.inbox_array.sort(function (a, b) {
+                    return a.status - b.status;
+                  });
+
+                  _this2.data.inbox_isLoad = false;
+
+                case 86:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3, null, [[3, 15, 19, 29], [20,, 24, 28], [31, 70, 74, 84], [39, 51, 55, 65], [56,, 60, 64], [75,, 79, 83]]);
+        }));
+
+        return function (_x3) {
+          return _ref3.apply(this, arguments);
         };
       }());
     },
@@ -27765,30 +27978,30 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
       }
     },
     markAsread: function markAsread(stage_id) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.axios.post("api/user/inbox/markasread", {
         document_stage_id: stage_id
       }).then( /*#__PURE__*/function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(res) {
-          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(res) {
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
             while (1) {
-              switch (_context3.prev = _context3.next) {
+              switch (_context4.prev = _context4.next) {
                 case 0:
-                  _this2.$router.push("/user/view/" + stage_id).then(function () {
+                  _this3.$router.push("/user/view/" + stage_id).then(function () {
                     location.reload();
                   });
 
                 case 1:
                 case "end":
-                  return _context3.stop();
+                  return _context4.stop();
               }
             }
-          }, _callee3);
+          }, _callee4);
         }));
 
-        return function (_x3) {
-          return _ref3.apply(this, arguments);
+        return function (_x4) {
+          return _ref4.apply(this, arguments);
         };
       }());
     }
@@ -30477,19 +30690,107 @@ var _hoisted_1 = {
   "class": "row"
 };
 var _hoisted_2 = {
-  "class": "flex xl12 xs12 center"
+  "class": "flex xs12 xl12 center"
+};
+var _hoisted_3 = {
+  "class": "row"
+};
+var _hoisted_4 = {
+  "class": "flex xl12 xs12"
 };
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("จัดการระบบ");
-
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "row"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "flex xl12 xs12"
-}, "Test")], -1
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "far fa-tachometer"
+}, null, -1
 /* HOISTED */
 );
 
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  จัดการระบบ ");
+
+var _hoisted_7 = {
+  "class": "flex lg4 xs12"
+};
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปีการศึกษา ปัจจุบัน ");
+
+var _hoisted_9 = {
+  "class": "flex lg4 xs12"
+};
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ยอดเอกสารทั้งหมดของปี ");
+
+var _hoisted_11 = {
+  "class": "flex lg4 xs12"
+};
+
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" จำนวนผู้ใช้งานทั้งหมด ");
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "flex lg12 xs12"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr")], -1
+/* HOISTED */
+);
+
+var _hoisted_14 = {
+  "class": "flex lg4 xs12"
+};
+var _hoisted_15 = {
+  "class": "form-group"
+};
+var _hoisted_16 = {
+  "class": "row"
+};
+
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ตั้งค่าปีการศึกษา ปัจจุบัน", -1
+/* HOISTED */
+);
+
+var _hoisted_18 = {
+  "class": "flex lg10 xs10"
+};
+var _hoisted_19 = {
+  "class": "flex lg2 xs2"
+};
+var _hoisted_20 = {
+  "class": "form-group"
+};
+
+var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เพิ่มปีการศึกษา (พ.ศ.)", -1
+/* HOISTED */
+);
+
+var _hoisted_22 = {
+  "class": "row"
+};
+var _hoisted_23 = {
+  "class": "flex lg10 xs10"
+};
+var _hoisted_24 = {
+  "class": "flex lg2 xs2"
+};
+var _hoisted_25 = {
+  "class": "flex lg12 xs12"
+};
+
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" รายการปีการศึกษาในระบบ ");
+
+var _hoisted_27 = {
+  "class": "row"
+};
+var _hoisted_28 = {
+  key: 0,
+  "class": "flex lg6 xs6"
+};
+var _hoisted_29 = {
+  key: 1,
+  "class": "flex lg6 xs6"
+};
+var _hoisted_30 = {
+  "class": "flex lg6 xs6",
+  style: {
+    "text-align": "right"
+  }
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
 
@@ -30497,21 +30798,199 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   var _component_va_card = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card");
 
+  var _component_va_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-select");
+
+  var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
+
+  var _component_va_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-input");
+
+  var _component_va_alert = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-alert");
+
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
     tag: "b",
     outlined: ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, null, {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_3];
-        }),
-        _: 1
-        /* STABLE */
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+            stripe: "",
+            "stripe-color": "danger"
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, {
+                "class": "card-title-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [_hoisted_5, _hoisted_6];
+                }),
+                _: 1
+                /* STABLE */
 
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_4];
+              }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, {
+                "class": "card-subtitle-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แอดมิน " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.username + " " + $data.data.lastname), 1
+                  /* TEXT */
+                  )];
+                }),
+                _: 1
+                /* STABLE */
+
+              })];
+            }),
+            _: 1
+            /* STABLE */
+
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+            color: "primary",
+            gradient: ""
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, {
+                "class": "card-title-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [_hoisted_8];
+                }),
+                _: 1
+                /* STABLE */
+
+              }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, {
+                "class": "card-subtitle-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.acd_year), 1
+                  /* TEXT */
+                  )];
+                }),
+                _: 1
+                /* STABLE */
+
+              })];
+            }),
+            _: 1
+            /* STABLE */
+
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+            color: "warning",
+            gradient: ""
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, {
+                "class": "card-title-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [_hoisted_10];
+                }),
+                _: 1
+                /* STABLE */
+
+              }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, {
+                "class": "card-subtitle-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.AllDoc_count), 1
+                  /* TEXT */
+                  )];
+                }),
+                _: 1
+                /* STABLE */
+
+              })];
+            }),
+            _: 1
+            /* STABLE */
+
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+            color: "danger",
+            gradient: ""
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, {
+                "class": "text-white card-title-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [_hoisted_12];
+                }),
+                _: 1
+                /* STABLE */
+
+              }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, {
+                "class": "text-white card-subtitle-dashboard"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.user_count), 1
+                  /* TEXT */
+                  )];
+                }),
+                _: 1
+                /* STABLE */
+
+              })];
+            }),
+            _: 1
+            /* STABLE */
+
+          })]), _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+            modelValue: $data.data.acd_year_value,
+            "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+              return $data.data.acd_year_value = $event;
+            }),
+            options: $data.data.acd_year_options,
+            "track-by": "id"
+          }, null, 8
+          /* PROPS */
+          , ["modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            icon: "save",
+            color: "warning",
+            onClick: _cache[1] || (_cache[1] = function ($event) {
+              return $options.changeMainEduYear();
+            })
+          })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_input, {
+            "class": "mb-0",
+            modelValue: $data.edu_manage.new_year,
+            "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+              return $data.edu_manage.new_year = $event;
+            })
+          }, null, 8
+          /* PROPS */
+          , ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            icon: "add",
+            onClick: _cache[3] || (_cache[3] = function ($event) {
+              return $options.createEdu_year();
+            })
+          })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.acd_year_options, function (year) {
+            return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
+              key: year.id
+            }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_alert, {
+              color: "danger",
+              border: "top",
+              "border-color": "success"
+            }, {
+              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [$data.data.acd_year != year.text ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+                  icon: "delete",
+                  color: "danger",
+                  onClick: function onClick($event) {
+                    return $options.removeEduYear(year.id);
+                  }
+                }, null, 8
+                /* PROPS */
+                , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.acd_year == year.text ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, " (ปีการศึกษาปัจจุบัน) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, " พ.ศ. " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(year.text), 1
+                /* TEXT */
+                )])];
+              }),
+              _: 2
+              /* DYNAMIC */
+
+            }, 1024
+            /* DYNAMIC_SLOTS */
+            )]);
+          }), 128
+          /* KEYED_FRAGMENT */
+          ))])])])])])])];
         }),
         _: 1
         /* STABLE */
@@ -32796,29 +33275,41 @@ var _hoisted_5 = {
   "class": "flex xl12 xs12"
 };
 var _hoisted_6 = {
-  "class": "flex xl4 xs12"
+  "class": "row"
 };
 var _hoisted_7 = {
+  "class": "flex xl4 xs10"
+};
+var _hoisted_8 = {
   "class": "form-group"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ปีการศึกษา", -1
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ปีการศึกษา", -1
 /* HOISTED */
 );
 
-var _hoisted_9 = {
-  "class": "flex xl12 xs12"
-};
 var _hoisted_10 = {
-  "class": "form-group"
+  "class": "row"
 };
 var _hoisted_11 = {
+  "class": "flex xl10 xs10"
+};
+var _hoisted_12 = {
+  "class": "flex xl2 xs2"
+};
+var _hoisted_13 = {
+  "class": "flex xl12 xs12"
+};
+var _hoisted_14 = {
+  "class": "form-group"
+};
+var _hoisted_15 = {
   "class": "va-table-responsive",
   style: {
     "overflow-y": "auto"
   }
 };
-var _hoisted_12 = {
+var _hoisted_16 = {
   key: 0,
   "class": "va-table",
   style: {
@@ -32826,15 +33317,15 @@ var _hoisted_12 = {
   }
 };
 
-var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เลขที่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "วันที่ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เอกสารลงวันที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หัวข้อเรื่อง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หมวดหมู่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th")])], -1
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เลขที่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "วันที่ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เอกสารลงวันที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หัวข้อเรื่อง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หมวดหมู่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th")])], -1
 /* HOISTED */
 );
 
-var _hoisted_14 = {
+var _hoisted_18 = {
   key: 0
 };
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   colspan: "6",
   style: {
     "text-align": "center"
@@ -32843,20 +33334,20 @@ var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_16 = [_hoisted_15];
-var _hoisted_17 = {
+var _hoisted_20 = [_hoisted_19];
+var _hoisted_21 = {
   key: 1
 };
-var _hoisted_18 = {
+var _hoisted_22 = {
   key: 0,
   "class": "text-danger"
 };
 
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" สถานะเอกสาร ");
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" สถานะเอกสาร ");
 
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แก้ไข ");
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" แก้ไข ");
 
-var _hoisted_21 = {
+var _hoisted_25 = {
   key: 0,
   align: "center",
   style: {
@@ -32864,23 +33355,23 @@ var _hoisted_21 = {
   }
 };
 
-var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กำลังโหลดข้อมูล ");
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กำลังโหลดข้อมูล ");
 
-var _hoisted_23 = {
+var _hoisted_27 = {
   "class": "modal fade",
   id: "TrackingStatusModal",
   "data-bs-backdrop": "static",
   tabindex: "-1",
   "aria-hidden": "true"
 };
-var _hoisted_24 = {
+var _hoisted_28 = {
   "class": "modal-dialog modal-dialog-centered modal-xl"
 };
-var _hoisted_25 = {
+var _hoisted_29 = {
   "class": "modal-content"
 };
 
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "modal-header"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", {
   "class": "modal-title"
@@ -32895,91 +33386,75 @@ var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_27 = {
+var _hoisted_31 = {
   "class": "modal-body"
 };
-var _hoisted_28 = {
+var _hoisted_32 = {
   "class": "row"
 };
-var _hoisted_29 = {
+var _hoisted_33 = {
   "class": "flex xs12 md6"
 };
 
-var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ติดตามเอกสาร");
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ติดตามเอกสาร");
 
-var _hoisted_31 = {
+var _hoisted_35 = {
   "class": "events"
 };
 
-var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "left"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "left"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, " เอกสารถูกส่งไปที่  ", -1
+var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, " เอกสารถูกส่งไปที่  ", -1
 /* HOISTED */
 );
 
-var _hoisted_35 = {
-  key: 0
-};
-var _hoisted_36 = {
-  key: 0
-};
-
-var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ไฟล์แนบ ");
-
-var _hoisted_38 = {
-  key: 1
-};
 var _hoisted_39 = {
   key: 0
 };
-
-var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ");
+var _hoisted_40 = {
+  key: 0
+};
 
 var _hoisted_41 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ไฟล์แนบ ");
 
 var _hoisted_42 = {
+  key: 1
+};
+var _hoisted_43 = {
   key: 0
 };
 
-var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ");
+
+var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ไฟล์แนบ ");
+
+var _hoisted_46 = {
+  key: 0
+};
+
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "left"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_44 = {
+var _hoisted_48 = {
   "class": "flex xs12 md6"
 };
 
-var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("รายละเอียดเอกสาร");
+var _hoisted_49 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("รายละเอียดเอกสาร");
 
-var _hoisted_46 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "หัวข้อเรื่อง: ", -1
-/* HOISTED */
-);
-
-var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_48 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลขที่เอกสาร: ", -1
-/* HOISTED */
-);
-
-var _hoisted_49 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "หมวดหมู่: ", -1
+var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "หัวข้อเรื่อง: ", -1
 /* HOISTED */
 );
 
@@ -32987,7 +33462,7 @@ var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_52 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "รายละเอียด: ", -1
+var _hoisted_52 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "เลขที่เอกสาร: ", -1
 /* HOISTED */
 );
 
@@ -32995,44 +33470,60 @@ var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ระดับความสำคัญ: ", -1
+var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "หมวดหมู่: ", -1
 /* HOISTED */
 );
 
-var _hoisted_55 = {
-  key: 0
-};
-var _hoisted_56 = {
-  key: 1
-};
-var _hoisted_57 = {
-  key: 2
-};
+var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
 
-var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "รายละเอียด: ", -1
+/* HOISTED */
+);
+
+var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "ระดับความสำคัญ: ", -1
 /* HOISTED */
 );
 
 var _hoisted_59 = {
+  key: 0
+};
+var _hoisted_60 = {
+  key: 1
+};
+var _hoisted_61 = {
+  key: 2
+};
+
+var _hoisted_62 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_63 = {
   key: 3,
   "class": "text-danger"
 };
-var _hoisted_60 = {
+var _hoisted_64 = {
   key: 4
 };
-var _hoisted_61 = {
+var _hoisted_65 = {
   key: 5
 };
 
-var _hoisted_62 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ยกเลิกเอกสาร ");
+var _hoisted_66 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ยกเลิกเอกสาร ");
 
-var _hoisted_63 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบเอกสาร ");
+var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ลบเอกสาร ");
 
-var _hoisted_64 = {
+var _hoisted_68 = {
   "class": "modal-footer"
 };
 
-var _hoisted_65 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
+var _hoisted_69 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ปิด ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
@@ -33063,19 +33554,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
             modelValue: $data.data.acd_year_value,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
               return $data.data.acd_year_value = $event;
             }),
             options: $data.data.acd_year_options,
-            onChange: _cache[1] || (_cache[1] = function ($event) {
-              return $options.LoadSenderDocumentLists();
-            }),
             "track-by": "id"
           }, null, 8
           /* PROPS */
-          , ["modelValue", "options"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [!$data.data.my_sender_documents_lists_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_12, [_hoisted_13, $data.data.my_sender_documents_lists.length == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_14, _hoisted_16)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.my_sender_documents_lists.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_17, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.my_sender_documents_lists, function (my_send_doc) {
+          , ["modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            icon: "done",
+            color: "primary",
+            onClick: _cache[1] || (_cache[1] = function ($event) {
+              return $options.LoadSenderDocumentLists();
+            })
+          })])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [!$data.data.my_sender_documents_lists_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_16, [_hoisted_17, $data.data.my_sender_documents_lists.length == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_18, _hoisted_20)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.my_sender_documents_lists.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_21, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.my_sender_documents_lists, function (my_send_doc) {
             return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
               key: my_send_doc.doc_id,
               "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
@@ -33083,7 +33577,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               })
             }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_send_doc.document_number) + " ", 1
             /* TEXT */
-            ), my_send_doc.document_status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_18, " (เอกสารถูกยกเลิก) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(my_send_doc.timestamp)), 1
+            ), my_send_doc.document_status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_22, " (เอกสารถูกยกเลิก) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(my_send_doc.timestamp)), 1
             /* TEXT */
             ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_send_doc.sign_timestamp || "ยังไม่มีการลงวันที่"), 1
             /* TEXT */
@@ -33104,7 +33598,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               }
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [_hoisted_19];
+                return [_hoisted_23];
               }),
               _: 2
               /* DYNAMIC */
@@ -33123,7 +33617,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                   color: "warning"
                 }, {
                   "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                    return [_hoisted_20];
+                    return [_hoisted_24];
                   }),
                   _: 1
                   /* STABLE */
@@ -33140,14 +33634,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             );
           }), 128
           /* KEYED_FRAGMENT */
-          ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.data.my_sender_documents_lists_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_progress_circle, {
+          ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.data.my_sender_documents_lists_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_progress_circle, {
             size: "large",
             thickness: 0.4,
             color: "primary",
             indeterminate: ""
           }, null, 8
           /* PROPS */
-          , ["thickness"]), _hoisted_22])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])];
+          , ["thickness"]), _hoisted_26])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])];
         }),
         _: 1
         /* STABLE */
@@ -33157,51 +33651,33 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
     square: "",
     outlined: ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_30];
+          return [_hoisted_34];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [_hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, " รับเอกสารเข้าระบบ (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate($data.data.select_my_sender_documents_data.timestamp)) + ") ", 1
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [_hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, " รับเอกสารเข้าระบบ (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate($data.data.select_my_sender_documents_data.timestamp)) + ") ", 1
           /* TEXT */
           ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.username + " " + $data.data.lastname), 1
           /* TEXT */
           )])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.select_my_sender_documents_stage_array, function (documents_stage) {
             return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
               key: documents_stage.stage
-            }, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [_hoisted_34, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(documents_stage.stage_data, function (to_data) {
+            }, [_hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [_hoisted_38, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(documents_stage.stage_data, function (to_data) {
               return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", {
                 key: to_data.id
-              }, [to_data.sender_type == 'group' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กลุ่มผู้ใช้: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(to_data.to_data.group_name) + " ", 1
+              }, [to_data.sender_type == 'group' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กลุ่มผู้ใช้: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(to_data.to_data.group_name) + " ", 1
               /* TEXT */
-              ), to_data.sttaus == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_36, "(อ่านแล้ว)")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
-                color: "info",
-                "class": "mr-0",
-                size: "small",
-                onClick: function onClick($event) {
-                  return $options.ShowFileDialog(to_data.files);
-                }
-              }, {
-                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                  return [_hoisted_37];
-                }),
-                _: 2
-                /* DYNAMIC */
-
-              }, 1032
-              /* PROPS, DYNAMIC_SLOTS */
-              , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), to_data.sender_type == 'user' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ผู้ใช้: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(to_data.to_data.name + " " + to_data.to_data.lastname) + " ", 1
-              /* TEXT */
-              ), to_data.status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_39, "(อ่านแล้ว)")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+              ), to_data.sttaus == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_40, "(อ่านแล้ว)")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
                 color: "info",
                 "class": "mr-0",
                 size: "small",
@@ -33217,13 +33693,31 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
               }, 1032
               /* PROPS, DYNAMIC_SLOTS */
+              , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), to_data.sender_type == 'user' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ผู้ใช้: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(to_data.to_data.name + " " + to_data.to_data.lastname) + " ", 1
+              /* TEXT */
+              ), to_data.status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_43, "(อ่านแล้ว)")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_44, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+                color: "info",
+                "class": "mr-0",
+                size: "small",
+                onClick: function onClick($event) {
+                  return $options.ShowFileDialog(to_data.files);
+                }
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [_hoisted_45];
+                }),
+                _: 2
+                /* DYNAMIC */
+
+              }, 1032
+              /* PROPS, DYNAMIC_SLOTS */
               , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
             }), 128
             /* KEYED_FRAGMENT */
             ))])]);
           }), 128
           /* KEYED_FRAGMENT */
-          )), $data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_42, [_hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, " เสร็จสิ้นกระบวนการ (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate($data.data.select_my_sender_documents_data.sign_timestamp)) + ") ", 1
+          )), $data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_46, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, " เสร็จสิ้นกระบวนการ (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate($data.data.select_my_sender_documents_data.sign_timestamp)) + ") ", 1
           /* TEXT */
           )])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
         }),
@@ -33235,29 +33729,29 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card, {
     square: "",
     outlined: ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_title, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_45];
+          return [_hoisted_49];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.document_title) + " ", 1
+          return [_hoisted_50, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.document_title) + " ", 1
           /* TEXT */
-          ), _hoisted_47, _hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.document_number) + " ", 1
+          ), _hoisted_51, _hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.document_number) + " ", 1
           /* TEXT */
-          ), _hoisted_49, _hoisted_50, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.group_name) + " ", 1
+          ), _hoisted_53, _hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.group_name) + " ", 1
           /* TEXT */
-          ), _hoisted_51, _hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.document_description) + " ", 1
+          ), _hoisted_55, _hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.data.select_my_sender_documents_data.document_description) + " ", 1
           /* TEXT */
-          ), _hoisted_53, _hoisted_54, $data.data.select_my_sender_documents_data.document_priority == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_55, "ทั่วไป")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.select_my_sender_documents_data.document_priority == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_56, "ด่วน")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.select_my_sender_documents_data.document_priority == 2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_57, "ด่วนที่สุด")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_58, $data.data.select_my_sender_documents_data.document_status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("b", _hoisted_59, " (เอกสารถูกยกเลิก) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("br", _hoisted_60)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("br", _hoisted_61)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_button, {
+          ), _hoisted_57, _hoisted_58, $data.data.select_my_sender_documents_data.document_priority == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_59, "ทั่วไป")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.select_my_sender_documents_data.document_priority == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_60, "ด่วน")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.select_my_sender_documents_data.document_priority == 2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_61, "ด่วนที่สุด")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_62, $data.data.select_my_sender_documents_data.document_status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("b", _hoisted_63, " (เอกสารถูกยกเลิก) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("br", _hoisted_64)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("br", _hoisted_65)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.data.select_my_sender_documents_data.sign_timestamp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_va_button, {
             key: 6,
             icon: "cancel",
             "class": "mr-1",
@@ -33268,7 +33762,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             })
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_62];
+              return [_hoisted_66];
             }),
             _: 1
             /* STABLE */
@@ -33285,7 +33779,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             })
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_63];
+              return [_hoisted_67];
             }),
             _: 1
             /* STABLE */
@@ -33300,7 +33794,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_64, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+  })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_68, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
     icon: "close",
     "class": "mr-1",
     color: "danger",
@@ -33311,7 +33805,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     id: "CloseTrackingStatusModal"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_65];
+      return [_hoisted_69];
     }),
     _: 1
     /* STABLE */
@@ -33600,18 +34094,27 @@ var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_9 = {
-  "class": "flex xl12 xs12"
+  "class": "row"
 };
 var _hoisted_10 = {
-  "class": "form-group"
+  "class": "flex xl10 xs10"
 };
 var _hoisted_11 = {
+  "class": "flex xl2 xs2"
+};
+var _hoisted_12 = {
+  "class": "flex xl12 xs12"
+};
+var _hoisted_13 = {
+  "class": "form-group"
+};
+var _hoisted_14 = {
   "class": "va-table-responsive",
   style: {
     "overflow-y": "auto"
   }
 };
-var _hoisted_12 = {
+var _hoisted_15 = {
   key: 0,
   "class": "va-table",
   style: {
@@ -33619,15 +34122,15 @@ var _hoisted_12 = {
   }
 };
 
-var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เลขที่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "วันที่ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เอกสารลงวันที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หัวข้อเรื่อง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อผู้ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "สถานะ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th")])], -1
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เลขที่เอกสาร"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "วันที่ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "เอกสารลงวันที่"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "หัวข้อเรื่อง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ชื่อผู้ส่ง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "สถานะ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th")])], -1
 /* HOISTED */
 );
 
-var _hoisted_14 = {
+var _hoisted_17 = {
   key: 0
 };
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   colspan: "6",
   style: {
     "text-align": "center"
@@ -33636,29 +34139,29 @@ var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_16 = [_hoisted_15];
-var _hoisted_17 = {
+var _hoisted_19 = [_hoisted_18];
+var _hoisted_20 = {
   key: 1
 };
-var _hoisted_18 = {
+var _hoisted_21 = {
   key: 0,
   "class": "text-danger"
 };
-var _hoisted_19 = {
+var _hoisted_22 = {
   key: 1
 };
-var _hoisted_20 = {
+var _hoisted_23 = {
   key: 0
 };
-var _hoisted_21 = {
+var _hoisted_24 = {
   key: 1
 };
 
-var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เปิด ");
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เปิด ");
 
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เปิด ");
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" เปิด ");
 
-var _hoisted_24 = {
+var _hoisted_27 = {
   key: 0,
   align: "center",
   style: {
@@ -33666,16 +34169,16 @@ var _hoisted_24 = {
   }
 };
 
-var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กำลังโหลดข้อมูล ");
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" กำลังโหลดข้อมูล ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_va_card_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-card-title");
 
   var _component_va_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-select");
 
-  var _component_va_badge = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-badge");
-
   var _component_va_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-button");
+
+  var _component_va_badge = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("va-badge");
 
   var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
 
@@ -33699,15 +34202,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_card_content, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_select, {
             modelValue: $data.data.acd_year_value,
             "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
               return $data.data.acd_year_value = $event;
             }),
-            options: $data.data.acd_year_options
+            options: $data.data.acd_year_options,
+            "track-by": "id"
           }, null, 8
           /* PROPS */
-          , ["modelValue", "options"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [!$data.data.inbox_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_12, [_hoisted_13, $data.data.inbox_array.length == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_14, _hoisted_16)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.inbox_array.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_17, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.inbox_array, function (inbox) {
+          , ["modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_button, {
+            icon: "done",
+            color: "primary",
+            onClick: _cache[1] || (_cache[1] = function ($event) {
+              return $options.getInbox();
+            })
+          })])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [!$data.data.inbox_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_15, [_hoisted_16, $data.data.inbox_array.length == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_17, _hoisted_19)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.data.inbox_array.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tbody", _hoisted_20, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.data.inbox_array, function (inbox) {
             return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
               key: inbox.document_id,
               "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
@@ -33715,7 +34225,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               })
             }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(inbox.document_number) + " ", 1
             /* TEXT */
-            ), inbox.document_status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_18, " (เอกสารถูกยกเลิก) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), inbox.sender_type == 'group' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_19, " (กลุ่ม) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(inbox.timestamp)), 1
+            ), inbox.document_status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_21, " (เอกสารถูกยกเลิก) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), inbox.sender_type == 'group' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_22, " (กลุ่ม) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(inbox.timestamp)), 1
             /* TEXT */
             ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.BuddishDate(inbox.sign_timestamp) || "ยังไม่ลงวันที่"), 1
             /* TEXT */
@@ -33723,11 +34233,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             /* TEXT */
             ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(inbox.name + " " + inbox.lastname), 1
             /* TEXT */
-            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [inbox.status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_badge, {
+            ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [inbox.status == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_badge, {
               text: "เปิดแล้ว",
               color: "success",
               "class": "mr-0"
-            })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), inbox.status == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_badge, {
+            })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), inbox.status == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_badge, {
               text: "ยังไม่เปิด",
               color: "warning",
               "class": "mr-0"
@@ -33744,7 +34254,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                   }
                 }, {
                   "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                    return [_hoisted_22];
+                    return [_hoisted_25];
                   }),
                   _: 1
                   /* STABLE */
@@ -33767,7 +34277,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               }
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [_hoisted_23];
+                return [_hoisted_26];
               }),
               _: 2
               /* DYNAMIC */
@@ -33779,14 +34289,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             );
           }), 128
           /* KEYED_FRAGMENT */
-          ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.data.inbox_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_progress_circle, {
+          ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.data.inbox_isLoad ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_va_progress_circle, {
             size: "large",
             thickness: 0.4,
             color: "primary",
             indeterminate: ""
           }, null, 8
           /* PROPS */
-          , ["thickness"]), _hoisted_25])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])];
+          , ["thickness"]), _hoisted_28])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])];
         }),
         _: 1
         /* STABLE */

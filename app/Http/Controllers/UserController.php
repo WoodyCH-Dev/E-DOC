@@ -861,6 +861,41 @@ class UserController extends Controller
         return response()->json(['status' => true,'lists'=>$lists]);
     }
 
+    public function Admin_CreateAcd_Year(Request $request){
+        if($this->ChkUser(2) == false)return response()->json(['status' => false,'message' => 'Not Permission']);
+        $chk = DB::table('year_list')->where('year',$request->post('year'))->first();
+        if(empty($chk)){
+            DB::table('year_list')
+            ->insert([
+                'year' => $request->post('year')
+            ]);
+            return response()->json(['status' => true]);
+        }else{
+            return response()->json(['status' => false]);
+        }
+    }
+
+    public function Admin_RemoveAcd_Year(Request $request){
+        $del = DB::table('year_list')
+        ->where('id',$request->post('year_id'))
+        ->delete();
+
+        if($del){
+            return response()->json(['status' => true]);
+        }else{
+            return response()->json(['status' => false]);
+        }
+    }
+
+    public function Admin_EditMainAcd_Year(Request $request){
+        DB::table('config')
+        ->where('config','year_config')
+        ->update([
+            'value'=> $request->post('year_id')
+        ]);
+        return response()->json(['status' => true]);
+    }
+
     //Chk User Function
     public function ChkUser($req_permission){
         $_user = auth()->user();

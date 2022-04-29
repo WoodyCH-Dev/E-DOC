@@ -71,4 +71,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/admin/document/remove', [UserController::class, 'AdminRemoveDocument']);
     Route::get('/admin/get/Sender/{document_id}', [UserController::class, 'Admin_Get_SenderData']);
     Route::post('/admin/edit/sender/document', [UserController::class, 'AdminUpdateSendDocument']);
+    Route::post('/admin/create/acd_year', [UserController::class, 'Admin_CreateAcd_Year']);
+    Route::post('/admin/remove/acd_year', [UserController::class, 'Admin_RemoveAcd_Year']);
+    Route::post('/admin/edit/main_edu_year', [UserController::class, 'Admin_EditMainAcd_Year']);
 });

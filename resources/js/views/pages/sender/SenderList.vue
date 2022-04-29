@@ -66,111 +66,125 @@
         <va-card-content>
           <div class="row">
             <div class="flex xl12 xs12">
-              <div class="flex xl4 xs12">
-                <div class="form-group">
-                  <b>ปีการศึกษา</b>
-                  <va-select
-                    v-model="data.acd_year_value"
-                    :options="data.acd_year_options"
-                    v-on:change="LoadSenderDocumentLists()"
-                    track-by="id"
-                  />
-                </div>
-              </div>
-              <div class="flex xl12 xs12">
-                <div class="form-group">
-                  <div class="va-table-responsive" style="overflow-y: auto">
-                    <table
-                      class="va-table"
-                      style="width: 100%"
-                      v-if="!data.my_sender_documents_lists_isLoad"
-                    >
-                      <thead>
-                        <tr>
-                          <th>เลขที่เอกสาร</th>
-                          <th>วันที่ส่ง</th>
-                          <th>เอกสารลงวันที่</th>
-                          <th>หัวข้อเรื่อง</th>
-                          <th>หมวดหมู่เอกสาร</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody v-if="data.my_sender_documents_lists.length == 0">
-                        <tr>
-                          <td colspan="6" style="text-align: center">
-                            -- ยังไม่มีประวัติการส่งของคุณในปีที่เลือก --
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody v-if="data.my_sender_documents_lists.length > 0">
-                        <tr
-                          v-for="my_send_doc in data.my_sender_documents_lists"
-                          :key="my_send_doc.doc_id"
-                          v-bind:class="{
-                            row_success: !!my_send_doc.sign_timestamp,
-                          }"
-                        >
-                          <td>
-                            {{ my_send_doc.document_number }}
-                            <label
-                              v-if="my_send_doc.document_status == 1"
-                              class="text-danger"
-                            >
-                              (เอกสารถูกยกเลิก)
-                            </label>
-                          </td>
-                          <td>{{ BuddishDate(my_send_doc.timestamp) }}</td>
-                          <td>
-                            {{
-                              my_send_doc.sign_timestamp ||
-                              "ยังไม่มีการลงวันที่"
-                            }}
-                          </td>
-                          <td>{{ my_send_doc.document_title }}</td>
-                          <td>{{ my_send_doc.group_name }}</td>
-                          <td>
-                            <va-button
-                              icon="approval"
-                              class="mr-2"
-                              style="background-color: rgb(47, 148, 91)"
-                              data-bs-toggle="modal"
-                              data-bs-target="#TrackingStatusModal"
-                              v-on:click="
-                                LoadSenderDocumentInfo(my_send_doc.doc_id)
-                              "
-                            >
-                              สถานะเอกสาร
-                            </va-button>
-                            <router-link
-                              v-if="!my_send_doc.sign_timestamp"
-                              :to="'/sender/send/edit/' + my_send_doc.doc_id"
-                              class="nav-item"
-                            >
-                              <va-button
-                                icon="edit"
-                                class="mr-2"
-                                color="warning"
-                              >
-                                แก้ไข
-                              </va-button>
-                            </router-link>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+              <div class="row">
+                <div class="flex xl4 xs10">
+                  <div class="form-group">
+                    <b>ปีการศึกษา</b>
+                    <div class="row">
+                      <div class="flex xl10 xs10">
+                        <va-select
+                          v-model="data.acd_year_value"
+                          :options="data.acd_year_options"
+                          track-by="id"
+                        />
+                      </div>
+                      <div class="flex xl2 xs2">
+                        <va-button
+                          icon="done"
+                          color="primary"
+                          v-on:click="LoadSenderDocumentLists()"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div
-                    align="center"
-                    style="padding-top: 30px"
-                    v-if="data.my_sender_documents_lists_isLoad"
-                  >
-                    <va-progress-circle
-                      size="large"
-                      :thickness="0.4"
-                      color="primary"
-                      indeterminate
-                    />
-                    กำลังโหลดข้อมูล
+                </div>
+                <div class="flex xl12 xs12">
+                  <div class="form-group">
+                    <div class="va-table-responsive" style="overflow-y: auto">
+                      <table
+                        class="va-table"
+                        style="width: 100%"
+                        v-if="!data.my_sender_documents_lists_isLoad"
+                      >
+                        <thead>
+                          <tr>
+                            <th>เลขที่เอกสาร</th>
+                            <th>วันที่ส่ง</th>
+                            <th>เอกสารลงวันที่</th>
+                            <th>หัวข้อเรื่อง</th>
+                            <th>หมวดหมู่เอกสาร</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody
+                          v-if="data.my_sender_documents_lists.length == 0"
+                        >
+                          <tr>
+                            <td colspan="6" style="text-align: center">
+                              -- ยังไม่มีประวัติการส่งของคุณในปีที่เลือก --
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody v-if="data.my_sender_documents_lists.length > 0">
+                          <tr
+                            v-for="my_send_doc in data.my_sender_documents_lists"
+                            :key="my_send_doc.doc_id"
+                            v-bind:class="{
+                              row_success: !!my_send_doc.sign_timestamp,
+                            }"
+                          >
+                            <td>
+                              {{ my_send_doc.document_number }}
+                              <label
+                                v-if="my_send_doc.document_status == 1"
+                                class="text-danger"
+                              >
+                                (เอกสารถูกยกเลิก)
+                              </label>
+                            </td>
+                            <td>{{ BuddishDate(my_send_doc.timestamp) }}</td>
+                            <td>
+                              {{
+                                my_send_doc.sign_timestamp ||
+                                "ยังไม่มีการลงวันที่"
+                              }}
+                            </td>
+                            <td>{{ my_send_doc.document_title }}</td>
+                            <td>{{ my_send_doc.group_name }}</td>
+                            <td>
+                              <va-button
+                                icon="approval"
+                                class="mr-2"
+                                style="background-color: rgb(47, 148, 91)"
+                                data-bs-toggle="modal"
+                                data-bs-target="#TrackingStatusModal"
+                                v-on:click="
+                                  LoadSenderDocumentInfo(my_send_doc.doc_id)
+                                "
+                              >
+                                สถานะเอกสาร
+                              </va-button>
+                              <router-link
+                                v-if="!my_send_doc.sign_timestamp"
+                                :to="'/sender/send/edit/' + my_send_doc.doc_id"
+                                class="nav-item"
+                              >
+                                <va-button
+                                  icon="edit"
+                                  class="mr-2"
+                                  color="warning"
+                                >
+                                  แก้ไข
+                                </va-button>
+                              </router-link>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div
+                      align="center"
+                      style="padding-top: 30px"
+                      v-if="data.my_sender_documents_lists_isLoad"
+                    >
+                      <va-progress-circle
+                        size="large"
+                        :thickness="0.4"
+                        color="primary"
+                        indeterminate
+                      />
+                      กำลังโหลดข้อมูล
+                    </div>
                   </div>
                 </div>
               </div>
