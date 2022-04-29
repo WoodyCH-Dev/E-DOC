@@ -12,6 +12,7 @@
                 color="primary"
                 data-bs-toggle="modal"
                 data-bs-target="#AddUserModal"
+                v-on:click="clearArray()"
               >
                 เพิ่มผู้ใช้
               </va-button>
@@ -21,6 +22,7 @@
                 style="background-color: rgb(47, 148, 91)"
                 data-bs-toggle="modal"
                 data-bs-target="#AddUserViaExcelModal"
+                v-on:click="clearArray()"
               >
                 Import ด้วย Excel
               </va-button>
@@ -284,7 +286,10 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">เพิ่มผู้ใช้งานด้วย Excel</h5>
+          <h5 class="modal-title">
+            เพิ่มผู้ใช้งานด้วย Excel (ห้ามใช้ E-mail ซ้ำกัน , หาก password ว่าง
+            password คือ password)
+          </h5>
           <button
             type="button"
             data-bs-dismiss="modal"
@@ -294,13 +299,70 @@
             <i class="far fa-times"></i>
           </button>
         </div>
-        <div class="modal-body">ยังไม่รองรับ Feature นี้</div>
+        <div class="modal-body">
+          <a
+            href="uploads/UserImportEDOC.xlsx"
+            class="nav-item"
+            target="_blank"
+          >
+            <va-button class="mr-2" color="warning" icon="file_download">
+              Download ไฟล์ Excel ต้นแบบสำหรับนำเข้า
+            </va-button>
+          </a>
+          <va-button
+            class="mr-2"
+            color="primary"
+            icon="open_in_browser"
+            v-on:click="file_selectBtn()"
+          >
+            เปิดไฟล์
+          </va-button>
+          <input
+            type="file"
+            hidden
+            id="SelectFileUploadBtn"
+            @change="file_selectChange"
+            multiple
+            accept=".xls,.xlsx"
+          />
+          <hr />
+          <table class="va-table" style="width: 100%">
+            <thead>
+              <tr>
+                <th>ชื่อ</th>
+                <th>นามสกุล</th>
+                <th>E-mail</th>
+                <th>Password</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(newUser, index) in data.newUser_Array" :key="newUser">
+                <td>{{ newUser.name }}</td>
+                <td>{{ newUser.lastname }}</td>
+                <td>{{ newUser.email }}</td>
+                <td>{{ newUser.password }}</td>
+                <td width="10%">
+                  <va-button
+                    icon="close"
+                    class="mr-1"
+                    color="danger"
+                    v-on:click="RemoveUserFromArray(index)"
+                  >
+                    ลบ
+                  </va-button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="modal-footer">
           <va-button
             icon="close"
             class="mr-1"
             color="danger"
             data-bs-dismiss="modal"
+            id="CloseAddUserExcelModal"
           >
             ปิด
           </va-button>
@@ -308,7 +370,8 @@
             icon="save"
             class="mr-1"
             style="background-color: rgb(47, 148, 91)"
-            disabled
+            :disabled="data.newUser_Array == 0"
+            v-on:click="AddUserSubmit()"
           >
             บันทึกข้อมูล
           </va-button>
@@ -509,6 +572,8 @@
 </template>
 
 <script>
+import * as XLSX from "xlsx";
+
 export default {
   data() {
     var user_id = 0;
@@ -552,6 +617,7 @@ export default {
         email: "",
         password: "",
         validation: null,
+        file: null,
       },
       editUserForm: {
         id: 0,
@@ -597,6 +663,47 @@ export default {
       });
     },
 
+    clearArray() {
+      this.data.newUser_Array = new Array();
+      this.addUserForm.file = null;
+    },
+
+    file_selectBtn() {
+      document.getElementById("SelectFileUploadBtn").click();
+    },
+
+    file_selectChange(event) {
+      this.addUserForm.file = event.target.files ? event.target.files[0] : null;
+      this.data.newUser_Array = new Array();
+      if (this.addUserForm.file) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          /* Parse data */
+          const bstr = e.target.result;
+          const wb = XLSX.read(bstr, { type: "binary" });
+          /* Get first worksheet */
+          const wsname = wb.SheetNames[0];
+          const ws = wb.Sheets[wsname];
+          /* Convert array of arrays */
+          const data = XLSX.utils.sheet_to_json(ws, { header: 2 });
+
+          for (let user_add of data) {
+            var password = user_add.password;
+            if (password == "" || password == null) password = "password";
+            this.data.newUser_Array.push({
+              name: user_add.name,
+              lastname: user_add.lastname,
+              email: user_add.email,
+              password: password,
+            });
+          }
+        };
+
+        reader.readAsBinaryString(this.addUserForm.file);
+      }
+    },
+
     AddUserToArray() {
       if (
         this.addUserForm.name != "" &&
@@ -628,7 +735,7 @@ export default {
       this.data.newUser_Array.splice(array_id, 1);
     },
 
-    AddUserSubmit() {
+    async AddUserSubmit() {
       if (this.data.newUser_Array.length > 0) {
         var counter = 0;
         this.$swal.fire({
@@ -636,8 +743,8 @@ export default {
           allowOutsideClick: false,
           showConfirmButton: false,
         });
-        for (let newUser of this.data.newUser_Array) {
-          this.axios
+        for await (let newUser of this.data.newUser_Array) {
+          await this.axios
             .post("api/admin/create/User", {
               name: newUser.name,
               lastname: newUser.lastname,
@@ -655,6 +762,7 @@ export default {
                   );
                   this.onLoad();
                   document.getElementById("CloseAddUserModal").click();
+                  document.getElementById("CloseAddUserExcelModal").click();
                 }
               }
             });
