@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -384,6 +385,45 @@ class UserController extends Controller
                             "document_stage_id" => $document_stage,
                         ]);
                     };
+
+
+                    $user_data = DB::table('users')->where('id',$user['id'])->first();
+                    $category = DB::table('document_category')->where('id',$request->post('document_category_id'))->first();
+                    $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                    $desp = '';
+                    if(!empty($request->post('document_description'))){
+                        $desp = $request->post('document_description');
+                    }
+                    $priority = '';
+                    if($request->post('document_priority') == 0){
+                        $priority = 'ทั่วไป';
+                    }else if($request->post('document_priority') == 1) {
+                        $priority = 'ด่วน';
+                    }else if($request->post('document_priority') == 2) {
+                        $priority = 'ด่วนมาก';
+                    }
+
+                    $html =
+                    "
+                        <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
+                        <br>
+                        <h4><b>ความสำคัญ: </b>$priority</h4>
+                        <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                        <h4><b>รายละเอียด: </b>$desp</h4>
+                        <br>
+                        <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                        <a href='$url' target='_blank'>
+                            $url
+                        </a>
+                    ";
+
+                    Mail::send([], [], function($message) use ($user_data,$html) {
+                        $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                        ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                        $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                        $message->setBody($html, 'text/html');
+                     });
+
                 }else if($user['type'] == 'group'){
                     $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                     foreach($user_ingroup as $user_id){
@@ -413,6 +453,43 @@ class UserController extends Controller
                                     "document_stage_id" => $document_stage,
                                 ]);
                             };
+
+                            $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
+                            $category = DB::table('document_category')->where('id',$request->post('document_category_id'))->first();
+                            $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                            $desp = '';
+                            if(!empty($request->post('document_description'))){
+                                $desp = $request->post('document_description');
+                            }
+                            $priority = '';
+                            if($request->post('document_priority') == 0){
+                                $priority = 'ทั่วไป';
+                            }else if($request->post('document_priority') == 1) {
+                                $priority = 'ด่วน';
+                            }else if($request->post('document_priority') == 2) {
+                                $priority = 'ด่วนมาก';
+                            }
+
+                            $html =
+                            "
+                                <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
+                                <br>
+                                <h4><b>ความสำคัญ: </b>$priority</h4>
+                                <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                                <h4><b>รายละเอียด: </b>$desp</h4>
+                                <br>
+                                <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                                <a href='$url' target='_blank'>
+                                    $url
+                                </a>
+                            ";
+
+                            Mail::send([], [], function($message) use ($user_data,$html) {
+                                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                $message->setBody($html, 'text/html');
+                             });
                         }
                     }
                 }
@@ -603,6 +680,43 @@ class UserController extends Controller
                     "document_stage_id" => $document_stage,
                 ]);
             };
+            $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+            $user_data = DB::table('users')->where('id',$document_old_data->user_id)->first();
+            $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+            $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+            $desp = '';
+            if(!empty($request->post('document_description'))){
+                $desp = $request->post('document_description');
+            }
+            $priority = '';
+            if($doc_data->document_priority == 0){
+                $priority = 'ทั่วไป';
+            }else if($doc_data->document_priority == 1) {
+                $priority = 'ด่วน';
+            }else if($doc_data->document_priority == 2) {
+                $priority = 'ด่วนมาก';
+            }
+
+            $html =
+            "
+                <h2>แจ้งเตือน มีเอกสารถึงคุณและได้ลงวันที่แล้ว</h2>
+                <br>
+                <h4><b>ความสำคัญ: </b>$priority</h4>
+                <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                <h4><b>รายละเอียด: </b>$desp</h4>
+                <br>
+                <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                <a href='$url' target='_blank'>
+                    $url
+                </a>
+            ";
+
+            Mail::send([], [], function($message) use ($user_data,$html) {
+                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                $message->setBody($html, 'text/html');
+            });
 
             if($request->post('send_to') != NULL){
                 foreach($request->post('send_to') as $user){
@@ -627,6 +741,44 @@ class UserController extends Controller
                                 "document_stage_id" => $document_stage,
                             ]);
                         };
+
+                        $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+                        $user_data = DB::table('users')->where('id',$user['id'])->first();
+                        $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+                        $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                        $desp = '';
+                        if(!empty($request->post('document_description'))){
+                            $desp = $request->post('document_description');
+                        }
+                        $priority = '';
+                        if($doc_data->document_priority == 0){
+                            $priority = 'ทั่วไป';
+                        }else if($doc_data->document_priority == 1) {
+                            $priority = 'ด่วน';
+                        }else if($doc_data->document_priority == 2) {
+                            $priority = 'ด่วนมาก';
+                        }
+
+                        $html =
+                        "
+                            <h2>แจ้งเตือน มีเอกสารถึงคุณและได้ลงวันที่แล้ว</h2>
+                            <br>
+                            <h4><b>ความสำคัญ: </b>$priority</h4>
+                            <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                            <h4><b>รายละเอียด: </b>$desp</h4>
+                            <br>
+                            <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                            <a href='$url' target='_blank'>
+                                $url
+                            </a>
+                        ";
+
+                        Mail::send([], [], function($message) use ($user_data,$html) {
+                            $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                            ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                            $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                            $message->setBody($html, 'text/html');
+                        });
                     }else if($user['type'] == 'group'){
                         $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                         foreach($user_ingroup as $user_id){
@@ -656,6 +808,44 @@ class UserController extends Controller
                                         "document_stage_id" => $document_stage,
                                     ]);
                                 };
+
+                                $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+                                $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
+                                $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+                                $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                                $desp = '';
+                                if(!empty($request->post('document_description'))){
+                                    $desp = $request->post('document_description');
+                                }
+                                $priority = '';
+                                if($doc_data->document_priority == 0){
+                                    $priority = 'ทั่วไป';
+                                }else if($doc_data->document_priority == 1) {
+                                    $priority = 'ด่วน';
+                                }else if($doc_data->document_priority == 2) {
+                                    $priority = 'ด่วนมาก';
+                                }
+
+                                $html =
+                                "
+                                    <h2>แจ้งเตือน มีเอกสารถึงคุณและได้ลงวันที่แล้ว</h2>
+                                    <br>
+                                    <h4><b>ความสำคัญ: </b>$priority</h4>
+                                    <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                                    <h4><b>รายละเอียด: </b>$desp</h4>
+                                    <br>
+                                    <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                                    <a href='$url' target='_blank'>
+                                        $url
+                                    </a>
+                                ";
+
+                                Mail::send([], [], function($message) use ($user_data,$html) {
+                                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->setBody($html, 'text/html');
+                                });
                             }
                         }
                     }
@@ -684,6 +874,45 @@ class UserController extends Controller
                         "document_stage_id" => $document_stage,
                     ]);
                 };
+
+                $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+                $user_data = DB::table('users')->where('id',$user['id'])->first();
+                $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+                $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                $desp = '';
+                if(!empty($request->post('document_description'))){
+                    $desp = $request->post('document_description');
+                }
+                $priority = '';
+                if($doc_data->document_priority == 0){
+                    $priority = 'ทั่วไป';
+                }else if($doc_data->document_priority == 1) {
+                    $priority = 'ด่วน';
+                }else if($doc_data->document_priority == 2) {
+                    $priority = 'ด่วนมาก';
+                }
+
+                $html =
+                "
+                    <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
+                    <br>
+                    <h4><b>ความสำคัญ: </b>$priority</h4>
+                    <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                    <h4><b>รายละเอียด: </b>$desp</h4>
+                    <br>
+                    <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                    <a href='$url' target='_blank'>
+                        $url
+                    </a>
+                ";
+
+                Mail::send([], [], function($message) use ($user_data,$html) {
+                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                    $message->setBody($html, 'text/html');
+                });
+
             }else if($user['type'] == 'group'){
                 $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                 foreach($user_ingroup as $user_id){
@@ -713,6 +942,44 @@ class UserController extends Controller
                                 "document_stage_id" => $document_stage,
                             ]);
                         };
+
+                        $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+                        $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
+                        $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+                        $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                        $desp = '';
+                        if(!empty($request->post('document_description'))){
+                            $desp = $request->post('document_description');
+                        }
+                        $priority = '';
+                        if($doc_data->document_priority == 0){
+                            $priority = 'ทั่วไป';
+                        }else if($doc_data->document_priority == 1) {
+                            $priority = 'ด่วน';
+                        }else if($doc_data->document_priority == 2) {
+                            $priority = 'ด่วนมาก';
+                        }
+
+                        $html =
+                        "
+                            <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
+                            <br>
+                            <h4><b>ความสำคัญ: </b>$priority</h4>
+                            <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                            <h4><b>รายละเอียด: </b>$desp</h4>
+                            <br>
+                            <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                            <a href='$url' target='_blank'>
+                                $url
+                            </a>
+                        ";
+
+                        Mail::send([], [], function($message) use ($user_data,$html) {
+                            $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                            ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                            $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                            $message->setBody($html, 'text/html');
+                        });
                     }
                 }
             }

@@ -60,7 +60,11 @@ export default {
     var remember_me = false;
 
     if (window.localStorage.getItem("user_id")) {
-      this.$router.push("/user/dashboard");
+      if (this.$route.query.redirect == "" || !this.$route.query.redirect) {
+        this.$router.push("/user/dashboard");
+      } else {
+        this.$router.push(this.$route.query.redirect);
+      }
     }
 
     if (window.sessionStorage.getItem("remember_me")) {
