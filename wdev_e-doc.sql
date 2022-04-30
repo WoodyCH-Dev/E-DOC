@@ -11,7 +11,7 @@
  Target Server Version : 100422
  File Encoding         : 65001
 
- Date: 30/04/2022 01:30:34
+ Date: 30/04/2022 23:41:01
 */
 
 SET NAMES utf8mb4;
@@ -29,11 +29,6 @@ CREATE TABLE `config`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of config
--- ----------------------------
-INSERT INTO `config` VALUES (1, 'year_config', '1');
-
--- ----------------------------
 -- Table structure for document_category
 -- ----------------------------
 DROP TABLE IF EXISTS `document_category`;
@@ -42,14 +37,6 @@ CREATE TABLE `document_category`  (
   `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of document_category
--- ----------------------------
-INSERT INTO `document_category` VALUES (1, 'วิชาการ');
-INSERT INTO `document_category` VALUES (2, 'ทั่วไป');
-INSERT INTO `document_category` VALUES (3, 'การเงิน');
-INSERT INTO `document_category` VALUES (4, 'กิจการนักเรียน');
 
 -- ----------------------------
 -- Table structure for document_file
@@ -65,11 +52,7 @@ CREATE TABLE `document_file`  (
   INDEX `document_file_ibfk_2`(`document_stage_id` ASC) USING BTREE,
   CONSTRAINT `document_file_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `document_file_ibfk_2` FOREIGN KEY (`document_stage_id`) REFERENCES `document_stage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of document_file
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 297 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for document_stage
@@ -88,11 +71,7 @@ CREATE TABLE `document_stage`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `document_stage_ibfk_1`(`document_id` ASC) USING BTREE,
   CONSTRAINT `document_stage_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 172 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of document_stage
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for documents
@@ -115,11 +94,7 @@ CREATE TABLE `documents`  (
   INDEX `year_id`(`year_id` ASC) USING BTREE,
   CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`document_category_id`) REFERENCES `document_category` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`year_id`) REFERENCES `year_list` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of documents
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for user_group
@@ -130,12 +105,6 @@ CREATE TABLE `user_group`  (
   `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of user_group
--- ----------------------------
-INSERT INTO `user_group` VALUES (1, 'ทดสอบ');
-INSERT INTO `user_group` VALUES (2, 'ผู้พัฒนาระบบ');
 
 -- ----------------------------
 -- Table structure for user_ingroup
@@ -153,12 +122,6 @@ CREATE TABLE `user_ingroup`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of user_ingroup
--- ----------------------------
-INSERT INTO `user_ingroup` VALUES (13, 1, 2);
-INSERT INTO `user_ingroup` VALUES (14, 1, 1);
-
--- ----------------------------
 -- Table structure for user_permission
 -- ----------------------------
 DROP TABLE IF EXISTS `user_permission`;
@@ -170,13 +133,6 @@ CREATE TABLE `user_permission`  (
   INDEX `user_permission_ibfk_1`(`user_id` ASC) USING BTREE,
   CONSTRAINT `user_permission_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 124 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of user_permission
--- ----------------------------
-INSERT INTO `user_permission` VALUES (1, 1, 0);
-INSERT INTO `user_permission` VALUES (2, 1, 1);
-INSERT INTO `user_permission` VALUES (3, 1, 2);
 
 -- ----------------------------
 -- Table structure for users
@@ -194,11 +150,6 @@ CREATE TABLE `users`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 185 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of users
--- ----------------------------
-INSERT INTO `users` VALUES (1, 'Wutthiphon', 'Tassana', 'woodychgamer5588@gmail.com', '$2a$12$MgrsMK8zpv/gbvyQfWL70uDVlddXJhUXJf8H9V3s3p.5JApCaWixO', '103141999773948035980');
-
--- ----------------------------
 -- Table structure for year_list
 -- ----------------------------
 DROP TABLE IF EXISTS `year_list`;
@@ -207,10 +158,5 @@ CREATE TABLE `year_list`  (
   `year` year NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of year_list
--- ----------------------------
-INSERT INTO `year_list` VALUES (1, 2022);
 
 SET FOREIGN_KEY_CHECKS = 1;
