@@ -71,9 +71,11 @@
               </div>
             </div>
             <div class="flex xl8 xs12" align="right">
-              <va-button icon="add" class="mr-2" color="primary">
-                เพิ่มเอกสาร
-              </va-button>
+              <router-link to="/sender/send" class="nav-item">
+                <va-button icon="add" class="mr-2" color="primary">
+                  เพิ่มเอกสาร
+                </va-button>
+              </router-link>
             </div>
             <div class="flex xl12 xs12">
               <div class="form-group">

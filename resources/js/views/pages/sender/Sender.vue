@@ -318,6 +318,11 @@ export default {
 
     DocumentSendSubmit() {
       if (this.form.document_file.length > 0) {
+        this.$swal.fire({
+          title: "กำลังส่งข้อมูล กรุณารอสักครู่",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+        });
         this.axios
           .post("api/sender/send/document", {
             document_title: this.form.document_title,
