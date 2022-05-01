@@ -11,7 +11,7 @@
  Target Server Version : 100422
  File Encoding         : 65001
 
- Date: 01/05/2022 16:19:58
+ Date: 01/05/2022 21:49:40
 */
 
 SET NAMES utf8mb4;
@@ -59,13 +59,12 @@ CREATE TABLE `document_file`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `document_id` int NULL DEFAULT NULL,
   `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `document_stage_id` int NULL DEFAULT NULL,
+  `document_stage_counter` int NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `document_file_ibfk_1`(`document_id` ASC) USING BTREE,
-  INDEX `document_file_ibfk_2`(`document_stage_id` ASC) USING BTREE,
-  CONSTRAINT `document_file_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `document_file_ibfk_2` FOREIGN KEY (`document_stage_id`) REFERENCES `document_stage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 297 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+  INDEX `document_file_ibfk_2`(`document_stage_counter` ASC) USING BTREE,
+  CONSTRAINT `document_file_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 487 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of document_file
@@ -88,7 +87,7 @@ CREATE TABLE `document_stage`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `document_stage_ibfk_1`(`document_id` ASC) USING BTREE,
   CONSTRAINT `document_stage_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 244 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of document_stage
@@ -115,7 +114,7 @@ CREATE TABLE `documents`  (
   INDEX `year_id`(`year_id` ASC) USING BTREE,
   CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`document_category_id`) REFERENCES `document_category` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`year_id`) REFERENCES `year_list` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 64 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of documents
@@ -169,7 +168,7 @@ CREATE TABLE `user_permission`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_permission_ibfk_1`(`user_id` ASC) USING BTREE,
   CONSTRAINT `user_permission_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 124 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 131 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_permission
@@ -191,12 +190,12 @@ CREATE TABLE `users`  (
   `google_uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `users_email_unique`(`email` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 185 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 189 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, 'Admin', 'Admin', 'admin@master.com', '$2a$12$bmCk3CtGduAJnYvSnEVfAe2O8FF7q0xRBZkeXT/dLzW41V9O/HtS6', '103141999773948035980');
+INSERT INTO `users` VALUES (1, 'แอดมิน', 'ระบบ', 'admin@gmail.com', '$2a$12$gl1m3X9FZIaiV.NAT0P/NunSbAUCCmaR6mntTc3OuvohcCS2OFMNy', NULL);
 
 -- ----------------------------
 -- Table structure for year_list
