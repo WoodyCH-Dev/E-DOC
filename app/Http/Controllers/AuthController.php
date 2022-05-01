@@ -26,41 +26,46 @@ class AuthController extends Controller
             $userdata = DB::table('users')
             ->where('email',$request->post('email'))
             ->first();
-            $userpermission = DB::table('user_permission')
-            ->where('user_id',$userdata->id)
-            ->get();
 
-            foreach($userpermission as $user_perms){
-                if($user_perms->permission_id == 0){
-                    array_push($permission,'user');
+            if(!empty($userdata)){
+                $userpermission = DB::table('user_permission')
+                ->where('user_id',$userdata->id)
+                ->get();
+
+                foreach($userpermission as $user_perms){
+                    if($user_perms->permission_id == 0){
+                        array_push($permission,'user');
+                    }
+                    if($user_perms->permission_id == 1){
+                        array_push($permission,'sender');
+                    }
+                    if($user_perms->permission_id == 2){
+                        array_push($permission,'admin');
+                    }
                 }
-                if($user_perms->permission_id == 1){
-                    array_push($permission,'sender');
+
+                if($userdata && Hash::check($request->post('password'), $userdata->password)){
+                    $status = true;
+
+                    $credentials = request(['email', 'password']);
+
+                    if (!$token = auth()->attempt($credentials)) {
+                        return response()->json(['error' => 'Unauthorized'], 401);
+                    }
+                }else{
+                    $status = false;
+                    $userdata = null;
+                    $userpermission = null;
                 }
-                if($user_perms->permission_id == 2){
-                    array_push($permission,'admin');
-                }
-            }
-
-            if($userdata && Hash::check($request->post('password'), $userdata->password)){
-                $status = true;
-
-                $credentials = request(['email', 'password']);
-
-                if (!$token = auth()->attempt($credentials)) {
-                    return response()->json(['error' => 'Unauthorized'], 401);
-                 }
+                return response()->json([
+                    'status' => $status,
+                    'userdata' => $userdata,
+                    'userpermission'=> $permission,
+                    'token' => $this->respondWithToken($token)
+                ]);
             }else{
-                $status = false;
-                $userdata = null;
-                $userpermission = null;
+                return response()->json(['status' => false]);
             }
-            return response()->json([
-                'status' => $status,
-                'userdata' => $userdata,
-                'userpermission'=> $permission,
-                'token' => $this->respondWithToken($token)
-            ]);
         }else{
             return response()->json(['status' => false]);
         }
