@@ -55,3 +55,6 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
   php artisan jwt:secret //หากมันถามว่ามี key อยู่แล้วต้องการ generate ใหม่หรือไม่ ให้พิมพ์ yes เพราะถ้าหากเชคใน .env จะเห็นเป็นค่าว่าง
   npm run dev 1 ครั้ง
 ```
+
+username: admin@gmail.com
+password: 12345678
