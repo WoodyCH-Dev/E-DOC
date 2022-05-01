@@ -40,7 +40,7 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
   DB_DATABASE=<ชื่อฐานข้อมูล>
   DB_USERNAME=root //DB User
   DB_PASSWORD= //DB Pass
-  MIX_GOOGLE_UID=<รหัสที่ขอจาก Google Console สำหรับใช้ Login Google>
+  MIX_GOOGLE_CLIENT_ID=<รหัสที่ขอจาก Google Console สำหรับใช้ Login Google>
 
   MAIL_MAILER=smtp
   MAIL_HOST=smtp.gmail.com
