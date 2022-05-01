@@ -63,7 +63,7 @@
                         <tr
                           v-for="inbox in data.inbox_array"
                           :key="inbox.document_id"
-                          v-bind:class="{ row_read: inbox.status == 1 }"
+                          v-bind:class="{ row_read: inbox.read_timestamp }"
                         >
                           <td>
                             {{ inbox.document_number }}
@@ -87,14 +87,14 @@
                           <td>{{ inbox.document_title }}</td>
                           <td>{{ inbox.name + " " + inbox.lastname }}</td>
                           <td>
-                            <label v-if="inbox.status == 1">
+                            <label v-if="inbox.read_timestamp">
                               <va-badge
                                 text="เปิดแล้ว"
                                 color="success"
                                 class="mr-0"
                               />
                             </label>
-                            <label v-if="inbox.status == 0">
+                            <label v-if="!inbox.read_timestamp">
                               <va-badge
                                 text="ยังไม่เปิด"
                                 color="warning"
@@ -103,25 +103,9 @@
                             </label>
                           </td>
                           <td>
-                            <router-link
-                              v-if="
-                                !inbox.sign_timestamp &&
-                                inbox.document_status == 0
-                              "
-                              :to="'/user/view/' + inbox.stage_id"
-                              class="nav-item"
-                            >
-                              <va-button
-                                icon="ads_click"
-                                style="background-color: rgb(47, 148, 91)"
-                              >
-                                เปิด
-                              </va-button>
-                            </router-link>
                             <va-button
                               icon="ads_click"
                               style="background-color: rgb(47, 148, 91)"
-                              v-if="inbox.sign_timestamp"
                               @click="markAsread(inbox.stage_id)"
                             >
                               เปิด
@@ -220,6 +204,7 @@ export default {
     },
 
     getInbox() {
+      this.data.inbox_array = new Array();
       this.axios.get("api/user/get/inbox").then(async (res) => {
         if (res.data.status == true) {
           for await (let to_user of res.data.sendto_user) {
@@ -230,7 +215,10 @@ export default {
               this.data.inbox_array.push(to_group);
           }
           this.data.inbox_array.sort((a, b) => {
-            return a.status - b.status;
+            return (
+              a.status - b.status ||
+              new Date(b.created_timestamp) - new Date(a.created_timestamp)
+            );
           });
           this.data.inbox_isLoad = false;
         }
