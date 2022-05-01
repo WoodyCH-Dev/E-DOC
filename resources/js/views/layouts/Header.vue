@@ -580,7 +580,7 @@ export default {
           }
           this.data.AllInbox_Unread_count = this.data.inbox_array.filter(
             (element) => {
-              return element.status == 0;
+              return !element.read_timestamp;
             }
           ).length;
         }

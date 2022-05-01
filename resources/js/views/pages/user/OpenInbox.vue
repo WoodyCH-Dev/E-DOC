@@ -472,6 +472,11 @@ export default {
         (this.form.user_select_value && this.form.sign_check == false) ||
         this.form.sign_check == true
       ) {
+        this.$swal.fire({
+          title: "กำลังส่งข้อมูล กรุณารอสักครู่",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+        });
         this.axios
           .post("api/user/submit/Sender", {
             document_stage_id: this.$route.params.stage_id,

@@ -674,7 +674,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             this.axios
-              .post("api/admin/document/delete", {
+              .post("api/admin/document/remove", {
                 document_id: doc_id,
               })
               .then((res) => {

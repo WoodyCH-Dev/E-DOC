@@ -69,6 +69,7 @@ class UserController extends Controller
         ->leftJoin('documents','documents.id','document_stage.document_id')
         ->leftJoin('users','users.id','document_stage.sender_user_id')
         ->where('sender_type','user')
+        ->where('documents.document_status',0)
         ->where('to',$_user->id)
         ->get();
         $sendto_group = Array();
@@ -78,6 +79,7 @@ class UserController extends Controller
             ->leftJoin('users','users.id','document_stage.sender_user_id')
             ->where('sender_type','group')
             ->where('to',$group->group_id)
+            ->where('documents.document_status',0)
             ->get();
 
             if($group_chk->count() > 0){
@@ -378,15 +380,6 @@ class UserController extends Controller
                         'read_timestamp'=> null,
                     ]);
 
-                    foreach($request->post('files') as $file_data){
-                        $file_upload = DB::table('document_file')->insert([
-                            "file" => $file_data['file'],
-                            "document_id" => $document_id,
-                            "document_stage_id" => $document_stage,
-                        ]);
-                    };
-
-
                     $user_data = DB::table('users')->where('id',$user['id'])->first();
                     $category = DB::table('document_category')->where('id',$request->post('document_category_id'))->first();
                     $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
@@ -446,14 +439,6 @@ class UserController extends Controller
                                 'read_timestamp'=> null,
                             ]);
 
-                            foreach($request->post('files') as $file_data){
-                                $file_upload = DB::table('document_file')->insert([
-                                    "file" => $file_data['file'],
-                                    "document_id" => $document_id,
-                                    "document_stage_id" => $document_stage,
-                                ]);
-                            };
-
                             $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
                             $category = DB::table('document_category')->where('id',$request->post('document_category_id'))->first();
                             $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
@@ -495,6 +480,14 @@ class UserController extends Controller
                 }
             }
 
+            foreach($request->post('files') as $file_data){
+                $file_upload = DB::table('document_file')->insert([
+                    "file" => $file_data['file'],
+                    "document_id" => $document_id,
+                    "document_stage_counter" => 1,
+                ]);
+            };
+
             return response()->json(['status' => true]);
     }
 
@@ -534,14 +527,6 @@ class UserController extends Controller
                         'created_timestamp'=> Carbon::now(),
                         'read_timestamp'=> null,
                     ]);
-
-                    foreach($request->post('files') as $file_data){
-                        $file_upload = DB::table('document_file')->insert([
-                            "file" => $file_data['file'],
-                            "document_id" => $request->post('document_id'),
-                            "document_stage_id" => $document_stage,
-                        ]);
-                    };
                 }else if($user['type'] == 'group'){
                     $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                     foreach($user_ingroup as $user_id){
@@ -564,17 +549,18 @@ class UserController extends Controller
                                 'read_timestamp'=> null,
                             ]);
 
-                            foreach($request->post('files') as $file_data){
-                                $file_upload = DB::table('document_file')->insert([
-                                    "file" => $file_data['file'],
-                                    "document_id" =>  $request->post('document_id'),
-                                    "document_stage_id" => $document_stage,
-                                ]);
-                            };
                         }
                     }
                 }
             }
+
+            foreach($request->post('files') as $file_data){
+                $file_upload = DB::table('document_file')->insert([
+                    "file" => $file_data['file'],
+                    "document_id" => $request->post('document_id'),
+                    "document_stage_counter" => 1,
+                ]);
+            };
 
             return response()->json(['status' => true]);
     }
@@ -614,20 +600,50 @@ class UserController extends Controller
         ->leftJoin('documents','documents.id','document_stage.document_id')
         ->where('document_stage.id',$request->route('stage_id'))
         ->first();
-        $document_file_array = DB::table('document_file')->where('document_id',$document_info->document_id)->where('document_stage_id',$document_info->doc_stage_id)->get();
+        $document_file_array = DB::table('document_file')->where('document_id',$document_info->document_id)->where('document_stage_counter',$document_info->stage)->get();
 
-        $stage_next = $document_info->stage + 1;
-        $stage_next_data = DB::table('document_stage')
-        ->where('document_id',$document_info->document_id)
-        ->where('sender_type','user')
-        ->where('sender_user_id',$document_info->to)
-        ->where('stage',$stage_next)
-        ->first();
-        $document_reupload_file_array = Array();
-        if(!empty($stage_next_data)){
-            $document_reupload_file_array = DB::table('document_file')->where('document_id',$stage_next_data->document_id)->where('document_stage_id',$stage_next_data->id)->get();
+        $chk = DB::table('document_stage')->where('document_stage.id',$request->route('stage_id'))->first();
+        if($chk->status == 0){
+            $stage_next = DB::table('document_stage')->where('document_id',$document_info->document_id)->orderByDesc('stage')->limit(1)->first();
+            if($document_info->stage == $stage_next->stage){
+                $stage_next = $document_info->stage + 1;
+                $stage_next_data = DB::table('document_stage')
+                ->where('document_id',$document_info->document_id)
+                ->where('sender_type','user')
+                ->where('stage',$stage_next)
+                ->first();
+                $document_reupload_file_array = Array();
+                if(!empty($stage_next_data)){
+                    $document_reupload_file_array = DB::table('document_file')->where('document_id',$stage_next_data->document_id)->where('document_stage_counter',$stage_next)->get();
+                }else{
+                    $document_reupload_file_array = Array();
+                }
+            }else{
+                $stage_next_data = DB::table('document_stage')
+                ->where('document_id',$document_info->document_id)
+                ->where('sender_type','user')
+                ->where('stage',$stage_next->stage)
+                ->first();
+                $document_reupload_file_array = Array();
+                if(!empty($stage_next_data)){
+                    $document_reupload_file_array = DB::table('document_file')->where('document_id',$stage_next_data->document_id)->where('document_stage_counter',$stage_next->stage)->get();
+                }else{
+                    $document_reupload_file_array = Array();
+                }
+            }
         }else{
+            $stage_next = $document_info->stage + 1;
+            $stage_next_data = DB::table('document_stage')
+            ->where('document_id',$document_info->document_id)
+            ->where('sender_type','user')
+            ->where('stage',$stage_next)
+            ->first();
             $document_reupload_file_array = Array();
+            if(!empty($stage_next_data)){
+                $document_reupload_file_array = DB::table('document_file')->where('document_id',$stage_next_data->document_id)->where('document_stage_counter',$stage_next)->get();
+            }else{
+                $document_reupload_file_array = Array();
+            }
         }
 
         return response()->json(['status' => true,'document_info'=>$document_info,'document_file','document_files'=>$document_file_array,'document_reupload_file_array'=>$document_reupload_file_array]);
@@ -639,7 +655,6 @@ class UserController extends Controller
             DB::table('document_stage')
             ->where('id',$request->post('document_stage_id'))
             ->update([
-                'status' => true,
                 'read_timestamp' => Carbon::now()
             ]);
         }
@@ -653,8 +668,15 @@ class UserController extends Controller
             'read_timestamp' => Carbon::now()
         ]);
 
+        $top_stage = DB::table('document_stage')->where('document_id',$request->post('document_id'))->orderByDesc('stage')->limit(1)->first();
+        $stage = (int) $request->post('stage');
+        if($stage == $top_stage->stage){
+            $stage += 1;
+        }else{
+            $stage = $top_stage->stage;
+        }
+
         $sign_check = $request->post('sign_check');
-        $stage = (int) $request->post('stage') + 1;
         if($sign_check == true){
             DB::table('documents')
             ->where('id',$request->post('document_id'))
@@ -673,13 +695,7 @@ class UserController extends Controller
                'created_timestamp'=> Carbon::now(),
                'read_timestamp'=> null,
            ]);
-           foreach($request->post('files') as $file_data){
-                $file_upload = DB::table('document_file')->insert([
-                    "file" => $file_data['file'],
-                    "document_id" => $request->post('document_id'),
-                    "document_stage_id" => $document_stage,
-                ]);
-            };
+
             $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
             $user_data = DB::table('users')->where('id',$document_old_data->user_id)->first();
             $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
@@ -733,14 +749,6 @@ class UserController extends Controller
                             'created_timestamp'=> Carbon::now(),
                             'read_timestamp'=> null,
                         ]);
-
-                        foreach($request->post('files') as $file_data){
-                            $file_upload = DB::table('document_file')->insert([
-                                "file" => $file_data['file'],
-                                "document_id" => $request->post('document_id'),
-                                "document_stage_id" => $document_stage,
-                            ]);
-                        };
 
                         $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
                         $user_data = DB::table('users')->where('id',$user['id'])->first();
@@ -801,14 +809,6 @@ class UserController extends Controller
                                     'read_timestamp'=> null,
                                 ]);
 
-                                foreach($request->post('files') as $file_data){
-                                    $file_upload = DB::table('document_file')->insert([
-                                        "file" => $file_data['file'],
-                                        "document_id" =>  $request->post('document_id'),
-                                        "document_stage_id" => $document_stage,
-                                    ]);
-                                };
-
                                 $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
                                 $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
                                 $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
@@ -853,138 +853,143 @@ class UserController extends Controller
             }
         } else {
             foreach($request->post('send_to') as $user){
-            $document_stage = 0;
-            if($user['type'] == 'user'){
-                $document_stage = DB::table('document_stage')
-                ->insertGetId([
-                    'stage'=> $stage,
-                    'document_id'=> $request->post('document_id'),
-                    'sender_user_id'=> $request->post('user_id'),
-                    'sender_type'=> 'user',
-                    'to'=> $user['id'],
-                    'status'=> 0,
-                    'created_timestamp'=> Carbon::now(),
-                    'read_timestamp'=> null,
-                ]);
-
-                foreach($request->post('files') as $file_data){
-                    $file_upload = DB::table('document_file')->insert([
-                        "file" => $file_data['file'],
-                        "document_id" => $request->post('document_id'),
-                        "document_stage_id" => $document_stage,
-                    ]);
-                };
-
-                $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
-                $user_data = DB::table('users')->where('id',$user['id'])->first();
-                $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
-                $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
-                $desp = '';
-                if(!empty($request->post('document_description'))){
-                    $desp = $request->post('document_description');
-                }
-                $priority = '';
-                if($doc_data->document_priority == 0){
-                    $priority = 'ทั่วไป';
-                }else if($doc_data->document_priority == 1) {
-                    $priority = 'ด่วน';
-                }else if($doc_data->document_priority == 2) {
-                    $priority = 'ด่วนมาก';
-                }
-
-                $html =
-                "
-                    <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
-                    <br>
-                    <h4><b>ความสำคัญ: </b>$priority</h4>
-                    <h4><b>หมวดหมู่: </b>$category->group_name</h4>
-                    <h4><b>รายละเอียด: </b>$desp</h4>
-                    <br>
-                    <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
-                    <a href='$url' target='_blank'>
-                        $url
-                    </a>
-                ";
-
-                Mail::send([], [], function($message) use ($user_data,$html) {
-                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                    $message->setBody($html, 'text/html');
-                });
-
-            }else if($user['type'] == 'group'){
-                $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
-                foreach($user_ingroup as $user_id){
-                    $chk2 = DB::table('document_stage')
-                    ->where('document_id',$request->post('document_id'))
-                    ->where('sender_type','user')
-                    ->where('to',$user_id->user_id)
-                    ->where('stage',$stage)
-                    ->first();
-                    if(empty($chk2)){
-                        $document_stage = DB::table('document_stage')
-                        ->insertGetId([
-                            'stage'=> $stage,
-                            'document_id'=> $request->post('document_id'),
-                            'sender_user_id'=> $request->post('user_id'),
-                            'sender_type'=> 'user',
-                            'to'=> $user_id->user_id,
-                            'status'=> 0,
-                            'created_timestamp'=> Carbon::now(),
-                            'read_timestamp'=> null,
-                        ]);
-
-                        foreach($request->post('files') as $file_data){
-                            $file_upload = DB::table('document_file')->insert([
-                                "file" => $file_data['file'],
-                                "document_id" =>  $request->post('document_id'),
-                                "document_stage_id" => $document_stage,
+                $document_stage = 0;
+                if($user['type'] == 'user'){
+                    $chkuser = DB::table('document_stage')->where('document_id',$request->post('document_id'))->where('to',$user['id'])->where('stage',$stage)->where('sender_type','user')->first();
+                    $chkuser2 = DB::table('document_stage')->where('document_id',$request->post('document_id'))->where('to',$user['id'])->where('status',0)->where('sender_type','user')->first();
+                    if(empty($chkuser2)){
+                        if(empty($chkuser)){
+                            $document_stage = DB::table('document_stage')
+                            ->insertGetId([
+                                'stage'=> $stage,
+                                'document_id'=> $request->post('document_id'),
+                                'sender_user_id'=> $request->post('user_id'),
+                                'sender_type'=> 'user',
+                                'to'=> $user['id'],
+                                'status'=> 0,
+                                'created_timestamp'=> Carbon::now(),
+                                'read_timestamp'=> null,
                             ]);
-                        };
 
-                        $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
-                        $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
-                        $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
-                        $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
-                        $desp = '';
-                        if(!empty($request->post('document_description'))){
-                            $desp = $request->post('document_description');
+                            $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+                            $user_data = DB::table('users')->where('id',$user['id'])->first();
+                            $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+                            $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                            $desp = '';
+                            if(!empty($request->post('document_description'))){
+                                $desp = $request->post('document_description');
+                            }
+                            $priority = '';
+                            if($doc_data->document_priority == 0){
+                                $priority = 'ทั่วไป';
+                            }else if($doc_data->document_priority == 1) {
+                                $priority = 'ด่วน';
+                            }else if($doc_data->document_priority == 2) {
+                                $priority = 'ด่วนมาก';
+                            }
+
+                            $html =
+                            "
+                                <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
+                                <br>
+                                <h4><b>ความสำคัญ: </b>$priority</h4>
+                                <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                                <h4><b>รายละเอียด: </b>$desp</h4>
+                                <br>
+                                <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                                <a href='$url' target='_blank'>
+                                    $url
+                                </a>
+                            ";
+
+                            Mail::send([], [], function($message) use ($user_data,$html) {
+                                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                $message->setBody($html, 'text/html');
+                            });
                         }
-                        $priority = '';
-                        if($doc_data->document_priority == 0){
-                            $priority = 'ทั่วไป';
-                        }else if($doc_data->document_priority == 1) {
-                            $priority = 'ด่วน';
-                        }else if($doc_data->document_priority == 2) {
-                            $priority = 'ด่วนมาก';
+                    }
+                }else if($user['type'] == 'group'){
+                    $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
+                    foreach($user_ingroup as $user_id){
+                        $chkuser2 = DB::table('document_stage')->where('document_id',$request->post('document_id'))->where('to',$user_id->user_id)->where('status',0)->where('sender_type','user')->first();
+                        if(empty($chkuser2)){
+                            $chk2 = DB::table('document_stage')
+                            ->where('document_id',$request->post('document_id'))
+                            ->where('sender_type','user')
+                            ->where('to',$user_id->user_id)
+                            ->where('stage',$stage)
+                            ->first();
+                            if(empty($chk2)){
+                                $document_stage = DB::table('document_stage')
+                                ->insertGetId([
+                                    'stage'=> $stage,
+                                    'document_id'=> $request->post('document_id'),
+                                    'sender_user_id'=> $request->post('user_id'),
+                                    'sender_type'=> 'user',
+                                    'to'=> $user_id->user_id,
+                                    'status'=> 0,
+                                    'created_timestamp'=> Carbon::now(),
+                                    'read_timestamp'=> null,
+                                ]);
+
+                                $doc_data = DB::table('documents')->where('id',$request->post('document_id'))->first();
+                                $user_data = DB::table('users')->where('id',$user_id->user_id)->first();
+                                $category = DB::table('document_category')->where('id',$doc_data->document_category_id)->first();
+                                $url = env('APP_URL')."?redirect=".urlencode('/user/view/').$document_stage;
+                                $desp = '';
+                                if(!empty($request->post('document_description'))){
+                                    $desp = $request->post('document_description');
+                                }
+                                $priority = '';
+                                if($doc_data->document_priority == 0){
+                                    $priority = 'ทั่วไป';
+                                }else if($doc_data->document_priority == 1) {
+                                    $priority = 'ด่วน';
+                                }else if($doc_data->document_priority == 2) {
+                                    $priority = 'ด่วนมาก';
+                                }
+
+                                $html =
+                                "
+                                    <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
+                                    <br>
+                                    <h4><b>ความสำคัญ: </b>$priority</h4>
+                                    <h4><b>หมวดหมู่: </b>$category->group_name</h4>
+                                    <h4><b>รายละเอียด: </b>$desp</h4>
+                                    <br>
+                                    <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
+                                    <a href='$url' target='_blank'>
+                                        $url
+                                    </a>
+                                ";
+
+                                Mail::send([], [], function($message) use ($user_data,$html) {
+                                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->setBody($html, 'text/html');
+                                });
+                            }
                         }
-
-                        $html =
-                        "
-                            <h2>แจ้งเตือน มีเอกสารรอรับการตรวจสอบส่งถึงคุณ</h2>
-                            <br>
-                            <h4><b>ความสำคัญ: </b>$priority</h4>
-                            <h4><b>หมวดหมู่: </b>$category->group_name</h4>
-                            <h4><b>รายละเอียด: </b>$desp</h4>
-                            <br>
-                            <b>คลิกที่ Link ด้านล่างเพื่อตรวจสอบ:</b><br>
-                            <a href='$url' target='_blank'>
-                                $url
-                            </a>
-                        ";
-
-                        Mail::send([], [], function($message) use ($user_data,$html) {
-                            $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                            ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                            $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                            $message->setBody($html, 'text/html');
-                        });
                     }
                 }
             }
-            }
         }
+
+        DB::table('document_file')
+        ->where('document_id',$request->post('document_id'))
+        ->where('document_stage_counter',$stage)
+        ->delete();
+
+        foreach($request->post('files') as $file_data){
+            $file_upload = DB::table('document_file')->insert([
+                "file" => $file_data['file'],
+                "document_id" => $request->post('document_id'),
+                "document_stage_counter" => $stage ,
+            ]);
+        };
 
         return response()->json(['status' => true]);
     }
@@ -1009,7 +1014,7 @@ class UserController extends Controller
             }else if($doc_track->sender_type == 'group'){
                 $to_data = DB::table("user_group")->where('id',$doc_track->to)->first();
             }
-            $files = DB::table('document_file')->where('document_stage_id',$doc_track->id)->get();
+            $files = DB::table('document_file')->where('document_id',$doc_track->document_id)->where('document_stage_counter',$doc_track->stage)->get();
             array_push($document_tracking,[
                 'id'=> $doc_track->id,
                 'stage'=> $doc_track->stage,

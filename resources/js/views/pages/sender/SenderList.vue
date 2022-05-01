@@ -243,7 +243,21 @@
                     >
                       <label class="left"></label>
                       <span>
-                        <strong> เอกสารถูกส่งไปที่&nbsp; </strong>
+                        <strong>
+                          เอกสารถูกส่งไปที่&nbsp;
+                          <va-button
+                            color="info"
+                            class="mr-0"
+                            size="small"
+                            v-on:click="
+                              ShowFileDialog(
+                                documents_stage.stage_data[0].files
+                              )
+                            "
+                          >
+                            ไฟล์แนบ
+                          </va-button>
+                        </strong>
                         <p
                           v-for="to_data in documents_stage.stage_data"
                           :key="to_data.id"
@@ -252,14 +266,6 @@
                             กลุ่มผู้ใช้:
                             {{ to_data.to_data.group_name }}
                             <label v-if="to_data.sttaus == 1">(อ่านแล้ว)</label>
-                            <va-button
-                              color="info"
-                              class="mr-0"
-                              size="small"
-                              v-on:click="ShowFileDialog(to_data.files)"
-                            >
-                              ไฟล์แนบ
-                            </va-button>
                           </label>
                           <label v-if="to_data.sender_type == 'user'">
                             ผู้ใช้:
@@ -270,14 +276,6 @@
                             }}
                             <label v-if="to_data.status == 1">(อ่านแล้ว)</label>
                             &nbsp;
-                            <va-button
-                              color="info"
-                              class="mr-0"
-                              size="small"
-                              v-on:click="ShowFileDialog(to_data.files)"
-                            >
-                              ไฟล์แนบ
-                            </va-button>
                           </label>
                         </p>
                       </span>
@@ -528,7 +526,6 @@ export default {
     },
 
     ShowFileDialog(file_array) {
-      console.log(file_array);
       var html_file = "";
       for (let file of file_array) {
         html_file =
