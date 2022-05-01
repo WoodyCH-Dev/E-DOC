@@ -202,6 +202,15 @@
                 </div>
 
                 <div class="form-group" v-if="form.stage_status != 1">
+                  <va-button
+                    v-on:click="usePreviousFile()"
+                    color="warning"
+                    class="mr-2"
+                  >
+                    <i class="fas fa-angle-double-right mr-2"></i>
+                    ใช้ไฟล์ที่ถูกส่งมา
+                  </va-button>
+
                   <va-button v-on:click="Documentfile_selectBtn()">
                     <i class="fas fa-upload mr-2"></i> เลือกไฟล์
                   </va-button>
@@ -500,6 +509,17 @@ export default {
           });
       } else {
         this.$swal.fire("Error!", "ไม่มีการเลือกผู้รับ", "error");
+      }
+    },
+
+    usePreviousFile() {
+      for (let file of this.form.document_file) {
+        var x = this.form.document_file_reupload.find((element) => {
+          return element.file == file.file;
+        });
+        if (x == null) {
+          this.form.document_file_reupload.push(file);
+        }
       }
     },
   },

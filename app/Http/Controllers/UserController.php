@@ -410,13 +410,14 @@ class UserController extends Controller
                         </a>
                     ";
 
-                    Mail::send([], [], function($message) use ($user_data,$html) {
-                        $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                        ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                        $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                        $message->setBody($html, 'text/html');
-                     });
-
+                    if(env('MAIL_USERNAME') != ''){
+                        Mail::send([], [], function($message) use ($user_data,$html) {
+                            $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                            ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                            $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                            $message->setBody($html, 'text/html');
+                        });
+                    }
                 }else if($user['type'] == 'group'){
                     $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                     foreach($user_ingroup as $user_id){
@@ -469,12 +470,14 @@ class UserController extends Controller
                                 </a>
                             ";
 
-                            Mail::send([], [], function($message) use ($user_data,$html) {
-                                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                $message->setBody($html, 'text/html');
-                             });
+                            if(env('MAIL_USERNAME') != ''){
+                                Mail::send([], [], function($message) use ($user_data,$html) {
+                                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->setBody($html, 'text/html');
+                                });
+                            }
                         }
                     }
                 }
@@ -727,12 +730,14 @@ class UserController extends Controller
                 </a>
             ";
 
-            Mail::send([], [], function($message) use ($user_data,$html) {
-                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                $message->setBody($html, 'text/html');
-            });
+            if(env('MAIL_USERNAME') != ''){
+                Mail::send([], [], function($message) use ($user_data,$html) {
+                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                    $message->setBody($html, 'text/html');
+                });
+            }
 
             if($request->post('send_to') != NULL){
                 foreach($request->post('send_to') as $user){
@@ -781,12 +786,14 @@ class UserController extends Controller
                             </a>
                         ";
 
+                        if(env('MAIL_USERNAME') != ''){
                         Mail::send([], [], function($message) use ($user_data,$html) {
-                            $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                            ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                            $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                            $message->setBody($html, 'text/html');
-                        });
+                                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                $message->setBody($html, 'text/html');
+                            });
+                        }
                     }else if($user['type'] == 'group'){
                         $user_ingroup = DB::table('user_ingroup')->where('group_id',$user['id'])->get();
                         foreach($user_ingroup as $user_id){
@@ -840,12 +847,14 @@ class UserController extends Controller
                                     </a>
                                 ";
 
-                                Mail::send([], [], function($message) use ($user_data,$html) {
-                                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                    $message->setBody($html, 'text/html');
-                                });
+                                if(env('MAIL_USERNAME') != ''){
+                                    Mail::send([], [], function($message) use ($user_data,$html) {
+                                        $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                        ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                        $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                        $message->setBody($html, 'text/html');
+                                    });
+                                }
                             }
                         }
                     }
@@ -902,12 +911,14 @@ class UserController extends Controller
                                 </a>
                             ";
 
-                            Mail::send([], [], function($message) use ($user_data,$html) {
-                                $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                                ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                $message->setBody($html, 'text/html');
-                            });
+                            if(env('MAIL_USERNAME') != ''){
+                                Mail::send([], [], function($message) use ($user_data,$html) {
+                                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                    $message->setBody($html, 'text/html');
+                                });
+                            }
                         }
                     }
                 }else if($user['type'] == 'group'){
@@ -965,12 +976,14 @@ class UserController extends Controller
                                     </a>
                                 ";
 
-                                Mail::send([], [], function($message) use ($user_data,$html) {
-                                    $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
-                                    ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                    $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
-                                    $message->setBody($html, 'text/html');
-                                });
+                                if(env('MAIL_USERNAME') != ''){
+                                    Mail::send([], [], function($message) use ($user_data,$html) {
+                                        $message->to($user_data->email, 'แจ้งเตือนเอกสารเข้า')
+                                        ->subject('[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                        $message->from(env('MAIL_USERNAME'),'[Notify] ระบบสารบรรณอิเล็กทรอนิกส์ (E-DOC)');
+                                        $message->setBody($html, 'text/html');
+                                    });
+                                }
                             }
                         }
                     }
