@@ -20,7 +20,7 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
 
 ## Feedback
 
-พบปัญหา ติชม แนะนำ https://wutthiphon.space/admin/projects
+พบปัญหา ติชม แนะนำ https://wutthiphon.space/report
 
 
 ## Installation
