@@ -20,7 +20,7 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
 
 ## Feedback
 
-พบปัญหา ติชม แนะนำ https://wutthiphon.space/admin/projects
+พบปัญหา ติชม แนะนำ https://wutthiphon.space/report
 
 
 ## Installation
@@ -34,14 +34,27 @@ E-DOC หรือระบบ เอกสารในรูปแบบอิ
 ```
 จากหลัง npm install เสร็จให้เปลี่ยนชื่อไฟล์ .env.example เป็น .env จากนั้นเปิดไฟล์ แก้ไขตามนี้
 ```bash
-  APP_URL=<ที่อยู่ Server/Subfolder> //เช่น https://wutthiphon.space/Projects/demo/e-doc
+  APP_URL=<ที่อยู่ Server/Subfolder> //เช่น https://wutthiphon.space/Projects/demo/e-doc หรือ https://wutthiphon.space/
   DB_HOST=<IP ที่อยู่ฐานข้อมูล MySQL> //เช่น 127.0.0.1
   DB_PORT=3306 //Port ของ MySQL Server
   DB_DATABASE=<ชื่อฐานข้อมูล>
   DB_USERNAME=root //DB User
   DB_PASSWORD= //DB Pass
+  MIX_GOOGLE_CLIENT_ID=<รหัสที่ขอจาก Google Console สำหรับใช้ Login Google>
+
+  MAIL_MAILER=smtp
+  MAIL_HOST=smtp.gmail.com
+  MAIL_PORT=587
+  MAIL_USERNAME= <email ที่ต้องการใช้ส่งเมล์>
+  MAIL_PASSWORD= <password ของ email ที่ต้องการใช้ส่งเมล์>
+  MAIL_ENCRYPTION=tls
 ```
 หลังจากแก้ไขไฟล์ .env เสร็จแล้ว
 ```bash
   php artisan key:generate
+  php artisan jwt:secret //หากมันถามว่ามี key อยู่แล้วต้องการ generate ใหม่หรือไม่ ให้พิมพ์ yes เพราะถ้าหากเชคใน .env จะเห็นเป็นค่าว่าง
+  npm run dev 1 ครั้ง
 ```
+
+username: admin@gmail.com
+password: 12345678
